@@ -21,9 +21,8 @@ The UI uses a Spider‑Man inspired red → blue palette for primary gradients a
 - Report form with image upload, tags, categories, and a react-leaflet map where users can click to set the exact report location.
 - Mobile-friendly UX: report FAB on small screens, mobile back button on the report form, sticky report CTA on the landing page.
 
-## Screenshots (placeholders)
+## Screenshots 
 
-To display screenshots inline in the repository README, create `assets/screenshots/` and add images with these recommended filenames:
 
 - `assets/screenshots/landing-page.png` — Landing page (hero + video)
 - `assets/screenshots/dashboard-mobile.png` — Dashboard on mobile (stats + chatbot button)
