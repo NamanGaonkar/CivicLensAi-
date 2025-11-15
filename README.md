@@ -4,7 +4,7 @@ An innovative React + TypeScript web application designed to transform how commu
 
 ---
 
-## 🎯 Overview
+##  Overview
 
 **CivicLens** is a smart civic engagement platform that empowers citizens to report civic issues efficiently while providing administrators with AI-powered insights and real-time analytics. The app combines interactive mapping, AI chatbot assistance, and intuitive mobile-first design to bridge the gap between communities and city services.
 
@@ -18,7 +18,7 @@ An innovative React + TypeScript web application designed to transform how commu
 
 ---
 
-## ✨ Core Features
+##  Core Features
 
 ![Landing Page](assets/a.png)
 
@@ -44,7 +44,7 @@ An innovative React + TypeScript web application designed to transform how commu
 
 ---
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Prerequisites
 - Node.js (v16+)
@@ -79,7 +79,7 @@ npm run dev
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 src/
@@ -110,7 +110,7 @@ assets/
 
 ---
 
-## 🎮 How to Use
+##  How to Use
 
 ### For Citizens
 1. **Sign Up/Sign In**: Use the authentication form (anonymous or email/password)
@@ -132,7 +132,7 @@ assets/
 
 ---
 
-## 🔐 Security & Privacy
+##  Security & Privacy
 
 - Authentication powered by Convex Auth
 - Anonymous posting supported for civic participation
@@ -142,7 +142,7 @@ assets/
 
 ---
 
-## 🚀 Upcoming Features
+##  Upcoming Features
 
 - **Real AI Integration**: Google Gemini for intelligent report classification and analysis
 - **Image Recognition**: Automatic categorization of civic issues from photos
@@ -153,7 +153,7 @@ assets/
 
 ---
 
-## 🛠️ Development
+##  Development
 
 ### Tech Details
 - **State Management**: React hooks + Convex queries/mutations
@@ -177,7 +177,7 @@ VITE_CONVEX_URL=your_convex_deployment_url
 
 ---
 
-## 📊 Performance & Scalability
+## Performance & Scalability
 
 - Convex handles real-time queries and automatic caching
 - React's virtual DOM ensures smooth UI even with large datasets
@@ -187,7 +187,7 @@ VITE_CONVEX_URL=your_convex_deployment_url
 
 ---
 
-## 🤝 Contributing
+##  Contributing
 
 We welcome contributions! Areas where we'd love help:
 - UI/UX improvements
@@ -198,13 +198,13 @@ We welcome contributions! Areas where we'd love help:
 
 ---
 
-## 📝 License
+##  License
 
 This project is open-source and available for educational and community use.
 
 ---
 
-## 👨‍💻 Created By
+##  Created By
 
 **Naman Gaonkar**
 
@@ -215,7 +215,7 @@ Passionate about civic tech, community engagement, and building solutions that c
 
 ---
 
-## 🙏 Acknowledgments
+##  Acknowledgments
 
 - Built with **React**, **TypeScript**, and **Tailwind CSS**
 - Maps powered by **OpenStreetMap** and **Leaflet**
@@ -225,7 +225,7 @@ Passionate about civic tech, community engagement, and building solutions that c
 
 ---
 
-## 📞 Support & Feedback
+##  Support & Feedback
 
 Have questions or feedback? Feel free to open an issue on GitHub or reach out directly.
 
