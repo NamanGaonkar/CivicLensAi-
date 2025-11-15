@@ -20,66 +20,25 @@ An innovative React + TypeScript web application designed to transform how commu
 
 ## ✨ Core Features
 
-### 🏠 Landing Page
-Welcoming hero section with embedded video content, conditional CTAs based on authentication state, and smooth particle animations.
-
 ![Landing Page](assets/a.png)
-
-### 📊 Dashboard
-Real-time analytics dashboard showing:
-- Total reports, open issues, resolved cases, and resolution rate stats
-- Interactive map visualization of all civic reports
-- Trends chart tracking issue patterns
-- Recent activity feed
-- AI Chatbot for instant assistance (mobile-friendly bottom-sheet)
 
 ![Dashboard Overview](assets/b.png)
 
-### 🤖 AI-Powered Chatbot
-Smart assistant available on the dashboard:
-- Responsive design: floating button on desktop, bottom-sheet on mobile
-- Real-time message responses
-- Accessible close button
-- Context-aware civic engagement guidance
+
 
 ![AI Chatbot](assets/c.png)
 
-### 📋 Report Submission Form
-Comprehensive form for citizens to report issues with:
-- Title, description, and category selection
-- Interactive map for precise location pinpointing (click-to-select)
-- Image upload with AI analysis capabilities
-- Tag-based classification
-- Mobile-friendly back navigation
+
 
 ![Report Form](assets/d.png)
 
-### 🗺️ Interactive Maps
-Real-time map features:
-- OpenStreetMap tiles for accurate geographic data
-- CircleMarkers showing all reported civic issues
-- Pop-up details for each report
-- Click-to-select location picker on report form
-- Mobile responsive with smooth interactions
 
 ![Reports Map](assets/e.png)
 
-### 📱 Mobile-First UX
-Optimized mobile experience includes:
-- Sticky "Report an Issue" button on landing page
-- Floating Action Button (FAB) for report submissions
-- Fixed back button for easy navigation
-- Bottom-sheet chatbot interface
-- Responsive layout that adapts to all screen sizes
+
 
 ![Mobile Interface](assets/f.png)
 
-### 🎨 Modern Design Language
-Spider‑Man inspired red-to-blue gradient theme:
-- High-contrast hero gradients
-- Accessible text colors maintained throughout
-- Smooth animations and transitions
-- Professional glass-morphism effects
 
 ![Design Theme](assets/g.png)
 
