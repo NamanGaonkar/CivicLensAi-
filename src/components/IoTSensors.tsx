@@ -1,4 +1,4 @@
-import { Id } from "../../convex/_generated/dataModel";
+
 
 interface IoTSensor {
   _id: Id<"iotSensors">;
@@ -25,9 +25,9 @@ interface IoTSensorsProps {
 
 export function IoTSensors({ sensors }: IoTSensorsProps) {
   const statusColors = {
-    normal: "bg-green-500/20 text-green-400 border-green-500/30",
-    warning: "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
-    critical: "bg-red-500/20 text-red-400 border-red-500/30",
+    normal: "bg-civic-teal/20 text-civic-teal border-civic-teal/30",
+    warning: "bg-accent-yellow/20 text-accent-yellow border-accent-yellow/30",
+    critical: "bg-accent-orange/20 text-accent-orange border-accent-orange/30",
   };
 
   const sensorIcons = {
@@ -77,8 +77,8 @@ export function IoTSensors({ sensors }: IoTSensorsProps) {
               <div className="w-full bg-white/10 rounded-full h-2">
                 <div
                   className={`h-2 rounded-full transition-all duration-300 ${
-                    sensor.status === "critical" ? "bg-red-500" :
-                    sensor.status === "warning" ? "bg-yellow-500" : "bg-green-500"
+                    sensor.status === "critical" ? "bg-accent-orange" :
+                    sensor.status === "warning" ? "bg-accent-yellow" : "bg-civic-teal"
                   }`}
                   style={{
                     width: `${Math.min(100, (sensor.currentValue / sensor.threshold.max) * 100)}%`

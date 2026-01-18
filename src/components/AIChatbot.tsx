@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, X, Send } from "lucide-react";
+import { MessageCircle, X, Send, Sparkles, Bot, User } from "lucide-react";
 
 export function AIChatbot() {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,6 +13,15 @@ export function AIChatbot() {
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const handleSendMessage = async () => {
     if (!input.trim()) return;
@@ -52,127 +61,127 @@ export function AIChatbot() {
 
   return (
     <>
-      {/* Chatbot Toggle Button */}
+      {/* Modern Chatbot Toggle Button */}
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
-        // On small screens keep the chatbot button above the report FAB by shifting it up;
-        // on md+ screens restore previous position.
-        className="fixed right-4 bottom-20 md:right-6 md:bottom-6 w-14 h-14 rounded-full bg-gradient-to-r from-red-600 to-blue-900 text-white shadow-lg flex items-center justify-center z-40"
-        whileHover={{ scale: 1.1 }}
+        className="fixed right-4 bottom-20 md:right-6 md:bottom-6 w-14 h-14 rounded-2xl bg-gradient-to-br from-civic-teal to-civic-darkBlue text-white shadow-xl flex items-center justify-center z-40"
+        whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
       >
-        <AnimatePresence mode="wait">
-          {isOpen ? (
-            <motion.div
-              key="close"
-              initial={{ rotate: -90, opacity: 0 }}
-              animate={{ rotate: 0, opacity: 1 }}
-              exit={{ rotate: 90, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <X className="w-6 h-6" />
-            </motion.div>
-          ) : (
-            <motion.div
-              key="open"
-              initial={{ rotate: 90, opacity: 0 }}
-              animate={{ rotate: 0, opacity: 1 }}
-              exit={{ rotate: -90, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <MessageCircle className="w-6 h-6" />
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {isOpen ? <X className="w-6 h-6" /> : <MessageCircle className="w-6 h-6" />}
       </motion.button>
 
-      {/* Chatbot Window */}
+      {/* Modern Chatbot Window */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.2 }}
             className={
-              `fixed z-50 bg-white shadow-2xl border-2 border-red-200 flex flex-col ` +
+              `fixed z-50 bg-white shadow-2xl border border-slate-200 flex flex-col ` +
               (typeof window !== "undefined" && window.innerWidth < 640
-                ? "inset-x-0 bottom-0 top-0 rounded-t-2xl h-full"
-                : "bottom-24 right-6 w-96 h-[600px] rounded-2xl")
+                ? "inset-x-0 bottom-0 top-0 h-full"
+                : "bottom-24 right-6 w-[420px] h-[650px] rounded-2xl")
             }
           >
             {/* Header */}
-            <div className="relative bg-gradient-to-r from-red-600 to-blue-900 text-white p-6 rounded-t-2xl">
-              <h3 className="text-lg font-bold">CivicLens AI Assistant</h3>
-              <p className="text-sm text-red-100">Powered by AI insights</p>
-              <button
-                onClick={() => setIsOpen(false)}
-                aria-label="Close chatbot"
-                className="absolute right-3 top-3 bg-black/25 hover:bg-black/40 p-1 rounded-full text-white"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
-              {messages.map((message) => (
-                <motion.div
-                  key={message.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
-                >
-                  <div
-                    className={`max-w-xs px-4 py-2 rounded-lg ${
-                      message.role === "user"
-                        ? "bg-gradient-to-r from-red-600 to-blue-900 text-white rounded-br-none"
-                        : "bg-slate-100 text-slate-900 rounded-bl-none"
-                    }`}
-                  >
-                    <p className="text-sm">{message.text}</p>
+            <div className="bg-gradient-to-r from-civic-teal to-civic-darkBlue text-white p-5">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                    <Sparkles className="w-5 h-5" />
                   </div>
-                </motion.div>
-              ))}
-
-              {isLoading && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="flex justify-start"
-                >
-                  <div className="bg-slate-100 px-4 py-2 rounded-lg rounded-bl-none">
-                    <div className="flex space-x-2">
-                      <div className="w-2 h-2 bg-slate-500 rounded-full animate-bounce"></div>
-                      <div className="w-2 h-2 bg-slate-500 rounded-full animate-bounce" style={{ animationDelay: "0.1s" }}></div>
-                      <div className="w-2 h-2 bg-slate-500 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
+                  <div>
+                    <h3 className="text-lg font-bold">CivicLens AI</h3>
+                    <div className="flex items-center space-x-2 mt-0.5">
+                      <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                      <p className="text-xs text-white/90">Online</p>
                     </div>
                   </div>
-                </motion.div>
-              )}
+                </div>
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="w-9 h-9 bg-white/20 hover:bg-white/30 rounded-xl flex items-center justify-center transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
             </div>
 
-            {/* Input */}
-            <div className="border-t-2 border-red-200 p-4 bg-slate-50 sm:rounded-b-2xl rounded-b-none sticky bottom-0">
-              <div className="flex space-x-2">
+            {/* Messages Area */}
+            <div className="flex-1 overflow-y-auto p-5 space-y-4 bg-slate-50">
+              {messages.map((message) => (
+                <div
+                  key={message.id}
+                  className={`flex items-start gap-3 ${message.role === "user" ? "flex-row-reverse" : "flex-row"}`}
+                >
+                  {/* Avatar */}
+                  <div
+                    className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${
+                      message.role === "user"
+                        ? "bg-gradient-to-br from-civic-teal to-civic-darkBlue text-white"
+                        : "bg-gradient-to-br from-purple-500 to-purple-600 text-white"
+                    }`}
+                  >
+                    {message.role === "user" ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
+                  </div>
+
+                  {/* Message Bubble */}
+                  <div className="flex flex-col max-w-[75%]">
+                    <div
+                      className={`px-4 py-3 rounded-2xl ${
+                        message.role === "user"
+                          ? "bg-gradient-to-br from-civic-teal to-civic-darkBlue text-white"
+                          : "bg-white border border-slate-200 text-slate-900"
+                      }`}
+                    >
+                      <p className="text-sm leading-relaxed">{message.text}</p>
+                    </div>
+                    <p className={`text-xs mt-1 px-1 ${message.role === "user" ? "text-right text-slate-400" : "text-slate-400"}`}>
+                      {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </p>
+                  </div>
+                </div>
+              ))}
+
+              {/* Typing Indicator */}
+              {isLoading && (
+                <div className="flex items-start gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 text-white flex items-center justify-center flex-shrink-0">
+                    <Bot className="w-4 h-4" />
+                  </div>
+                  <div className="bg-white border border-slate-200 px-4 py-3 rounded-2xl">
+                    <div className="flex space-x-1.5">
+                      <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: "0s" }}></div>
+                      <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
+                      <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: "0.4s" }}></div>
+                    </div>
+                  </div>
+                </div>
+              )}
+              <div ref={messagesEndRef} />
+            </div>
+
+            {/* Input Area */}
+            <div className="border-t border-slate-200 p-4 bg-white">
+              <div className="flex items-center gap-2">
                 <input
                   type="text"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
-                  placeholder="Ask me anything..."
-                  className="flex-1 px-4 py-2 border-2 border-red-200 rounded-lg focus:border-red-500 focus:outline-none text-slate-900 placeholder-slate-500"
+                  placeholder="Type your message..."
+                  className="flex-1 px-4 py-3 border border-slate-300 rounded-xl focus:border-civic-teal focus:outline-none text-slate-900 placeholder-slate-400 bg-white"
                 />
-                <motion.button
+                <button
                   onClick={handleSendMessage}
                   disabled={isLoading || !input.trim()}
-                  className="px-4 py-2 bg-gradient-to-r from-red-600 to-blue-900 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  className="w-11 h-11 bg-gradient-to-br from-civic-teal to-civic-darkBlue text-white rounded-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center flex-shrink-0"
                 >
-                  <Send className="w-4 h-4" />
-                </motion.button>
+                  <Send className="w-5 h-5" />
+                </button>
               </div>
             </div>
           </motion.div>

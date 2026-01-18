@@ -1,4 +1,3 @@
-import { Authenticated, Unauthenticated } from "convex/react";
 import { SignInForm } from "./SignInForm";
 import { SignOutButton } from "./SignOutButton";
 import { Toaster } from "sonner";
@@ -6,13 +5,23 @@ import { Dashboard } from "./components/Dashboard";
 import { ReportForm } from "./components/ReportForm";
 import { LandingPage } from "./components/LandingPage";
 import { AIChatbot } from "./components/AIChatbot";
+import { Logo } from "./components/Logo";
+import { CommunityFeed } from "./components/CommunityFeed";
+import { BeforeAfter } from "./components/BeforeAfter";
+import { UserProfile } from "./components/UserProfile";
+import { OfficialDashboard } from "./components/OfficialDashboard";
+import { StatusTracker } from "./components/StatusTracker";
+import { GoogleMapsProvider } from "./components/GoogleMapsProvider";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MapPin } from "lucide-react";
+import { MapPin, Users, User, ShieldCheck, Activity } from "lucide-react";
+import { useAuth } from "./hooks/useAuth";
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<"dashboard" | "report" | "landing">("landing");
+  const [currentView, setCurrentView] = useState<"dashboard" | "report" | "landing" | "community" | "beforeafter" | "profile" | "official" | "status">("landing");
   const [showAuth, setShowAuth] = useState(false);
+  const [userRole, setUserRole] = useState<"citizen" | "official">("citizen"); // In production, fetch from user profile
+  const { user, loading } = useAuth();
 
   const handleGetStarted = () => {
     setShowAuth(true);
@@ -23,9 +32,21 @@ export default function App() {
     setShowAuth(false);
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-civic-lightBlue to-white">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-civic-teal border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-slate-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen">
-      <Authenticated>
+    <GoogleMapsProvider>
+      <div className="min-h-screen">
+        {user ? (
         <AnimatePresence mode="wait">
           {currentView === "landing" ? (
             <motion.div
@@ -44,10 +65,10 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.5 }}
-              className="min-h-screen bg-gradient-to-br from-red-800 via-black to-blue-900"
+              className="min-h-screen bg-gradient-to-br from-slate-50 via-civic-lightBlue/30 to-white"
             >
               {/* Navigation */}
-              <nav className="sticky top-0 z-50 backdrop-blur-xl bg-white/10 border-b border-white/20">
+              <nav className="sticky top-0 z-50 backdrop-blur-xl bg-white/90 border-b border-civic-teal/20 shadow-sm">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                   <div className="flex justify-between items-center h-16">
                     <div className="flex items-center space-x-8">
@@ -57,19 +78,15 @@ export default function App() {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                       >
-                        <div className="bg-black/80 px-3 py-1 rounded-md">
-                          <span className="text-2xl font-bold bg-gradient-to-r from-red-600 to-blue-900 bg-clip-text text-transparent">
-                            CivicLens
-                          </span>
-                        </div>
+                        <Logo size="md" showText={true} textColor="text-slate-900" />
                       </motion.button>
                       <div className="hidden md:flex space-x-4">
                         <motion.button
                           onClick={() => setCurrentView("dashboard")}
                           className={`px-4 py-2 rounded-lg transition-all duration-200 ${
                             currentView === "dashboard"
-                              ? "bg-white/20 text-white"
-                              : "text-white/70 hover:text-white hover:bg-white/10"
+                              ? "bg-civic-teal text-white"
+                              : "text-slate-700 hover:text-civic-teal hover:bg-civic-lightBlue/30"
                           }`}
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
@@ -80,17 +97,69 @@ export default function App() {
                           onClick={() => setCurrentView("report")}
                           className={`px-4 py-2 rounded-lg transition-all duration-200 ${
                             currentView === "report"
-                              ? "bg-white/20 text-white"
-                              : "text-white/70 hover:text-white hover:bg-white/10"
+                              ? "bg-civic-teal text-white"
+                              : "text-slate-700 hover:text-civic-teal hover:bg-civic-lightBlue/30"
                           }`}
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                         >
                           Report Issue
                         </motion.button>
+                        <motion.button
+                          onClick={() => setCurrentView("community")}
+                          className={`px-4 py-2 rounded-lg transition-all duration-200 flex items-center space-x-1 ${
+                            currentView === "community"
+                              ? "bg-civic-teal text-white"
+                              : "text-slate-700 hover:text-civic-teal hover:bg-civic-lightBlue/30"
+                          }`}
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          <Users className="w-4 h-4" />
+                          <span>Community</span>
+                        </motion.button>
+                        <motion.button
+                          onClick={() => setCurrentView("status")}
+                          className={`px-4 py-2 rounded-lg transition-all duration-200 flex items-center space-x-1 ${
+                            currentView === "status"
+                              ? "bg-civic-teal text-white"
+                              : "text-slate-700 hover:text-civic-teal hover:bg-civic-lightBlue/30"
+                          }`}
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          <Activity className="w-4 h-4" />
+                          <span>My Status</span>
+                        </motion.button>
+                        {userRole === "official" && (
+                          <motion.button
+                            onClick={() => setCurrentView("official")}
+                            className={`px-4 py-2 rounded-lg transition-all duration-200 flex items-center space-x-1 ${
+                              currentView === "official"
+                                ? "bg-civic-darkBlue text-white"
+                                : "text-slate-700 hover:text-civic-darkBlue hover:bg-civic-lightBlue/30"
+                            }`}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                          >
+                            <ShieldCheck className="w-4 h-4" />
+                            <span>Official Portal</span>
+                          </motion.button>
+                        )}
                       </div>
                     </div>
-                    <SignOutButton />
+                    <div className="flex items-center space-x-3">
+                      <motion.button
+                        onClick={() => setCurrentView("profile")}
+                        className="p-2 rounded-lg hover:bg-civic-lightBlue/30 transition-colors"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        title="My Profile"
+                      >
+                        <User className="w-5 h-5 text-slate-700" />
+                      </motion.button>
+                      <SignOutButton />
+                    </div>
                   </div>
                 </div>
               </nav>
@@ -98,7 +167,7 @@ export default function App() {
               {/* Main Content */}
               <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <AnimatePresence mode="wait">
-                  {currentView === "dashboard" ? (
+                  {currentView === "dashboard" && (
                     <motion.div
                       key="dashboard"
                       initial={{ opacity: 0, x: -20 }}
@@ -106,9 +175,10 @@ export default function App() {
                       exit={{ opacity: 0, x: 20 }}
                       transition={{ duration: 0.3 }}
                     >
-                      <Dashboard />
+                      <Dashboard onNavigate={setCurrentView} />
                     </motion.div>
-                  ) : (
+                  )}
+                  {currentView === "report" && (
                     <motion.div
                       key="report"
                       initial={{ opacity: 0, x: 20 }}
@@ -117,6 +187,61 @@ export default function App() {
                       transition={{ duration: 0.3 }}
                     >
                         <ReportForm onBack={() => setCurrentView("dashboard")} />
+                    </motion.div>
+                  )}
+                  {currentView === "community" && (
+                    <motion.div
+                      key="community"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <CommunityFeed />
+                    </motion.div>
+                  )}
+                  {currentView === "beforeafter" && (
+                    <motion.div
+                      key="beforeafter"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <BeforeAfter reports={[]} />
+                    </motion.div>
+                  )}
+                  {currentView === "status" && (
+                    <motion.div
+                      key="status"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <StatusTracker userReports={[]} />
+                    </motion.div>
+                  )}
+                  {currentView === "profile" && (
+                    <motion.div
+                      key="profile"
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <UserProfile />
+                    </motion.div>
+                  )}
+                  {currentView === "official" && userRole === "official" && (
+                    <motion.div
+                      key="official"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <OfficialDashboard />
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -130,7 +255,7 @@ export default function App() {
                   <button
                     onClick={() => setCurrentView("report")}
                     aria-label="Report an issue"
-                    className="w-14 h-14 rounded-full bg-gradient-to-r from-red-600 to-blue-900 text-white flex items-center justify-center shadow-2xl"
+                    className="w-14 h-14 rounded-full bg-civic-teal text-white flex items-center justify-center shadow-2xl hover:bg-civic-darkBlue transition-all"
                   >
                     <MapPin className="w-6 h-6" />
                   </button>
@@ -139,9 +264,7 @@ export default function App() {
             </motion.div>
           )}
         </AnimatePresence>
-      </Authenticated>
-
-      <Unauthenticated>
+        ) : (
         <AnimatePresence mode="wait">
           {!showAuth ? (
             <motion.div
@@ -160,12 +283,12 @@ export default function App() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.5 }}
-              className="min-h-screen bg-gradient-to-br from-red-700 via-red-900 to-blue-900 flex items-center justify-center p-8"
+              className="min-h-screen bg-gradient-to-br from-civic-lightBlue via-white to-blue-50 flex items-center justify-center p-8"
             >
               <div className="w-full max-w-md">
                 <motion.button
                   onClick={handleBackToLanding}
-                  className="mb-8 text-white/70 hover:text-white transition-colors flex items-center space-x-2"
+                  className="mb-8 text-slate-700 hover:text-slate-900 transition-colors flex items-center space-x-2"
                   whileHover={{ x: -5 }}
                 >
                   <span>←</span>
@@ -178,15 +301,13 @@ export default function App() {
                   transition={{ delay: 0.2 }}
                   className="text-center mb-8"
                 >
-                  <div className="inline-block bg-black/80 px-3 py-1 rounded-md mb-4">
-                    <h1 className="text-5xl font-bold bg-gradient-to-r from-red-600 to-blue-900 bg-clip-text text-transparent">
-                      CivicLens
-                    </h1>
+                  <div className="flex justify-center mb-4">
+                    <Logo size="lg" showText={true} textColor="text-slate-900" />
                   </div>
-                  <p className="text-xl text-white/80">
+                  <p className="text-xl text-slate-800 font-semibold">
                     AI-Powered Civic Engagement Platform
                   </p>
-                  <p className="text-white/60 mt-2">
+                  <p className="text-slate-600 mt-2">
                     Sign in to start transforming your community
                   </p>
                 </motion.div>
@@ -202,9 +323,10 @@ export default function App() {
             </motion.div>
           )}
         </AnimatePresence>
-      </Unauthenticated>
+        )}
 
       <Toaster />
     </div>
+    </GoogleMapsProvider>
   );
 }

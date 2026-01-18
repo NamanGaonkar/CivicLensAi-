@@ -1,5 +1,7 @@
 import { motion } from "framer-motion";
 import Particles from "./Particles";
+import { Logo } from "./Logo";
+import personImage from "../../assets/person.png";
 import { 
   MapPin, 
   Camera, 
@@ -26,37 +28,37 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
       icon: <Camera className="w-8 h-8" />,
       title: "AI-Powered Image Analysis",
       description: "Upload photos and let our AI automatically categorize and prioritize civic issues",
-      color: "from-blue-500 to-cyan-500"
+      color: "from-civic-teal to-civic-darkBlue"
     },
     {
       icon: <MapPin className="w-8 h-8" />,
       title: "Real-time Location Tracking",
       description: "Precise GPS coordinates and interactive maps for accurate issue reporting",
-      color: "from-green-500 to-emerald-500"
+      color: "from-civic-teal to-civic-darkBlue"
     },
     {
       icon: <BarChart3 className="w-8 h-8" />,
       title: "Advanced Analytics Dashboard",
       description: "Comprehensive insights and trends to help city officials make data-driven decisions",
-      color: "from-purple-500 to-violet-500"
+      color: "from-civic-teal to-civic-darkBlue"
     },
     {
       icon: <Brain className="w-8 h-8" />,
       title: "Smart Prioritization",
       description: "Machine learning algorithms automatically assess urgency and route issues efficiently",
-      color: "from-orange-500 to-red-500"
+      color: "from-civic-darkBlue to-slate-700"
     },
     {
       icon: <Users className="w-8 h-8" />,
       title: "Community Engagement",
       description: "Upvoting, commenting, and collaborative problem-solving for better communities",
-      color: "from-pink-500 to-rose-500"
+      color: "from-civic-darkBlue to-slate-700"
     },
     {
       icon: <MessageSquare className="w-8 h-8" />,
       title: "AI Chat Assistant",
       description: "Upload images and ask questions - our AI helps you understand issues and solutions",
-      color: "from-cyan-500 to-blue-500"
+      color: "from-civic-darkBlue to-slate-700"
     }
   ];
 
@@ -68,12 +70,12 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 via-red-100 to-blue-50 relative overflow-hidden">
-      {/* Background gradient with Material UI theme */}
+    <div className="min-h-screen bg-gradient-to-br from-civic-lightBlue via-white to-civic-lightBlue relative overflow-hidden">
+      {/* Background gradient with new civic palette */}
       <div className="absolute inset-0 -z-30">
-        <div className="absolute inset-0 bg-gradient-to-br from-sky-50 via-blue-50 to-slate-100"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(14,165,233,0.15),transparent_50%)]"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,rgba(30,58,138,0.1),transparent_50%)]"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-civic-lightBlue via-white to-blue-50"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(0,145,185,0.15),transparent_50%)]"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,rgba(0,79,155,0.1),transparent_50%)]"></div>
       </div>
       
       {/* Particle background (uses dynamic import of ogl) */}
@@ -113,12 +115,8 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
-            className="flex items-center space-x-2"
           >
-            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-red-600 to-blue-900 flex items-center justify-center shadow-lg transition-all">
-              <span className="text-white font-bold text-lg">C</span>
-            </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-red-600 to-blue-900 bg-clip-text text-transparent">CivicLens</span>
+            <Logo size="md" showText={true} textColor="text-slate-900" />
           </motion.div>
 
           {/* Get started and Demo buttons on the right */}
@@ -130,7 +128,7 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
           >
             <motion.button
               onClick={onGetStarted}
-              className="px-6 py-2 bg-gradient-to-r from-sky-500 to-blue-600 text-white font-semibold rounded-lg text-sm shadow-lg hover:shadow-sky-400/50 transition-all"
+              className="px-6 py-2 bg-gradient-to-r from-civic-teal to-civic-darkBlue text-white font-semibold rounded-lg text-sm shadow-lg hover:shadow-civic-teal/50 transition-all"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -138,7 +136,7 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
             </motion.button>
 
             {isAuthenticated && (
-              <button className="px-6 py-2 border-2 border-blue-300 text-slate-900 rounded-lg bg-white/80 hover:bg-white backdrop-blur-md text-sm font-semibold transition-all shadow-sm">
+              <button className="px-6 py-2 border-2 border-civic-teal text-slate-900 rounded-lg bg-white/80 hover:bg-white backdrop-blur-md text-sm font-semibold transition-all shadow-sm">
                 Watch demo
               </button>
             )}
@@ -147,126 +145,209 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
       </nav>
 
       <div className="relative z-10 pt-24">
-        {/* Hero Section - Centered */}
-        <section className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center max-w-4xl mx-auto"
-          >
-            {/* Interactive Badge */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2 }}
-              whileHover={{ scale: 1.05 }}
-              className="inline-flex items-center space-x-2 bg-sky-200/40 backdrop-blur-xl border border-sky-300/60 rounded-full px-6 py-3 mb-8 cursor-pointer hover:bg-sky-200/60 transition-all shadow-lg"
-            >
-              <Sparkles className="w-4 h-4 text-sky-600" />
-              <span className="text-slate-900 font-medium">Revolutionizing Civic Engagement</span>
+        {/* Hero Section - Split Layout (Agency Style) */}
+        <section className="min-h-screen flex items-center px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto w-full">
+            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+              
+              {/* Left Side - Content */}
               <motion.div
-                animate={{ x: [0, 5, 0] }}
-                transition={{ duration: 2, repeat: Infinity }}
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8 }}
+                className="space-y-8"
               >
-                <ArrowRight className="w-4 h-4 text-sky-600" />
-              </motion.div>
-            </motion.div>
+                {/* Interactive Badge */}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.2 }}
+                  whileHover={{ scale: 1.05 }}
+                  className="inline-flex items-center space-x-2 bg-civic-lightBlue/60 backdrop-blur-xl border border-civic-teal/60 rounded-full px-5 py-2.5 cursor-pointer hover:bg-civic-lightBlue/80 transition-all shadow-lg"
+                >
+                  <Sparkles className="w-4 h-4 text-civic-teal" />
+                  <span className="text-slate-900 font-medium text-sm">AI-Powered Civic Platform</span>
+                  <motion.div
+                    animate={{ x: [0, 5, 0] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  >
+                    <ArrowRight className="w-4 h-4 text-civic-teal" />
+                  </motion.div>
+                </motion.div>
 
-            {/* Main Heading - Centered */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="mb-8"
-            >
-              <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black leading-tight mb-6">
-                <span className="bg-gradient-to-r from-red-600 via-blue-900 to-black bg-clip-text text-transparent">
-                  CivicLens
-                </span>
-              </h1>
-              <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-slate-900 leading-relaxed max-w-3xl mx-auto px-2">
-                Transform how your city reports and resolves civic issues. From image analysis to real-time maps—powered by AI.
-              </p>
-            </motion.div>
+                {/* Main Heading */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="space-y-4"
+                >
+                  <h1 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-black leading-[1.1] tracking-tight">
+                    <span className="bg-gradient-to-r from-civic-teal via-civic-darkBlue to-slate-900 bg-clip-text text-transparent">
+                      CivicLens
+                    </span>
+                  </h1>
+                  <p className="text-xl sm:text-2xl lg:text-3xl text-slate-700 font-semibold leading-relaxed">
+                    AI-Powered Civic Issue Reporting & Community Engagement
+                  </p>
+                  <p className="text-base sm:text-lg text-slate-600 leading-relaxed max-w-xl">
+                    Transform how your city reports and resolves civic issues. From intelligent image analysis to real-time location tracking and advanced analytics—all powered by cutting-edge AI.
+                  </p>
+                </motion.div>
 
-            {/* Interactive CTA Buttons */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4 mb-12 px-4 sm:px-0 w-full"
-            >
-                {!isAuthenticated ? (
-                  <>
+                {/* CTA Buttons */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4 }}
+                  className="flex flex-col sm:flex-row gap-4"
+                >
+                  {!isAuthenticated ? (
+                    <>
+                      <motion.button
+                        onClick={onGetStarted}
+                        className="px-8 py-4 bg-gradient-to-r from-civic-teal to-civic-darkBlue text-white font-bold rounded-xl text-lg shadow-xl hover:shadow-2xl hover:shadow-civic-teal/30 transition-all group"
+                        whileHover={{ scale: 1.05, y: -2 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <span className="flex items-center justify-center space-x-2">
+                          <span>Start Now</span>
+                          <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                        </span>
+                      </motion.button>
+
+                      <motion.button
+                        className="px-8 py-4 border-2 border-civic-teal text-civic-darkBlue font-bold rounded-xl text-lg bg-white hover:bg-civic-lightBlue/20 transition-all group shadow-lg"
+                        whileHover={{ scale: 1.05, y: -2 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <span className="flex items-center justify-center space-x-2">
+                          <span>Watch Demo</span>
+                          <motion.div
+                            animate={{ rotate: [0, 360] }}
+                            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                          >
+                            <Sparkles className="w-5 h-5" />
+                          </motion.div>
+                        </span>
+                      </motion.button>
+                    </>
+                  ) : (
                     <motion.button
                       onClick={onGetStarted}
-                      className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-red-600 to-blue-900 text-white font-bold rounded-lg sm:rounded-xl text-base sm:text-lg shadow-xl transition-all group"
-                      whileHover={{ scale: 1.05, y: -5 }}
-                      whileTap={{ scale: 0.95 }}
+                      className="px-8 py-4 bg-gradient-to-r from-civic-teal to-civic-darkBlue text-white font-bold rounded-xl text-lg shadow-xl transition-all"
+                      whileHover={{ scale: 1.05, y: -2 }}
+                      whileTap={{ scale: 0.98 }}
                     >
-                      <span className="flex items-center justify-center space-x-2">
-                        <span>Start Now</span>
-                        <ArrowRight className="w-4 sm:w-5 h-4 sm:h-5 group-hover:translate-x-1 transition-transform" />
-                      </span>
+                      Go to Dashboard
                     </motion.button>
-
-                    <motion.button
-                      className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 border-2 border-red-300 text-slate-900 font-bold rounded-lg sm:rounded-xl text-base sm:text-lg bg-white/70 hover:bg-white transition-all group backdrop-blur-md shadow-lg"
-                      whileHover={{ scale: 1.05, y: -5 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      <span className="flex items-center space-x-2">
-                        <span>Watch Demo</span>
-                        <motion.div
-                          animate={{ rotate: [0, 360] }}
-                          transition={{ duration: 3, repeat: Infinity }}
-                        >
-                          <Sparkles className="w-5 h-5" />
-                        </motion.div>
-                      </span>
-                    </motion.button>
-                  </>
-                ) : (
-                  <motion.button
-                    onClick={onGetStarted}
-                    className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-red-600 to-blue-900 text-white font-bold rounded-lg sm:rounded-xl text-base sm:text-lg shadow-xl transition-all"
-                    whileHover={{ scale: 1.03 }}
-                  >
-                    Go to Dashboard
-                  </motion.button>
-                )}
-            </motion.div>
-
-            {/* Video Section - Civic Sense */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              className="max-w-2xl mx-auto mt-12"
-            >
-              <motion.div
-                className="relative w-full rounded-2xl shadow-2xl border-2 border-sky-300/50 hover:border-sky-400/70 transition-all overflow-hidden bg-black"
-                whileHover={{ scale: 1.02, y: -5 }}
-                transition={{ type: "spring", stiffness: 300 }}
-                style={{ paddingBottom: "56.25%" }}
-              >
-                <iframe
-                  className="absolute top-0 left-0 w-full h-full"
-                  src="https://www.youtube.com/embed/zNR5ZB3ApdU"
-                  title="Why India Lacks Civic Sense"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                ></iframe>
+                  )}
+                </motion.div>
               </motion.div>
-              <p className="text-center text-slate-900 mt-4 text-sm">Understanding civic responsibility and how platforms like CivicLens drive change</p>
-            </motion.div>
-          </motion.div>
+
+              {/* Right Side - Hero Image with Person */}
+              <motion.div
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="relative hidden lg:block"
+              >
+                <div className="relative">
+                  {/* Animated background blobs */}
+                  <motion.div
+                    animate={{ 
+                      scale: [1, 1.2, 1],
+                      rotate: [0, 90, 0],
+                      opacity: [0.3, 0.5, 0.3]
+                    }}
+                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                    className="absolute top-20 right-0 w-96 h-96 bg-gradient-to-br from-civic-teal/30 to-civic-lightBlue/40 rounded-full blur-3xl"
+                  />
+                  <motion.div
+                    animate={{ 
+                      scale: [1, 1.3, 1],
+                      rotate: [0, -90, 0],
+                      opacity: [0.2, 0.4, 0.2]
+                    }}
+                    transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                    className="absolute -bottom-10 left-10 w-80 h-80 bg-gradient-to-br from-civic-darkBlue/20 to-civic-teal/30 rounded-full blur-3xl"
+                  />
+
+                  {/* Main content container with reflection */}
+                  <div className="relative">
+                    {/* Person image with civic tech elements */}
+                    <motion.div
+                      whileHover={{ scale: 1.02 }}
+                      transition={{ type: "spring", stiffness: 300 }}
+                      className="relative z-10"
+                    >
+                      {/* Main visual with person image */}
+                      <div className="relative rounded-3xl overflow-hidden shadow-2xl">
+                        <img 
+                          src={personImage} 
+                          alt="Person using CivicLens platform" 
+                          className="w-full h-auto object-cover rounded-3xl"
+                        />
+                        
+                        {/* Floating civic icons around the person */}
+                        <motion.div
+                          animate={{ y: [0, -15, 0] }}
+                          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                          className="absolute top-20 right-8 bg-white/90 backdrop-blur-sm border-2 border-civic-teal/40 rounded-2xl p-3 shadow-xl"
+                        >
+                          <MapPin className="w-8 h-8 text-civic-teal" />
+                        </motion.div>
+
+                        <motion.div
+                          animate={{ y: [0, 15, 0] }}
+                          transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+                          className="absolute top-40 left-8 bg-white/90 backdrop-blur-sm border-2 border-civic-darkBlue/40 rounded-2xl p-3 shadow-xl"
+                        >
+                          <Camera className="w-8 h-8 text-civic-darkBlue" />
+                        </motion.div>
+
+                        <motion.div
+                          animate={{ y: [0, -12, 0] }}
+                          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                          className="absolute bottom-32 right-12 bg-white/90 backdrop-blur-sm border-2 border-accent-orange/40 rounded-2xl p-3 shadow-xl"
+                        >
+                          <BarChart3 className="w-8 h-8 text-accent-orange" />
+                        </motion.div>
+
+                        <motion.div
+                          animate={{ 
+                            rotate: [0, 360],
+                          }}
+                          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                          className="absolute top-1/2 left-12 bg-white/90 backdrop-blur-sm border-2 border-purple-400/40 rounded-2xl p-3 shadow-xl"
+                        >
+                          <Brain className="w-8 h-8 text-purple-500" />
+                        </motion.div>
+                      </div>
+
+                      {/* Reflection effect */}
+                      <div className="relative mt-2 h-32 overflow-hidden">
+                        <div 
+                          className="absolute inset-0 bg-gradient-to-br from-civic-lightBlue/20 via-white/10 to-civic-teal/10 rounded-3xl"
+                          style={{
+                            transform: 'scaleY(-1)',
+                            maskImage: 'linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 80%)',
+                            WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 80%)'
+                          }}
+                        >
+                          <div className="h-full blur-sm opacity-40"></div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          </div>
         </section>
 
         {/* Features Section */}
-        <section className="py-24 px-4 sm:px-6 lg:px-8">
+        <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-white via-civic-lightBlue/20 to-white">
           <div className="max-w-7xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -275,11 +356,11 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
               viewport={{ once: true }}
               className="text-center mb-16"
             >
-              <h2 className="text-5xl font-bold bg-gradient-to-r from-red-600 to-blue-900 bg-clip-text text-transparent mb-6">
+              <h2 className="text-5xl font-bold text-slate-900 mb-6">
                 Powerful Features for
-                <span className="text-slate-800"> Modern Cities</span>
+                <span className="bg-gradient-to-r from-civic-teal to-purple-500 bg-clip-text text-transparent"> Modern Cities</span>
               </h2>
-              <p className="text-xl text-slate-900 max-w-3xl mx-auto">
+              <p className="text-xl text-slate-700 max-w-3xl mx-auto">
                 Discover how CivicLens revolutionizes civic engagement with cutting-edge AI and real-time analytics
               </p>
             </motion.div>
@@ -299,7 +380,7 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
                   }}
                   className="group relative"
                 >
-                  <div className="bg-white backdrop-blur-xl border-2 border-sky-200 p-4 sm:p-6 md:p-8 h-full rounded-2xl relative overflow-hidden shadow-lg hover:shadow-sky-300/50 transition-all duration-300">
+                  <div className="bg-white backdrop-blur-xl border-2 border-civic-teal/30 p-4 sm:p-6 md:p-8 h-full rounded-2xl relative overflow-hidden shadow-xl hover:shadow-2xl hover:border-civic-teal transition-all duration-300">
                     {/* Gradient Background */}
                     <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}></div>
                     
@@ -313,16 +394,16 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
                     </motion.div>
                     
                     {/* Content */}
-                    <h3 className="text-lg sm:text-xl md:text-2xl font-bold bg-gradient-to-r from-red-600 to-blue-900 bg-clip-text text-transparent mb-2 sm:mb-4 group-hover:opacity-80 transition-all duration-300">
+                    <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 mb-2 sm:mb-4 group-hover:text-civic-teal transition-all duration-300">
                       {feature.title}
                     </h3>
-                    <p className="text-sm sm:text-base text-slate-700 leading-relaxed group-hover:text-slate-900 transition-colors duration-300">
+                    <p className="text-sm sm:text-base text-slate-600 leading-relaxed group-hover:text-slate-800 transition-colors duration-300">
                       {feature.description}
                     </p>
                     
                     {/* Hover Effect */}
                     <motion.div
-                      className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-purple-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"
+                      className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-civic-teal to-purple-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"
                     ></motion.div>
                   </div>
                 </motion.div>
@@ -332,7 +413,7 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
         </section>
 
         {/* CTA Section */}
-        <section className="py-24 px-4 sm:px-6 lg:px-8">
+        <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-white to-civic-lightBlue/30">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -340,27 +421,27 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
             viewport={{ once: true }}
             className="max-w-4xl mx-auto text-center"
           >
-            <div className="bg-gradient-to-br from-red-50 to-blue-50 backdrop-blur-xl border-2 border-red-200 p-12 rounded-3xl relative overflow-hidden shadow-2xl">
+            <div className="bg-gradient-to-br from-white to-civic-lightBlue/50 backdrop-blur-xl border-2 border-civic-teal/40 p-12 rounded-3xl relative overflow-hidden shadow-2xl">
               {/* Background Animation */}
-              <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 to-blue-900/10"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-civic-teal/5 to-purple-500/5"></div>
               
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                className="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-r from-red-500/30 to-blue-900/30 rounded-full blur-xl"
+                className="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-r from-civic-teal/20 to-purple-500/20 rounded-full blur-xl"
               ></motion.div>
               
               <div className="relative z-10">
-                <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-red-600 to-blue-900 bg-clip-text text-transparent mb-6 sm:mb-8 px-4 sm:px-0">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 mb-6 sm:mb-8 px-4 sm:px-0">
                   Ready to Transform Your Community?
                 </h2>
                 
                 <motion.button
                   onClick={onGetStarted}
-                  className="group relative w-full sm:w-auto px-6 sm:px-10 py-3 sm:py-5 bg-gradient-to-r from-sky-500 to-blue-600 text-white font-bold rounded-2xl text-base sm:text-lg md:text-xl shadow-xl hover:shadow-sky-400/50"
+                  className="group relative w-full sm:w-auto px-6 sm:px-10 py-3 sm:py-5 bg-gradient-to-r from-civic-teal to-civic-darkBlue text-white font-bold rounded-2xl text-base sm:text-lg md:text-xl shadow-xl hover:shadow-civic-teal/50"
                   whileHover={{ 
                     scale: 1.05, 
-                    boxShadow: "0 25px 50px rgba(14, 165, 233, 0.3)",
+                    boxShadow: "0 25px 50px rgba(0, 145, 185, 0.3)",
                   }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -368,7 +449,7 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
                     <span>Start Your Journey</span>
                     <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
                   </span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-red-600 to-blue-900 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity -z-10"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-civic-teal/80 to-civic-darkBlue/80 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity -z-10"></div>
                 </motion.button>
               </div>
             </div>
@@ -376,7 +457,7 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
         </section>
 
         {/* Footer */}
-        <footer className="py-8 sm:py-12 px-4 sm:px-6 lg:px-8 border-t-2 border-sky-300 bg-white/50 backdrop-blur-sm">
+        <footer className="py-8 sm:py-12 px-4 sm:px-6 lg:px-8 border-t-2 border-civic-teal/30 bg-civic-lightBlue/20">
           <div className="max-w-7xl mx-auto">
             <motion.div
               initial={{ opacity: 0 }}
@@ -386,27 +467,19 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
               className="text-center"
             >
               <div className="flex items-center justify-center space-x-2 mb-4">
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                >
-                  <Sparkles className="w-5 sm:w-6 h-5 sm:h-6 text-sky-600" />
-                </motion.div>
-                <span className="text-xl sm:text-2xl md:text-3xl font-bold bg-gradient-to-r from-sky-600 to-blue-700 bg-clip-text text-transparent">
-                  CivicLens
-                </span>
+                <Logo size="md" showText={true} textColor="text-slate-900" />
               </div>
               
-              <p className="text-slate-900 text-sm sm:text-base mb-4">
+              <p className="text-slate-700 text-sm sm:text-base mb-4">
                 Empowering communities through intelligent civic engagement
               </p>
               
               <motion.p 
-                className="text-slate-900 text-xs sm:text-sm"
+                className="text-slate-600 text-xs sm:text-sm"
                 whileHover={{ scale: 1.05 }}
               >
                 Made by{" "}
-                <span className="bg-gradient-to-r from-sky-600 to-blue-700 bg-clip-text text-transparent font-semibold">
+                <span className="text-civic-teal font-semibold">
                   Naman Gaonkar
                 </span>
               </motion.p>
@@ -415,12 +488,12 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
         </footer>
       </div>
 
-        {/* Mobile-only sticky report CTA - helps users reach reporting flow on small screens */}
+        {/* Mobile-only sticky report CTA */}
         <div className="sm:hidden fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50">
           <button
             onClick={onGetStarted}
             aria-label="Report an issue"
-            className="w-[92%] mx-auto px-4 py-3 bg-gradient-to-r from-red-600 to-blue-900 text-white font-bold rounded-xl shadow-2xl flex items-center justify-center space-x-3"
+            className="w-[92%] mx-auto px-4 py-3 bg-civic-teal text-white font-bold rounded-xl shadow-2xl flex items-center justify-center space-x-3"
           >
             <MapPin className="w-5 h-5" />
             <span>Report an Issue</span>

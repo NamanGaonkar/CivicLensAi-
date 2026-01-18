@@ -1,24 +1,32 @@
 import { useState, useRef } from "react";
-import { useMutation } from "convex/react";
-import { api } from "../../convex/_generated/api";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
-import { Camera, MapPin, Tag, Upload } from "lucide-react";
-import { MapContainer, TileLayer, CircleMarker, useMapEvents } from 'react-leaflet';
+import { Camera, MapPin, Tag, Upload, Navigation } from "lucide-react";
+import { GoogleInteractiveMap } from "./GoogleInteractiveMap";
+import { supabase } from "../lib/supabase";
+import { useAuth } from "../hooks/useAuth";
 
 export function ReportForm({ onBack }: { onBack?: () => void }) {
+  const { user } = useAuth();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("Infrastructure");
-  const [location, setLocation] = useState({ lat: 40.7128, lng: -74.0060, address: "" });
+  const [location, setLocation] = useState({ 
+    lat: 15.4909, 
+    lng: 73.8278, 
+    address: "",
+    area: "",
+    city: "",
+    state: "",
+    pincode: ""
+  });
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const imageInputRef = useRef<HTMLInputElement>(null);
-  const createReport = useMutation(api.reports.createReport);
-  const generateUploadUrl = useMutation(api.reports.generateUploadUrl);
+
 
   const categories = [
     "Infrastructure",
@@ -52,15 +60,26 @@ export function ReportForm({ onBack }: { onBack?: () => void }) {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          setLocation({
+          const newLocation = {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
-            address: `${position.coords.latitude.toFixed(4)}, ${position.coords.longitude.toFixed(4)}`
-          });
+            address: `${position.coords.latitude.toFixed(6)}, ${position.coords.longitude.toFixed(6)}`,
+            area: "",
+            city: "",
+            state: "",
+            pincode: ""
+          };
+          setLocation(newLocation);
           toast.success("Location captured successfully!");
         },
         (error) => {
-          toast.error("Failed to get location. Please try again.");
+          toast.error("Failed to get location. Please enable location access.");
+          console.error("Geolocation error:", error);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+          maximumAge: 0,
         }
       );
     } else {
@@ -68,19 +87,14 @@ export function ReportForm({ onBack }: { onBack?: () => void }) {
     }
   };
 
-  function LocationPicker({} : { }) {
-    useMapEvents({
-      click(e) {
-        setLocation({
-          lat: e.latlng.lat,
-          lng: e.latlng.lng,
-          address: `${e.latlng.lat.toFixed(4)}, ${e.latlng.lng.toFixed(4)}`,
-        });
-        toast.success('Location selected on map');
-      }
+  const handleLocationSelect = (selectedLoc: { lat: number; lng: number }) => {
+    setLocation({
+      ...location,
+      lat: selectedLoc.lat,
+      lng: selectedLoc.lng,
     });
-    return null;
-  }
+    toast.success('Location selected on map');
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -89,51 +103,74 @@ export function ReportForm({ onBack }: { onBack?: () => void }) {
       return;
     }
 
+    if (!user) {
+      toast.error("You must be logged in to submit a report");
+      return;
+    }
+
     setIsSubmitting(true);
+    
     try {
-      let imageId = undefined;
+      let imageUrl = null;
 
       // Upload image if selected
       if (selectedImage) {
-        const uploadUrl = await generateUploadUrl();
-        const result = await fetch(uploadUrl, {
-          method: "POST",
-          headers: { "Content-Type": selectedImage.type },
-          body: selectedImage,
-        });
+        const fileExt = selectedImage.name.split('.').pop();
+        const fileName = `${user.id}/${Date.now()}.${fileExt}`;
         
-        if (!result.ok) {
-          throw new Error("Failed to upload image");
+        const { error: uploadError } = await supabase.storage
+          .from('report-images')
+          .upload(fileName, selectedImage);
+
+        if (uploadError) {
+          console.error('Image upload error:', uploadError);
+        } else {
+          const { data: { publicUrl } } = supabase.storage
+            .from('report-images')
+            .getPublicUrl(fileName);
+          imageUrl = publicUrl;
         }
-        
-        const { storageId } = await result.json();
-        imageId = storageId;
       }
 
-      // Create the report
-      await createReport({
-        title: title.trim(),
-        description: description.trim(),
-        category,
-        location,
-        imageId,
-        tags,
-      });
+      // Insert report
+      const { error } = await supabase
+        .from('reports')
+        .insert({
+          user_id: user.id,
+          title,
+          description,
+          category,
+          latitude: location.lat,
+          longitude: location.lng,
+          address: location.address,
+          area: location.area,
+          city: location.city,
+          state: location.state,
+          pincode: location.pincode,
+          tags,
+          image_url: imageUrl,
+          status: 'open',
+          priority: 'medium'
+        });
 
+      if (error) throw error;
+
+      toast.success("Report submitted successfully!");
+      
       // Reset form
       setTitle("");
       setDescription("");
       setCategory("Infrastructure");
-      setLocation({ lat: 40.7128, lng: -74.0060, address: "" });
+      setLocation({ lat: 15.4909, lng: 73.8278, address: "", area: "", city: "", state: "", pincode: "" });
       setTags([]);
       setSelectedImage(null);
       if (imageInputRef.current) {
         imageInputRef.current.value = "";
       }
-
-      toast.success("Report submitted successfully! AI analysis will be performed if an image was uploaded.");
-    } catch (error) {
-      console.error("Error submitting report:", error);
+      
+      if (onBack) onBack();
+    } catch (error: any) {
+      console.error('Error submitting report:', error);
       toast.error("Failed to submit report. Please try again.");
     } finally {
       setIsSubmitting(false);
@@ -149,7 +186,7 @@ export function ReportForm({ onBack }: { onBack?: () => void }) {
     >
       <div className="glass-card p-8 relative overflow-hidden">
         {/* Background Animation */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-civic-teal/5 to-civic-darkBlue/5"></div>
         
         <motion.div
           initial={{ y: -10, opacity: 0 }}
@@ -171,8 +208,8 @@ export function ReportForm({ onBack }: { onBack?: () => void }) {
               </button>
             </div>
           )}
-          <h2 className="text-3xl font-bold text-white mb-2">Report an Issue</h2>
-          <p className="text-white/70">Help improve your community by reporting civic issues</p>
+          <h2 className="text-3xl font-bold text-slate-900 mb-2">Report an Issue</h2>
+          <p className="text-slate-600">Help improve your community by reporting civic issues</p>
         </motion.div>
 
         <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
@@ -182,15 +219,15 @@ export function ReportForm({ onBack }: { onBack?: () => void }) {
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: 0.3 }}
           >
-            <label className="block text-white font-medium mb-2">
-              Title <span className="text-red-400">*</span>
+            <label className="block text-slate-900 font-medium mb-2">
+              Title <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Brief description of the issue"
-              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              className="w-full px-4 py-3 bg-white/80 border border-civic-teal/30 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-civic-teal focus:border-transparent transition-all"
               required
             />
           </motion.div>
@@ -201,15 +238,15 @@ export function ReportForm({ onBack }: { onBack?: () => void }) {
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: 0.4 }}
           >
-            <label className="block text-white font-medium mb-2">
-              Description <span className="text-red-400">*</span>
+            <label className="block text-slate-900 font-medium mb-2">
+              Description <span className="text-red-500">*</span>
             </label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Detailed description of the issue..."
               rows={4}
-              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none transition-all"
+              className="w-full px-4 py-3 bg-white/80 border border-civic-teal/30 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-civic-teal focus:border-transparent resize-none transition-all"
               required
             />
           </motion.div>
@@ -220,14 +257,14 @@ export function ReportForm({ onBack }: { onBack?: () => void }) {
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: 0.5 }}
           >
-            <label className="block text-white font-medium mb-2">Category</label>
+            <label className="block text-slate-900 font-medium mb-2">Category</label>
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              className="w-full px-4 py-3 bg-white/80 border border-civic-teal/30 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-civic-teal focus:border-transparent transition-all"
             >
               {categories.map((cat) => (
-                <option key={cat} value={cat} className="bg-slate-800 text-white">
+                <option key={cat} value={cat} className="bg-white text-slate-900">
                   {cat}
                 </option>
               ))}
@@ -240,44 +277,87 @@ export function ReportForm({ onBack }: { onBack?: () => void }) {
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: 0.6 }}
           >
-            <label className="block text-white font-medium mb-2 flex items-center space-x-2">
+            <label className="block text-slate-900 font-medium mb-2 flex items-center space-x-2">
               <MapPin className="w-4 h-4" />
               <span>Location</span>
             </label>
-            <div className="flex space-x-2">
+            
+            {/* Manual Address Input */}
+            <div className="mb-4 space-y-3">
               <input
                 type="text"
                 value={location.address}
                 onChange={(e) => setLocation({ ...location, address: e.target.value })}
-                placeholder="Street address or landmark"
-                className="flex-1 px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                placeholder="Street Address / Landmark"
+                className="w-full px-4 py-3 bg-white/80 border border-civic-teal/30 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-civic-teal focus:border-transparent transition-all"
               />
+              
+              <div className="grid grid-cols-2 gap-3">
+                <input
+                  type="text"
+                  value={location.area}
+                  onChange={(e) => setLocation({ ...location, area: e.target.value })}
+                  placeholder="Area / Locality"
+                  className="w-full px-4 py-3 bg-white/80 border border-civic-teal/30 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-civic-teal focus:border-transparent transition-all"
+                />
+                <input
+                  type="text"
+                  value={location.city}
+                  onChange={(e) => setLocation({ ...location, city: e.target.value })}
+                  placeholder="City"
+                  className="w-full px-4 py-3 bg-white/80 border border-civic-teal/30 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-civic-teal focus:border-transparent transition-all"
+                />
+              </div>
+              
+              <div className="grid grid-cols-2 gap-3">
+                <input
+                  type="text"
+                  value={location.state}
+                  onChange={(e) => setLocation({ ...location, state: e.target.value })}
+                  placeholder="State"
+                  className="w-full px-4 py-3 bg-white/80 border border-civic-teal/30 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-civic-teal focus:border-transparent transition-all"
+                />
+                <input
+                  type="text"
+                  value={location.pincode}
+                  onChange={(e) => setLocation({ ...location, pincode: e.target.value })}
+                  placeholder="Pincode"
+                  maxLength={6}
+                  className="w-full px-4 py-3 bg-white/80 border border-civic-teal/30 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-civic-teal focus:border-transparent transition-all"
+                />
+              </div>
+              
+              <p className="text-slate-500 text-xs mt-1.5">
+                You can type an address manually or use the map below for precise GPS location
+              </p>
+            </div>
+
+            {/* Get My Location Button */}
+            <div className="mb-4">
               <motion.button
                 type="button"
                 onClick={handleGetLocation}
-                className="px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors whitespace-nowrap flex items-center space-x-2"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                className="w-full px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center space-x-2"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
               >
-                <MapPin className="w-4 h-4" />
-                <span>Get Location</span>
+                <Navigation className="w-4 h-4" />
+                <span>Use My Current Location</span>
               </motion.button>
             </div>
-            <p className="text-white/50 text-sm mt-1">
-              Current coordinates: {location.lat.toFixed(4)}, {location.lng.toFixed(4)}
+
+            <p className="text-slate-500 text-sm mb-3 flex items-center space-x-2">
+              <MapPin className="w-3 h-3" />
+              <span>Coordinates: {location.lat.toFixed(6)}, {location.lng.toFixed(6)}</span>
             </p>
 
-            {/* Map selector - click to choose a location */}
-            <div className="mt-4 rounded-lg overflow-hidden border-2 border-white/10">
-              <MapContainer center={[location.lat, location.lng]} zoom={13} scrollWheelZoom={false} style={{ height: 260, width: '100%' }}>
-                <TileLayer
-                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-                <CircleMarker center={[location.lat, location.lng]} radius={8} pathOptions={{ color: '#e11d24', fillColor: '#e11d24' }} />
-                <LocationPicker />
-              </MapContainer>
-              <p className="text-white/60 text-sm p-2">Click on the map to set the report location manually.</p>
+            {/* Google Map selector - click to choose a location */}
+            <div className="rounded-xl overflow-hidden border-2 border-accent-orange/30 shadow-lg">
+              <GoogleInteractiveMap
+                selectedLocation={location}
+                onLocationSelect={handleLocationSelect}
+                showLocationPicker={true}
+              />
             </div>
           </motion.div>
 
@@ -287,7 +367,7 @@ export function ReportForm({ onBack }: { onBack?: () => void }) {
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: 0.7 }}
           >
-            <label className="block text-white font-medium mb-2 flex items-center space-x-2">
+            <label className="block text-slate-900 font-medium mb-2 flex items-center space-x-2">
               <Tag className="w-4 h-4" />
               <span>Tags</span>
             </label>
@@ -298,12 +378,12 @@ export function ReportForm({ onBack }: { onBack?: () => void }) {
                 onChange={(e) => setTagInput(e.target.value)}
                 onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), handleAddTag())}
                 placeholder="Add a tag..."
-                className="flex-1 px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                className="flex-1 px-4 py-2 bg-white/80 border border-civic-teal/30 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-civic-teal focus:border-transparent transition-all"
               />
               <motion.button
                 type="button"
                 onClick={handleAddTag}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                className="px-4 py-2 bg-civic-teal text-white rounded-lg hover:bg-civic-teal/90 transition-colors"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -316,13 +396,13 @@ export function ReportForm({ onBack }: { onBack?: () => void }) {
                   key={tag}
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  className="px-3 py-1 bg-purple-600/30 text-purple-300 rounded-full text-sm flex items-center space-x-1"
+                  className="px-3 py-1 bg-civic-teal/20 text-civic-darkBlue rounded-full text-sm flex items-center space-x-1"
                 >
                   <span>{tag}</span>
                   <button
                     type="button"
                     onClick={() => handleRemoveTag(tag)}
-                    className="text-purple-300 hover:text-white transition-colors"
+                    className="text-civic-darkBlue hover:text-slate-900 transition-colors"
                   >
                     ×
                   </button>
@@ -337,11 +417,11 @@ export function ReportForm({ onBack }: { onBack?: () => void }) {
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: 0.8 }}
           >
-            <label className="block text-white font-medium mb-2 flex items-center space-x-2">
+            <label className="block text-slate-900 font-medium mb-2 flex items-center space-x-2">
               <Camera className="w-4 h-4" />
               <span>Photo Evidence</span>
             </label>
-            <div className="border-2 border-dashed border-white/20 rounded-lg p-6 text-center hover:border-white/40 transition-colors">
+            <div className="border-2 border-dashed border-civic-teal/30 rounded-lg p-6 text-center hover:border-civic-teal/50 transition-colors">
               <input
                 ref={imageInputRef}
                 type="file"
@@ -355,36 +435,36 @@ export function ReportForm({ onBack }: { onBack?: () => void }) {
                   animate={{ scale: 1 }}
                   className="space-y-2"
                 >
-                  <div className="text-green-400 flex items-center justify-center space-x-2">
+                  <div className="text-civic-teal flex items-center justify-center space-x-2">
                     <Upload className="w-5 h-5" />
                     <span>Image selected: {selectedImage.name}</span>
                   </div>
-                  <p className="text-white/60 text-sm">AI will analyze this image for automatic categorization</p>
+                  <p className="text-slate-600 text-sm">AI will analyze this image for automatic categorization</p>
                   <button
                     type="button"
                     onClick={() => {
                       setSelectedImage(null);
                       if (imageInputRef.current) imageInputRef.current.value = "";
                     }}
-                    className="text-red-400 hover:text-red-300 transition-colors"
+                    className="text-accent-orange hover:text-red-600 transition-colors"
                   >
                     Remove
                   </button>
                 </motion.div>
               ) : (
                 <div className="space-y-2">
-                  <Camera className="w-12 h-12 text-white/40 mx-auto" />
-                  <div className="text-white/70">
+                  <Camera className="w-12 h-12 text-slate-400 mx-auto" />
+                  <div className="text-slate-700">
                     <button
                       type="button"
                       onClick={() => imageInputRef.current?.click()}
-                      className="text-blue-400 hover:text-blue-300 underline transition-colors"
+                      className="text-civic-teal hover:text-civic-darkBlue underline transition-colors"
                     >
                       Click to upload
                     </button>{" "}
                     or drag and drop
                   </div>
-                  <div className="text-white/50 text-sm">PNG, JPG up to 10MB • AI analysis included</div>
+                  <div className="text-slate-500 text-sm">PNG, JPG up to 10MB • AI analysis included</div>
                 </div>
               )}
             </div>
@@ -394,7 +474,7 @@ export function ReportForm({ onBack }: { onBack?: () => void }) {
           <motion.button
             type="submit"
             disabled={isSubmitting}
-            className="w-full py-4 bg-gradient-to-r from-red-600 to-blue-900 text-white font-semibold rounded-lg hover:from-red-700 hover:to-blue-900 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-4 bg-gradient-to-r from-civic-teal to-civic-darkBlue text-white font-semibold rounded-lg hover:from-civic-teal/90 hover:to-civic-darkBlue/90 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
             whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
             initial={{ y: 20, opacity: 0 }}

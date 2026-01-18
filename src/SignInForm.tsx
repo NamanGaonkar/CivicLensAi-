@@ -1,14 +1,13 @@
 "use client";
-import { useAuthActions } from "@convex-dev/auth/react";
 import { useState } from "react";
-import { useMutation } from "convex/react";
-import { api } from "../convex/_generated/api";
 import { toast } from "sonner";
+import { supabase } from "./lib/supabase";
 
 export function SignInForm() {
-  const { signIn } = useAuthActions();
   const [flow, setFlow] = useState<"signIn" | "signUp">("signIn");
   const [submitting, setSubmitting] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   // additional profile fields for sign up
   const [fullName, setFullName] = useState("");
   const [displayName, setDisplayName] = useState("");
@@ -17,10 +16,6 @@ export function SignInForm() {
   const [organization, setOrganization] = useState("");
   const [bio, setBio] = useState("");
 
-  // NOTE: server mutation to persist profiles is not yet implemented in the generated API.
-  // We keep a placeholder here for when a createProfile mutation is added server-side.
-  // const createProfile = useMutation(api.accounts.createProfile);
-
   return (
     <div className="w-full">
       <form
@@ -28,31 +23,50 @@ export function SignInForm() {
         onSubmit={async (e) => {
           e.preventDefault();
           setSubmitting(true);
-          const form = e.target as HTMLFormElement;
-          const formData = new FormData(form);
-          formData.set("flow", flow);
-
+          
           try {
-            await signIn("password", formData);
-
-            // If this was a sign up, we collected additional profile fields above.
-            // Server-side persistence (createProfile) should be implemented separately
-            // and invoked here (e.g. createProfile({ fullName, displayName, phone, city, organization, bio })).
-
             if (flow === "signUp") {
-              toast.success("Signed up successfully. You can complete your profile in settings.");
+              // Sign up new user
+              const { data, error } = await supabase.auth.signUp({
+                email,
+                password,
+              });
+              
+              if (error) throw error;
+              
+              // Create profile
+              if (data.user) {
+                const { error: profileError } = await supabase
+                  .from('profiles')
+                  .insert({
+                    id: data.user.id,
+                    email,
+                    full_name: fullName,
+                    display_name: displayName,
+                    phone,
+                    city,
+                    organization,
+                    bio,
+                  });
+                
+                if (profileError) console.error('Profile creation error:', profileError);
+              }
+              
+              toast.success("Account created! Please check your email to verify.");
+            } else {
+              // Sign in existing user
+              const { error } = await supabase.auth.signInWithPassword({
+                email,
+                password,
+              });
+              
+              if (error) throw error;
+              toast.success("Signed in successfully!");
             }
           } catch (error: any) {
-            let toastTitle = "";
-            if (error?.message?.includes("Invalid password")) {
-              toastTitle = "Invalid password. Please try again.";
-            } else {
-              toastTitle =
-                flow === "signIn"
-                  ? "Could not sign in, did you mean to sign up?"
-                  : "Could not sign up, did you mean to sign in?";
-            }
-            toast.error(toastTitle);
+            console.error('Auth error:', error);
+            toast.error(error.message || "Authentication failed. Please try again.");
+          } finally {
             setSubmitting(false);
           }
         }}
@@ -61,6 +75,8 @@ export function SignInForm() {
           className="auth-input-field"
           type="email"
           name="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           placeholder="Email"
           required
         />
@@ -68,6 +84,8 @@ export function SignInForm() {
           className="auth-input-field"
           type="password"
           name="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
           required
         />
@@ -134,21 +152,13 @@ export function SignInForm() {
           </span>
           <button
             type="button"
-            className="text-primary hover:text-primary-hover hover:underline font-medium cursor-pointer"
+            className="text-civic-teal hover:text-civic-darkBlue hover:underline font-medium cursor-pointer"
             onClick={() => setFlow(flow === "signIn" ? "signUp" : "signIn")}
           >
             {flow === "signIn" ? "Sign up instead" : "Sign in instead"}
           </button>
         </div>
       </form>
-      <div className="flex items-center justify-center my-3">
-        <hr className="my-4 grow border-gray-200" />
-        <span className="mx-4 text-secondary">or</span>
-        <hr className="my-4 grow border-gray-200" />
-      </div>
-      <button className="auth-button" onClick={() => void signIn("anonymous")}>
-        Sign in anonymously
-      </button>
     </div>
   );
 }

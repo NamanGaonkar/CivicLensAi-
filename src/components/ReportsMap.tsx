@@ -1,9 +1,8 @@
-import { useQuery } from "convex/react";
-import { api } from "../../convex/_generated/api";
+
 import { MapContainer, TileLayer, CircleMarker, Popup } from "react-leaflet";
 
 export function ReportsMap() {
-  const reports = useQuery(api.analytics.getReportsByLocation) || [];
+  const reports: any[] = [];
 
   const defaultCenter: [number, number] = reports.length > 0 && reports[0].location
     ? [reports[0].location.lat, reports[0].location.lng]
@@ -12,19 +11,19 @@ export function ReportsMap() {
   return (
     <div className="glass-card p-6">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-xl font-semibold text-white">Reports Map</h3>
+        <h3 className="text-xl font-semibold text-slate-900">Reports Map</h3>
         <div className="flex space-x-4 text-sm">
           <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-            <span className="text-white/70">Critical</span>
+            <div className="w-3 h-3 bg-accent-orange rounded-full"></div>
+            <span className="text-slate-700">Critical</span>
           </div>
           <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-            <span className="text-white/70">Medium</span>
+            <div className="w-3 h-3 bg-accent-yellow rounded-full"></div>
+            <span className="text-slate-700">Medium</span>
           </div>
           <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-            <span className="text-white/70">Low</span>
+            <div className="w-3 h-3 bg-civic-teal rounded-full"></div>
+            <span className="text-slate-700">Low</span>
           </div>
         </div>
       </div>
@@ -39,7 +38,7 @@ export function ReportsMap() {
           {reports.map((report: any) => {
             const lat = report.location?.lat ?? defaultCenter[0];
             const lng = report.location?.lng ?? defaultCenter[1];
-            const color = report.priority === 'critical' ? '#ef4444' : report.priority === 'medium' ? '#f59e0b' : report.priority === 'green' ? '#10b981' : '#f97316';
+            const color = report.priority === 'critical' ? '#FF6500' : report.priority === 'medium' ? '#FFD500' : report.priority === 'low' ? '#0091B9' : '#FF6500';
             return (
               <CircleMarker
                 key={report.id}

@@ -1,20 +1,21 @@
 import { motion } from "framer-motion";
+import { ReactElement } from "react";
 
 interface StatsCardProps {
   title: string;
   value: string | number;
   change: string;
-  icon: string;
+  icon: ReactElement;
   color: "blue" | "green" | "yellow" | "purple" | "red";
 }
 
 export function StatsCard({ title, value, change, icon, color }: StatsCardProps) {
   const colorClasses = {
-    blue: "from-blue-500/20 to-blue-600/20 border-blue-500/30",
-    green: "from-green-500/20 to-green-600/20 border-green-500/30",
-    yellow: "from-yellow-500/20 to-yellow-600/20 border-yellow-500/30",
-    purple: "from-purple-500/20 to-purple-600/20 border-purple-500/30",
-    red: "from-red-500/20 to-red-600/20 border-red-500/30",
+    blue: "from-civic-teal/20 to-civic-darkBlue/20 border-civic-teal/30 text-civic-teal",
+    green: "from-green-500/20 to-green-600/20 border-green-500/30 text-green-600",
+    yellow: "from-accent-yellow/20 to-accent-orange/20 border-accent-yellow/30 text-accent-orange",
+    purple: "from-purple-500/20 to-purple-600/20 border-purple-500/30 text-purple-600",
+    red: "from-accent-orange/20 to-red-600/20 border-accent-orange/30 text-red-600",
   };
 
   const isPositive = change.startsWith("+");
@@ -39,15 +40,17 @@ export function StatsCard({ title, value, change, icon, color }: StatsCardProps)
       <div className="relative z-10">
         <div className="flex items-center justify-between mb-4">
           <motion.div
-            className="text-3xl"
+            className={colorClasses[color].split(' ').find(c => c.startsWith('text-')) || 'text-civic-teal'}
             whileHover={{ rotate: 360, scale: 1.2 }}
             transition={{ duration: 0.5 }}
           >
-            {icon}
+            <div className="w-10 h-10 flex items-center justify-center">
+              {icon}
+            </div>
           </motion.div>
           <motion.div
             className={`text-sm font-medium px-2 py-1 rounded-full ${
-              isPositive ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"
+              isPositive ? "bg-green-500/20 text-green-600" : "bg-red-500/20 text-red-600"
             }`}
             whileHover={{ scale: 1.1 }}
           >
@@ -55,11 +58,11 @@ export function StatsCard({ title, value, change, icon, color }: StatsCardProps)
           </motion.div>
         </div>
         <div className="space-y-1">
-          <p className="text-white/70 text-sm font-medium group-hover:text-white/90 transition-colors">
+          <p className="text-slate-600 text-sm font-medium group-hover:text-slate-900 transition-colors">
             {title}
           </p>
           <motion.p
-            className="text-3xl font-bold text-white"
+            className="text-3xl font-bold text-slate-900"
             whileHover={{ scale: 1.1 }}
             transition={{ type: "spring", stiffness: 400, damping: 10 }}
           >
@@ -70,7 +73,7 @@ export function StatsCard({ title, value, change, icon, color }: StatsCardProps)
       
       {/* Hover Effect Line */}
       <motion.div
-        className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-purple-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"
+        className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-civic-teal to-civic-darkBlue transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"
       />
     </motion.div>
   );

@@ -1,19 +1,28 @@
 "use client";
-import { useAuthActions } from "@convex-dev/auth/react";
-import { useConvexAuth } from "convex/react";
+import { toast } from "sonner";
+import { supabase } from "./lib/supabase";
+import { useAuth } from "./hooks/useAuth";
 
 export function SignOutButton() {
-  const { isAuthenticated } = useConvexAuth();
-  const { signOut } = useAuthActions();
+  const { user } = useAuth();
 
-  if (!isAuthenticated) {
+  if (!user) {
     return null;
   }
 
+  const handleSignOut = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      toast.error("Sign out failed");
+    } else {
+      toast.success("Signed out successfully!");
+    }
+  };
+
   return (
     <button
-      className="px-4 py-2 rounded bg-white text-secondary border border-gray-200 font-semibold hover:bg-gray-50 hover:text-secondary-hover transition-colors shadow-sm hover:shadow"
-      onClick={() => void signOut()}
+      className="px-4 py-2 rounded bg-white text-slate-900 border-2 border-civic-teal font-semibold hover:bg-civic-lightBlue/20 transition-colors shadow-sm hover:shadow"
+      onClick={handleSignOut}
     >
       Sign out
     </button>

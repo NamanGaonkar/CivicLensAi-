@@ -5,8 +5,21 @@ export default {
     extend: {
       colors: {
         primary: {
-          DEFAULT: "#3b82f6",
-          hover: "#2563eb",
+          DEFAULT: "#0091B9",
+          hover: "#007A9A",
+          light: "#BAE4F0",
+          dark: "#004F9B",
+        },
+        accent: {
+          orange: "#FF6500",
+          yellow: "#FFD500",
+        },
+        civic: {
+          teal: "#0091B9",
+          lightBlue: "#BAE4F0",
+          darkBlue: "#004F9B",
+          orange: "#FF6500",
+          yellow: "#FFD500",
         },
       },
       borderRadius: {
