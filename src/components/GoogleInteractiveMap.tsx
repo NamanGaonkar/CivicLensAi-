@@ -30,28 +30,80 @@ function MapControls({ mapType, onMyLocationClick }: { mapType: string; onMyLoca
   useEffect(() => {
     if (!map) return;
     
-    // Enable all controls with proper positioning and POI labels
+    // Enable proper map interaction
     map.setOptions({
-      zoomControl: true,
-      zoomControlOptions: {
-        position: google.maps.ControlPosition.RIGHT_CENTER,
-      },
-      fullscreenControl: true,
-      fullscreenControlOptions: {
-        position: google.maps.ControlPosition.RIGHT_TOP,
-      },
-      streetViewControl: false,
-      mapTypeControl: false,
       gestureHandling: 'greedy',
-      clickableIcons: true,
+      clickableIcons: false,
+      disableDoubleClickZoom: false,
+      scrollwheel: true,
       // Enable all POI (Points of Interest) and place labels
       styles: [], // Clear any styles to show all default labels
     });
 
-    // Add custom "My Location" button
+    // Create control container
+    const controlDiv = document.createElement("div");
+    controlDiv.style.cssText = `
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin: 10px;
+    `;
+
+    // Zoom In Button
+    const zoomInButton = document.createElement("button");
+    zoomInButton.textContent = "+";
+    zoomInButton.style.cssText = `
+      background-color: #fff;
+      border: 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      color: rgb(25,25,25);
+      cursor: pointer;
+      font-family: Roboto,Arial,sans-serif;
+      font-size: 24px;
+      font-weight: bold;
+      line-height: 38px;
+      padding: 0;
+      text-align: center;
+      height: 40px;
+      width: 40px;
+    `;
+    zoomInButton.title = "Zoom in";
+    zoomInButton.type = "button";
+    zoomInButton.addEventListener("click", () => {
+      const currentZoom = map.getZoom() || 13;
+      map.setZoom(currentZoom + 1);
+    });
+
+    // Zoom Out Button
+    const zoomOutButton = document.createElement("button");
+    zoomOutButton.textContent = "−";
+    zoomOutButton.style.cssText = `
+      background-color: #fff;
+      border: 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      color: rgb(25,25,25);
+      cursor: pointer;
+      font-family: Roboto,Arial,sans-serif;
+      font-size: 24px;
+      font-weight: bold;
+      line-height: 38px;
+      padding: 0;
+      text-align: center;
+      height: 40px;
+      width: 40px;
+    `;
+    zoomOutButton.title = "Zoom out";
+    zoomOutButton.type = "button";
+    zoomOutButton.addEventListener("click", () => {
+      const currentZoom = map.getZoom() || 13;
+      map.setZoom(currentZoom - 1);
+    });
+
+    // My Location Button
     const locationButton = document.createElement("button");
     locationButton.textContent = "📍";
-    locationButton.classList.add("custom-map-control-button");
     locationButton.style.cssText = `
       background-color: #fff;
       border: 0;
@@ -62,21 +114,25 @@ function MapControls({ mapType, onMyLocationClick }: { mapType: string; onMyLoca
       font-family: Roboto,Arial,sans-serif;
       font-size: 20px;
       line-height: 38px;
-      margin: 8px 0 22px;
-      padding: 0 8px;
+      padding: 0;
       text-align: center;
       height: 40px;
       width: 40px;
     `;
     locationButton.title = "Go to my location";
     locationButton.type = "button";
-    
     locationButton.addEventListener("click", onMyLocationClick);
     
-    map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(locationButton);
+    // Add buttons to container
+    controlDiv.appendChild(zoomInButton);
+    controlDiv.appendChild(zoomOutButton);
+    controlDiv.appendChild(locationButton);
+    
+    // Add to map
+    map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(controlDiv);
     
     return () => {
-      const index = map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].getArray().indexOf(locationButton);
+      const index = map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].getArray().indexOf(controlDiv);
       if (index > -1) {
         map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].removeAt(index);
       }
@@ -97,7 +153,18 @@ export function GoogleInteractiveMap({
   const [mapType, setMapType] = useState<'roadmap' | 'satellite'>('roadmap');
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [isLoadingLocation, setIsLoadingLocation] = useState(false);
-  const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number }>({ lat: 40.7128, lng: -74.0060 });
+  const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number }>(
+    selectedLocation || { lat: 15.4909, lng: 73.8278 } // Default to Goa
+  );
+  const map = useMap();
+
+  // Update map center when selectedLocation changes (for location picker mode)
+  useEffect(() => {
+    if (showLocationPicker && selectedLocation && map) {
+      map.panTo(selectedLocation);
+      setMapCenter(selectedLocation);
+    }
+  }, [selectedLocation, showLocationPicker, map]);
 
   // Get user's current location on mount
   useEffect(() => {
@@ -147,13 +214,31 @@ export function GoogleInteractiveMap({
   };
 
   const handleMapClick = (e: any) => {
-    if (showLocationPicker && e.latLng && onLocationSelect) {
-      const location = {
-        lat: e.latLng.lat(),
-        lng: e.latLng.lng(),
-      };
-      onLocationSelect(location);
-      console.log('Location selected:', location);
+    console.log('Map clicked:', e);
+    if (showLocationPicker && onLocationSelect) {
+      // Try multiple ways to access lat/lng from the click event
+      let location;
+      
+      if (e.detail && e.detail.latLng) {
+        // vis.gl/react-google-maps event structure
+        location = {
+          lat: e.detail.latLng.lat,
+          lng: e.detail.latLng.lng,
+        };
+      } else if (e.latLng) {
+        // Traditional Google Maps event structure
+        location = {
+          lat: typeof e.latLng.lat === 'function' ? e.latLng.lat() : e.latLng.lat,
+          lng: typeof e.latLng.lng === 'function' ? e.latLng.lng() : e.latLng.lng,
+        };
+      }
+      
+      if (location) {
+        onLocationSelect(location);
+        console.log('Location selected:', location);
+      } else {
+        console.error('Could not extract location from click event');
+      }
     }
   };
 
@@ -186,14 +271,22 @@ export function GoogleInteractiveMap({
 
   return (
     <div className="relative h-[600px] w-full rounded-xl overflow-hidden shadow-xl">
-      {/* Map Type Toggle - Positioned to avoid overlap with fullscreen */}
-      <div className="absolute top-4 left-4 z-10 flex flex-col gap-2">
+      {/* Pin Placement Mode Indicator - Top center */}
+      {showLocationPicker && (
+        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10 px-4 py-2 bg-accent-orange text-white rounded-lg shadow-lg font-semibold text-sm flex items-center space-x-2">
+          <MapPinned className="w-4 h-4" />
+          <span>Click map to place pin</span>
+        </div>
+      )}
+
+      {/* Map Type Toggle - Bottom left */}
+      <div className="absolute bottom-6 left-4 z-10">
         <div className="flex gap-2">
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setMapType('roadmap')}
-            className={`px-3 py-2 rounded-lg backdrop-blur-xl shadow-lg font-semibold flex items-center space-x-1.5 text-sm ${
+            className={`px-4 py-2.5 rounded-lg backdrop-blur-xl shadow-lg font-semibold flex items-center space-x-2 text-sm ${
               mapType === 'roadmap'
                 ? 'bg-civic-teal text-white'
                 : 'bg-white/95 text-slate-700 hover:bg-white'
@@ -206,7 +299,7 @@ export function GoogleInteractiveMap({
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setMapType('satellite')}
-            className={`px-3 py-2 rounded-lg backdrop-blur-xl shadow-lg font-semibold flex items-center space-x-1.5 text-sm ${
+            className={`px-4 py-2.5 rounded-lg backdrop-blur-xl shadow-lg font-semibold flex items-center space-x-2 text-sm ${
               mapType === 'satellite'
                 ? 'bg-civic-teal text-white'
                 : 'bg-white/95 text-slate-700 hover:bg-white'
@@ -218,9 +311,9 @@ export function GoogleInteractiveMap({
         </div>
       </div>
 
-      {/* Location Indicator */}
+      {/* Location Loading Indicator - Top left */}
       {isLoadingLocation && (
-        <div className="absolute top-20 left-4 z-10 px-4 py-2 bg-white/95 backdrop-blur-xl rounded-lg shadow-lg border-2 border-civic-teal">
+        <div className="absolute top-4 left-4 z-10 px-4 py-2 bg-white/95 backdrop-blur-xl rounded-lg shadow-lg border-2 border-civic-teal">
           <div className="flex items-center space-x-2 text-sm text-slate-700">
             <div className="w-4 h-4 border-2 border-civic-teal border-t-transparent rounded-full animate-spin" />
             <span>Getting location...</span>
@@ -232,15 +325,12 @@ export function GoogleInteractiveMap({
         defaultCenter={mapCenter}
         defaultZoom={13}
         mapTypeId={mapType}
-        disableDefaultUI={false}
+        disableDefaultUI={true}
         gestureHandling="greedy"
-        clickableIcons={true}
+        clickableIcons={false}
         onClick={handleMapClick}
         style={{ width: '100%', height: '100%', cursor: showLocationPicker ? 'crosshair' : 'default' }}
         reuseMaps={true}
-        controlSize={28}
-        zoomControl={true}
-        fullscreenControl={true}
       >
         <MapControls mapType={mapType} onMyLocationClick={handleMyLocationClick} />
         {/* User Location Marker */}

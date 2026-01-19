@@ -12,16 +12,39 @@ import { UserProfile } from "./components/UserProfile";
 import { OfficialDashboard } from "./components/OfficialDashboard";
 import { StatusTracker } from "./components/StatusTracker";
 import { GoogleMapsProvider } from "./components/GoogleMapsProvider";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MapPin, Users, User, ShieldCheck, Activity } from "lucide-react";
 import { useAuth } from "./hooks/useAuth";
+import { supabase } from "./lib/supabase";
 
 export default function App() {
   const [currentView, setCurrentView] = useState<"dashboard" | "report" | "landing" | "community" | "beforeafter" | "profile" | "official" | "status">("landing");
   const [showAuth, setShowAuth] = useState(false);
   const [userRole, setUserRole] = useState<"citizen" | "official">("citizen"); // In production, fetch from user profile
+  const [userReports, setUserReports] = useState<any[]>([]);
   const { user, loading } = useAuth();
+
+  useEffect(() => {
+    if (user) {
+      fetchUserReports();
+    }
+  }, [user]);
+
+  const fetchUserReports = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('reports')
+        .select('*')
+        .eq('user_id', user?.id)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setUserReports(data || []);
+    } catch (error) {
+      console.error('Error fetching user reports:', error);
+    }
+  };
 
   const handleGetStarted = () => {
     setShowAuth(true);
@@ -219,7 +242,7 @@ export default function App() {
                       exit={{ opacity: 0, y: -20 }}
                       transition={{ duration: 0.3 }}
                     >
-                      <StatusTracker userReports={[]} />
+                      <StatusTracker userReports={userReports} />
                     </motion.div>
                   )}
                   {currentView === "profile" && (

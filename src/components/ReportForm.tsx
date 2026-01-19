@@ -346,13 +346,18 @@ export function ReportForm({ onBack }: { onBack?: () => void }) {
               </motion.button>
             </div>
 
-            <p className="text-slate-500 text-sm mb-3 flex items-center space-x-2">
-              <MapPin className="w-3 h-3" />
-              <span>Coordinates: {location.lat.toFixed(6)}, {location.lng.toFixed(6)}</span>
-            </p>
+            <div className="bg-accent-orange/10 border-l-4 border-accent-orange p-4 rounded-lg mb-3">
+              <p className="text-slate-700 font-medium text-sm flex items-center space-x-2">
+                <MapPin className="w-4 h-4 text-accent-orange" />
+                <span>Click anywhere on the map to place a pin at your report location</span>
+              </p>
+              <p className="text-slate-600 text-xs mt-2">
+                Current coordinates: {location.lat.toFixed(6)}, {location.lng.toFixed(6)}
+              </p>
+            </div>
 
             {/* Google Map selector - click to choose a location */}
-            <div className="rounded-xl overflow-hidden border-2 border-accent-orange/30 shadow-lg">
+            <div className="rounded-xl overflow-hidden border-4 border-accent-orange shadow-lg">
               <GoogleInteractiveMap
                 selectedLocation={location}
                 onLocationSelect={handleLocationSelect}

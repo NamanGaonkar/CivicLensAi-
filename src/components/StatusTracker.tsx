@@ -33,14 +33,14 @@ export function StatusTracker({ userReports = [] }: StatusTrackerProps) {
   };
 
   const getTimeline = (report: any) => {
-    const created = new Date(report.createdAt);
+    const created = new Date(report.created_at);
     const now = new Date();
     const diffDays = Math.floor((now.getTime() - created.getTime()) / (1000 * 60 * 60 * 24));
     
     return {
       created: created.toLocaleDateString(),
-      updated: report.updatedAt ? new Date(report.updatedAt).toLocaleDateString() : "N/A",
-      resolved: report.resolvedAt ? new Date(report.resolvedAt).toLocaleDateString() : "N/A",
+      updated: report.updated_at ? new Date(report.updated_at).toLocaleDateString() : "N/A",
+      resolved: report.resolved_at ? new Date(report.resolved_at).toLocaleDateString() : "N/A",
       daysElapsed: diffDays
     };
   };
@@ -61,10 +61,11 @@ export function StatusTracker({ userReports = [] }: StatusTrackerProps) {
       <div className="space-y-4">
         {userReports.map((report, index) => {
           const timeline = getTimeline(report);
+          const location = report.address || `${report.area}, ${report.city}` || "Location not specified";
           
           return (
             <motion.div
-              key={report._id}
+              key={report.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
@@ -74,10 +75,11 @@ export function StatusTracker({ userReports = [] }: StatusTrackerProps) {
                 <div className="flex items-start space-x-4 flex-1">
                   <div className="mt-1">{getStatusIcon(report.status)}</div>
                   <div className="flex-1">
-                    <h3 className="text-xl font-bold text-slate-900 mb-2">{report.description}</h3>
+                    <h3 className="text-xl font-bold text-slate-900 mb-2">{report.title}</h3>
+                    <p className="text-slate-600 mb-2">{report.description}</p>
                     <div className="flex items-center space-x-2 text-slate-600 mb-2">
                       <MapPin className="w-4 h-4" />
-                      <span>{report.location}</span>
+                      <span>{location}</span>
                     </div>
                     <div
                       className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold border ${getStatusColor(

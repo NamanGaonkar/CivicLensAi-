@@ -52,7 +52,10 @@ export function CommunityFeed() {
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (postsError) throw postsError;
+      if (postsError) {
+        console.error('Posts error:', postsError);
+        throw postsError;
+      }
 
       if (postsData) {
         // Fetch comments for each post
@@ -73,9 +76,17 @@ export function CommunityFeed() {
 
         setPosts(postsWithComments);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching posts:', error);
-      toast.error('Failed to load posts');
+      
+      // More specific error messages
+      if (error?.code === '42P01') {
+        toast.error('Posts table not found. Please run the SQL setup from SUPABASE_SETUP.md');
+      } else if (error?.message) {
+        toast.error(`Failed to load posts: ${error.message}`);
+      } else {
+        toast.error('Failed to load posts');
+      }
     } finally {
       setLoading(false);
     }
