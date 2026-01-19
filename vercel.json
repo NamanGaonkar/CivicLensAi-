@@ -2,10 +2,5 @@
   "rewrites": [{ "source": "/(.*)", "destination": "/" }],
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "framework": "vite",
-  "env": {
-    "VITE_GOOGLE_MAPS_API_KEY": "@vite_google_maps_api_key",
-    "VITE_SUPABASE_URL": "@vite_supabase_url",
-    "VITE_SUPABASE_ANON_KEY": "@vite_supabase_anon_key"
-  }
+  "framework": "vite"
 }
