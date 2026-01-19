@@ -108,7 +108,7 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
       </div>
 
       {/* Top Navigation Bar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 lg:px-8 py-6 backdrop-blur-lg">
+      <nav className="fixed top-0 left-0 right-0 z-50 px-2 sm:px-4 lg:px-8 py-3 sm:py-4 lg:py-6 backdrop-blur-lg">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           {/* Logo on the left */}
           <motion.div
@@ -124,11 +124,11 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
-            className="flex space-x-3"
+            className="flex space-x-2 sm:space-x-3"
           >
             <motion.button
               onClick={onGetStarted}
-              className="px-6 py-2 bg-gradient-to-r from-civic-teal to-civic-darkBlue text-white font-semibold rounded-lg text-sm shadow-lg hover:shadow-civic-teal/50 transition-all"
+              className="px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 bg-gradient-to-r from-civic-teal to-civic-darkBlue text-white font-semibold rounded-lg text-xs sm:text-sm shadow-lg hover:shadow-civic-teal/50 transition-all"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -136,8 +136,9 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
             </motion.button>
 
             {isAuthenticated && (
-              <button className="px-6 py-2 border-2 border-civic-teal text-slate-900 rounded-lg bg-white/80 hover:bg-white backdrop-blur-md text-sm font-semibold transition-all shadow-sm">
-                Watch demo
+              <button className="px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 border-2 border-civic-teal text-slate-900 rounded-lg bg-white/80 hover:bg-white backdrop-blur-md text-xs sm:text-sm font-semibold transition-all shadow-sm">
+                <span className="hidden sm:inline">Watch demo</span>
+                <span className="sm:hidden">Demo</span>
               </button>
             )}
           </motion.div>
@@ -182,7 +183,7 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
                   transition={{ delay: 0.3 }}
                   className="space-y-4"
                 >
-                  <h1 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-black leading-[1.1] tracking-tight">
+                  <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black leading-[1.1] tracking-tight">
                     <span className="bg-gradient-to-r from-civic-teal via-civic-darkBlue to-slate-900 bg-clip-text text-transparent">
                       CivicLens
                     </span>

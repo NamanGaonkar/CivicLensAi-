@@ -92,21 +92,21 @@ export default function App() {
             >
               {/* Navigation */}
               <nav className="sticky top-0 z-50 backdrop-blur-xl bg-white/90 border-b border-civic-teal/20 shadow-sm">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                  <div className="flex justify-between items-center h-16">
-                    <div className="flex items-center space-x-8">
+                <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
+                  <div className="flex justify-between items-center h-12 sm:h-14 md:h-16">
+                    <div className="flex items-center space-x-2 sm:space-x-8">
                       <motion.button
                         onClick={handleBackToLanding}
                         className="hover:scale-105 transition-transform"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                       >
-                        <Logo size="md" showText={true} textColor="text-slate-900" />
+                        <Logo size="sm" showText={true} textColor="text-slate-900" />
                       </motion.button>
-                      <div className="hidden md:flex space-x-4">
+                      <div className="hidden md:flex space-x-1 lg:space-x-3">
                         <motion.button
                           onClick={() => setCurrentView("dashboard")}
-                          className={`px-4 py-2 rounded-lg transition-all duration-200 ${
+                          className={`px-3 py-1.5 lg:px-4 lg:py-2 rounded-lg transition-all duration-200 text-sm lg:text-base ${
                             currentView === "dashboard"
                               ? "bg-civic-teal text-white"
                               : "text-slate-700 hover:text-civic-teal hover:bg-civic-lightBlue/30"
@@ -118,7 +118,7 @@ export default function App() {
                         </motion.button>
                         <motion.button
                           onClick={() => setCurrentView("report")}
-                          className={`px-4 py-2 rounded-lg transition-all duration-200 ${
+                          className={`px-3 py-1.5 lg:px-4 lg:py-2 rounded-lg transition-all duration-200 text-sm lg:text-base ${
                             currentView === "report"
                               ? "bg-civic-teal text-white"
                               : "text-slate-700 hover:text-civic-teal hover:bg-civic-lightBlue/30"
@@ -126,11 +126,12 @@ export default function App() {
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                         >
-                          Report Issue
+                          <span className="hidden lg:inline">Report Issue</span>
+                          <span className="lg:hidden">Report</span>
                         </motion.button>
                         <motion.button
                           onClick={() => setCurrentView("community")}
-                          className={`px-4 py-2 rounded-lg transition-all duration-200 flex items-center space-x-1 ${
+                          className={`px-3 py-1.5 lg:px-4 lg:py-2 rounded-lg transition-all duration-200 flex items-center space-x-1 text-sm lg:text-base ${
                             currentView === "community"
                               ? "bg-civic-teal text-white"
                               : "text-slate-700 hover:text-civic-teal hover:bg-civic-lightBlue/30"
@@ -139,11 +140,11 @@ export default function App() {
                           whileTap={{ scale: 0.95 }}
                         >
                           <Users className="w-4 h-4" />
-                          <span>Community</span>
+                          <span className="hidden lg:inline">Community</span>
                         </motion.button>
                         <motion.button
                           onClick={() => setCurrentView("status")}
-                          className={`px-4 py-2 rounded-lg transition-all duration-200 flex items-center space-x-1 ${
+                          className={`px-3 py-1.5 lg:px-4 lg:py-2 rounded-lg transition-all duration-200 flex items-center space-x-1 text-sm lg:text-base ${
                             currentView === "status"
                               ? "bg-civic-teal text-white"
                               : "text-slate-700 hover:text-civic-teal hover:bg-civic-lightBlue/30"
@@ -188,7 +189,7 @@ export default function App() {
               </nav>
 
               {/* Main Content */}
-              <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+              <main className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8">
                 <AnimatePresence mode="wait">
                   {currentView === "dashboard" && (
                     <motion.div

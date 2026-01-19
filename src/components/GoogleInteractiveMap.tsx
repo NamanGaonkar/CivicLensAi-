@@ -270,53 +270,53 @@ export function GoogleInteractiveMap({
   };
 
   return (
-    <div className="relative h-[600px] w-full rounded-xl overflow-hidden shadow-xl">
+    <div className="relative h-full w-full rounded-xl overflow-hidden shadow-xl">
       {/* Pin Placement Mode Indicator - Top center */}
       {showLocationPicker && (
-        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10 px-4 py-2 bg-accent-orange text-white rounded-lg shadow-lg font-semibold text-sm flex items-center space-x-2">
-          <MapPinned className="w-4 h-4" />
+        <div className="absolute top-2 sm:top-4 left-1/2 transform -translate-x-1/2 z-10 px-2 sm:px-4 py-1 sm:py-2 bg-accent-orange text-white rounded-lg shadow-lg font-semibold text-xs sm:text-sm flex items-center space-x-1 sm:space-x-2">
+          <MapPinned className="w-3 h-3 sm:w-4 sm:h-4" />
           <span>Click map to place pin</span>
         </div>
       )}
 
       {/* Map Type Toggle - Bottom left */}
-      <div className="absolute bottom-6 left-4 z-10">
-        <div className="flex gap-2">
+      <div className="absolute bottom-3 sm:bottom-4 md:bottom-6 left-2 sm:left-4 z-10">
+        <div className="flex gap-1 sm:gap-2">
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setMapType('roadmap')}
-            className={`px-4 py-2.5 rounded-lg backdrop-blur-xl shadow-lg font-semibold flex items-center space-x-2 text-sm ${
+            className={`px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 md:py-2.5 rounded-lg backdrop-blur-xl shadow-lg font-semibold flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm ${
               mapType === 'roadmap'
                 ? 'bg-civic-teal text-white'
                 : 'bg-white/95 text-slate-700 hover:bg-white'
             }`}
           >
-            <MapIcon className="w-4 h-4" />
-            <span>Map</span>
+            <MapIcon className="w-3 h-3 sm:w-4 sm:h-4" />
+            <span className="hidden sm:inline">Map</span>
           </motion.button>
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setMapType('satellite')}
-            className={`px-4 py-2.5 rounded-lg backdrop-blur-xl shadow-lg font-semibold flex items-center space-x-2 text-sm ${
+            className={`px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 md:py-2.5 rounded-lg backdrop-blur-xl shadow-lg font-semibold flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm ${
               mapType === 'satellite'
                 ? 'bg-civic-teal text-white'
                 : 'bg-white/95 text-slate-700 hover:bg-white'
             }`}
           >
-            <Satellite className="w-4 h-4" />
-            <span>Satellite</span>
+            <Satellite className="w-3 h-3 sm:w-4 sm:h-4" />
+            <span className="hidden sm:inline">Satellite</span>
           </motion.button>
         </div>
       </div>
 
       {/* Location Loading Indicator - Top left */}
       {isLoadingLocation && (
-        <div className="absolute top-4 left-4 z-10 px-4 py-2 bg-white/95 backdrop-blur-xl rounded-lg shadow-lg border-2 border-civic-teal">
-          <div className="flex items-center space-x-2 text-sm text-slate-700">
-            <div className="w-4 h-4 border-2 border-civic-teal border-t-transparent rounded-full animate-spin" />
-            <span>Getting location...</span>
+        <div className="absolute top-2 sm:top-4 left-2 sm:left-4 z-10 px-2 sm:px-4 py-1 sm:py-2 bg-white/95 backdrop-blur-xl rounded-lg shadow-lg border-2 border-civic-teal">
+          <div className="flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm text-slate-700">
+            <div className="w-3 h-3 sm:w-4 sm:h-4 border-2 border-civic-teal border-t-transparent rounded-full animate-spin" />
+            <span className="hidden sm:inline">Getting location...</span>
           </div>
         </div>
       )}

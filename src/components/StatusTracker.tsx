@@ -47,18 +47,18 @@ export function StatusTracker({ userReports = [] }: StatusTrackerProps) {
 
   if (userReports.length === 0) {
     return (
-      <div className="glass-card p-12 text-center">
-        <AlertCircle className="w-16 h-16 text-slate-400 mx-auto mb-4" />
-        <p className="text-slate-600">You haven't filed any reports yet.</p>
+      <div className="glass-card p-6 sm:p-8 md:p-12 text-center mx-3 sm:mx-0">
+        <AlertCircle className="w-12 h-12 sm:w-16 sm:h-16 text-slate-400 mx-auto mb-4" />
+        <p className="text-sm sm:text-base text-slate-600">You haven't filed any reports yet.</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-3xl font-bold text-slate-900">My Reports Status</h2>
+    <div className="space-y-4 sm:space-y-6 px-3 sm:px-0">
+      <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">My Reports Status</h2>
 
-      <div className="space-y-4">
+      <div className="space-y-3 sm:space-y-4">
         {userReports.map((report, index) => {
           const timeline = getTimeline(report);
           const location = report.address || `${report.area}, ${report.city}` || "Location not specified";

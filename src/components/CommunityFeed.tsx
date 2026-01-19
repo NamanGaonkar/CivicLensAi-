@@ -312,7 +312,7 @@ export function CommunityFeed() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="max-w-5xl mx-auto space-y-8"
+      className="max-w-5xl mx-auto space-y-4 sm:space-y-6 md:space-y-8 px-3 sm:px-0"
     >
       {/* Header */}
       <motion.div
@@ -321,11 +321,11 @@ export function CommunityFeed() {
         transition={{ delay: 0.1 }}
         className="text-center"
       >
-        <div className="flex items-center justify-center gap-3 mb-2">
-          <Users className="w-8 h-8 text-civic-teal" />
-          <h2 className="text-4xl font-bold text-slate-900">Community Feed</h2>
+        <div className="flex items-center justify-center gap-2 sm:gap-3 mb-2">
+          <Users className="w-6 h-6 sm:w-8 sm:h-8 text-civic-teal" />
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900">Community Feed</h2>
         </div>
-        <p className="text-slate-600">Share updates, ask questions, and connect with your neighbors</p>
+        <p className="text-sm sm:text-base text-slate-600">Share updates, ask questions, and connect with your neighbors</p>
       </motion.div>
 
       {/* Create Post Card */}
@@ -333,13 +333,13 @@ export function CommunityFeed() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="glass-card p-8 bg-gradient-to-br from-white via-white to-civic-lightBlue/20 shadow-xl border border-civic-teal/20"
+        className="glass-card p-4 sm:p-6 md:p-8 bg-gradient-to-br from-white via-white to-civic-lightBlue/20 shadow-xl border border-civic-teal/20"
       >
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-civic-teal to-civic-darkBlue flex items-center justify-center">
-            <Sparkles className="w-6 h-6 text-white" />
+        <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-civic-teal to-civic-darkBlue flex items-center justify-center">
+            <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
           </div>
-          <h3 className="text-2xl font-bold text-slate-900">What's on your mind?</h3>
+          <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-900">What's on your mind?</h3>
         </div>
         
         <div className="space-y-4">

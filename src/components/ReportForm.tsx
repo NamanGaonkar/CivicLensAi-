@@ -182,9 +182,9 @@ export function ReportForm({ onBack }: { onBack?: () => void }) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="max-w-2xl mx-auto"
+      className="max-w-2xl mx-auto px-3 sm:px-0"
     >
-      <div className="glass-card p-8 relative overflow-hidden">
+      <div className="glass-card p-4 sm:p-6 md:p-8 relative overflow-hidden">
         {/* Background Animation */}
         <div className="absolute inset-0 bg-gradient-to-br from-civic-teal/5 to-civic-darkBlue/5"></div>
         
@@ -192,7 +192,7 @@ export function ReportForm({ onBack }: { onBack?: () => void }) {
           initial={{ y: -10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="text-center mb-8 relative z-10"
+          className="text-center mb-6 sm:mb-8 relative z-10"
         >
           {/* Mobile back button inside the report form for easy navigation */}
           {onBack && (
@@ -357,7 +357,7 @@ export function ReportForm({ onBack }: { onBack?: () => void }) {
             </div>
 
             {/* Google Map selector - click to choose a location */}
-            <div className="rounded-xl overflow-hidden border-4 border-accent-orange shadow-lg">
+            <div className="rounded-xl overflow-hidden border-4 border-accent-orange shadow-lg h-[400px] sm:h-[500px] md:h-[600px]">
               <GoogleInteractiveMap
                 selectedLocation={location}
                 onLocationSelect={handleLocationSelect}
