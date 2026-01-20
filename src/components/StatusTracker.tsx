@@ -55,7 +55,7 @@ export function StatusTracker({ userReports = [] }: StatusTrackerProps) {
   }
 
   return (
-    <div className="space-y-4 sm:space-y-6 px-3 sm:px-0">
+    <div className="space-y-4 sm:space-y-6 px-3 sm:px-0 pb-6 md:pb-0">
       <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">My Reports Status</h2>
 
       <div className="space-y-3 sm:space-y-4">

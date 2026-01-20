@@ -33,6 +33,22 @@ body {
   overflow-x: hidden;
 }
 
+/* Prevent horizontal scroll on mobile */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Prevent text from overflowing */
+h1, h2, h3, h4, h5, h6, p {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
 /* Glass morphism effect */
 .glass-card {
   @apply backdrop-blur-xl bg-white/90 border border-civic-teal/20 rounded-xl shadow-xl;

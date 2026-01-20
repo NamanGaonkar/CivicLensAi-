@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import Particles from "./Particles";
 import { Logo } from "./Logo";
-import personImage from "../../assets/person.png";
+import TextType from "./TextType";
 import { 
   MapPin, 
   Camera, 
@@ -145,205 +145,273 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
         </div>
       </nav>
 
-      <div className="relative z-10 pt-24">
-        {/* Hero Section - Split Layout (Agency Style) */}
-        <section className="min-h-screen flex items-center px-4 sm:px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto w-full">
-            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-              
-              {/* Left Side - Content */}
+      <div className="relative z-10 pt-20">
+        {/* Hero Section - Maximum Animation Effects */}
+        <section className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+          {/* Animated particles background */}
+          <motion.div
+            className="absolute inset-0 z-0"
+            style={{
+              background: 'radial-gradient(circle at 30% 50%, rgba(20, 184, 166, 0.15) 0%, transparent 50%), radial-gradient(circle at 70% 50%, rgba(8, 145, 178, 0.15) 0%, transparent 50%)'
+            }}
+          >
+            <Particles />
+          </motion.div>
+
+          {/* Floating orbs */}
+          <motion.div
+            animate={{
+              x: [0, 100, 0],
+              y: [0, -100, 0],
+              scale: [1, 1.2, 1],
+              opacity: [0.3, 0.6, 0.3]
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            className="absolute top-20 left-10 w-64 h-64 bg-civic-teal/20 rounded-full blur-3xl"
+          />
+          <motion.div
+            animate={{
+              x: [0, -100, 0],
+              y: [0, 100, 0],
+              scale: [1, 1.3, 1],
+              opacity: [0.3, 0.5, 0.3]
+            }}
+            transition={{
+              duration: 10,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 1
+            }}
+            className="absolute bottom-20 right-10 w-96 h-96 bg-civic-darkBlue/20 rounded-full blur-3xl"
+          />
+          <motion.div
+            animate={{
+              x: [0, 50, 0],
+              y: [0, -50, 0],
+              scale: [1, 1.1, 1],
+              opacity: [0.2, 0.4, 0.2]
+            }}
+            transition={{
+              duration: 12,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 2
+            }}
+            className="absolute top-1/2 left-1/3 w-72 h-72 bg-civic-lightBlue/20 rounded-full blur-3xl"
+          />
+
+          <div className="max-w-4xl mx-auto w-full relative z-10 text-center">
+            {/* Centered Content */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="space-y-8"
+            >
+              {/* Small Badge with Animation */}
               <motion.div
-                initial={{ opacity: 0, x: -50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8 }}
-                className="space-y-8"
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+                className="inline-block"
               >
-                {/* Interactive Badge */}
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.2 }}
-                  whileHover={{ scale: 1.05 }}
-                  className="inline-flex items-center space-x-2 bg-civic-lightBlue/60 backdrop-blur-xl border border-civic-teal/60 rounded-full px-5 py-2.5 cursor-pointer hover:bg-civic-lightBlue/80 transition-all shadow-lg"
+                  animate={{
+                    boxShadow: [
+                      "0 0 20px rgba(20, 184, 166, 0.4)",
+                      "0 0 30px rgba(20, 184, 166, 0.7)",
+                      "0 0 20px rgba(20, 184, 166, 0.4)"
+                    ]
+                  }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className="px-6 py-2.5 bg-gradient-to-r from-civic-teal to-civic-darkBlue rounded-full border-2 border-white/50"
                 >
-                  <Sparkles className="w-4 h-4 text-civic-teal" />
-                  <span className="text-slate-900 font-medium text-sm">AI-Powered Civic Platform</span>
-                  <motion.div
-                    animate={{ x: [0, 5, 0] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  >
-                    <ArrowRight className="w-4 h-4 text-civic-teal" />
-                  </motion.div>
-                </motion.div>
-
-                {/* Main Heading */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
-                  className="space-y-4"
-                >
-                  <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black leading-[1.1] tracking-tight">
-                    <span className="bg-gradient-to-r from-civic-teal via-civic-darkBlue to-slate-900 bg-clip-text text-transparent">
-                      CivicLens
-                    </span>
-                  </h1>
-                  <p className="text-xl sm:text-2xl lg:text-3xl text-slate-700 font-semibold leading-relaxed">
-                    AI-Powered Civic Issue Reporting & Community Engagement
-                  </p>
-                  <p className="text-base sm:text-lg text-slate-600 leading-relaxed max-w-xl">
-                    Transform how your city reports and resolves civic issues. From intelligent image analysis to real-time location tracking and advanced analytics—all powered by cutting-edge AI.
-                  </p>
-                </motion.div>
-
-                {/* CTA Buttons */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4 }}
-                  className="flex flex-col sm:flex-row gap-4"
-                >
-                  {!isAuthenticated ? (
-                    <>
-                      <motion.button
-                        onClick={onGetStarted}
-                        className="px-8 py-4 bg-gradient-to-r from-civic-teal to-civic-darkBlue text-white font-bold rounded-xl text-lg shadow-xl hover:shadow-2xl hover:shadow-civic-teal/30 transition-all group"
-                        whileHover={{ scale: 1.05, y: -2 }}
-                        whileTap={{ scale: 0.98 }}
-                      >
-                        <span className="flex items-center justify-center space-x-2">
-                          <span>Start Now</span>
-                          <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                        </span>
-                      </motion.button>
-
-                      <motion.button
-                        className="px-8 py-4 border-2 border-civic-teal text-civic-darkBlue font-bold rounded-xl text-lg bg-white hover:bg-civic-lightBlue/20 transition-all group shadow-lg"
-                        whileHover={{ scale: 1.05, y: -2 }}
-                        whileTap={{ scale: 0.98 }}
-                      >
-                        <span className="flex items-center justify-center space-x-2">
-                          <span>Watch Demo</span>
-                          <motion.div
-                            animate={{ rotate: [0, 360] }}
-                            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                          >
-                            <Sparkles className="w-5 h-5" />
-                          </motion.div>
-                        </span>
-                      </motion.button>
-                    </>
-                  ) : (
-                    <motion.button
-                      onClick={onGetStarted}
-                      className="px-8 py-4 bg-gradient-to-r from-civic-teal to-civic-darkBlue text-white font-bold rounded-xl text-lg shadow-xl transition-all"
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      Go to Dashboard
-                    </motion.button>
-                  )}
+                  <span className="text-sm sm:text-base font-black text-white uppercase tracking-wider flex items-center gap-2">
+                    <Brain className="w-4 h-4" />
+                    AI POWERED PLATFORM
+                  </span>
                 </motion.div>
               </motion.div>
 
-              {/* Right Side - Hero Image with Person */}
+              {/* Main Title with Multiple Effects */}
               <motion.div
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="relative hidden lg:block"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="space-y-4 relative"
               >
-                <div className="relative">
-                  {/* Animated background blobs */}
-                  <motion.div
-                    animate={{ 
-                      scale: [1, 1.2, 1],
-                      rotate: [0, 90, 0],
-                      opacity: [0.3, 0.5, 0.3]
+                {/* Glowing background behind title */}
+                <motion.div
+                  animate={{
+                    scale: [1, 1.05, 1],
+                    opacity: [0.3, 0.5, 0.3]
+                  }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                  className="absolute inset-0 bg-gradient-to-r from-civic-teal/20 via-civic-lightBlue/20 to-civic-teal/20 blur-3xl"
+                />
+                
+                <motion.h1
+                  className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black leading-[1.1] tracking-tight relative"
+                  animate={{
+                    y: [0, -5, 0]
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                >
+                  <motion.span
+                    animate={{
+                      textShadow: [
+                        "0 0 20px rgba(51, 65, 85, 0.3)",
+                        "0 0 30px rgba(51, 65, 85, 0.5)",
+                        "0 0 20px rgba(51, 65, 85, 0.3)"
+                      ]
+                    }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                    className="text-slate-700"
+                  >
+                    CIVIC{" "}
+                  </motion.span>
+                  <motion.span
+                    animate={{
+                      backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"]
+                    }}
+                    transition={{ duration: 5, repeat: Infinity }}
+                    style={{ backgroundSize: "200% 200%" }}
+                    className="bg-gradient-to-r from-civic-teal via-civic-darkBlue to-civic-teal bg-clip-text text-transparent"
+                  >
+                    LENS
+                  </motion.span>
+                </motion.h1>
+              </motion.div>
+
+              {/* Description with Fade Animation */}
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4 }}
+                className="text-slate-700 font-medium text-base sm:text-lg md:text-xl leading-relaxed max-w-2xl mx-auto relative"
+              >
+                <motion.span
+                  animate={{
+                    opacity: [0.8, 1, 0.8]
+                  }}
+                  transition={{ duration: 3, repeat: Infinity }}
+                >
+                  Empower your community with AI-driven civic issue reporting and resolution. Track problems in real-time, engage with your neighbors, and build a better future together.
+                </motion.span>
+              </motion.p>
+
+              {/* CTA Buttons with Advanced Animations */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+              >
+                <motion.button
+                  onClick={onGetStarted}
+                  className="px-8 py-3.5 border-2 border-civic-darkBlue text-civic-darkBlue font-bold rounded-full text-base relative overflow-hidden group"
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                  animate={{
+                    boxShadow: [
+                      "0 0 20px rgba(8, 145, 178, 0.3)",
+                      "0 0 30px rgba(8, 145, 178, 0.5)",
+                      "0 0 20px rgba(8, 145, 178, 0.3)"
+                    ]
+                  }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  <motion.span
+                    className="absolute inset-0 bg-civic-darkBlue opacity-0 group-hover:opacity-100 transition-opacity"
+                    initial={{ x: "-100%" }}
+                    whileHover={{ x: 0 }}
+                  />
+                  <span className="relative z-10 group-hover:text-white transition-colors">
+                    {!isAuthenticated ? 'GET STARTED' : 'GO TO DASHBOARD'}
+                  </span>
+                </motion.button>
+
+                <motion.button
+                  className="px-8 py-3.5 bg-gradient-to-r from-civic-teal via-civic-darkBlue to-civic-teal text-white font-bold rounded-full text-base relative overflow-hidden group"
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                  animate={{
+                    backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                    boxShadow: [
+                      "0 0 20px rgba(20, 184, 166, 0.5)",
+                      "0 10px 40px rgba(20, 184, 166, 0.8)",
+                      "0 0 20px rgba(20, 184, 166, 0.5)"
+                    ]
+                  }}
+                  transition={{ 
+                    backgroundPosition: { duration: 3, repeat: Infinity },
+                    boxShadow: { duration: 2, repeat: Infinity }
+                  }}
+                  style={{ backgroundSize: "200% 200%" }}
+                >
+                  <motion.span
+                    animate={{
+                      rotate: [0, 360]
                     }}
                     transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                    className="absolute top-20 right-0 w-96 h-96 bg-gradient-to-br from-civic-teal/30 to-civic-lightBlue/40 rounded-full blur-3xl"
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
                   />
-                  <motion.div
-                    animate={{ 
-                      scale: [1, 1.3, 1],
-                      rotate: [0, -90, 0],
-                      opacity: [0.2, 0.4, 0.2]
-                    }}
-                    transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                    className="absolute -bottom-10 left-10 w-80 h-80 bg-gradient-to-br from-civic-darkBlue/20 to-civic-teal/30 rounded-full blur-3xl"
-                  />
-
-                  {/* Main content container with reflection */}
-                  <div className="relative">
-                    {/* Person image with civic tech elements */}
-                    <motion.div
-                      whileHover={{ scale: 1.02 }}
-                      transition={{ type: "spring", stiffness: 300 }}
-                      className="relative z-10"
-                    >
-                      {/* Main visual with person image */}
-                      <div className="relative rounded-3xl overflow-hidden shadow-2xl">
-                        <img 
-                          src={personImage} 
-                          alt="Person using CivicLens platform" 
-                          className="w-full h-auto object-cover rounded-3xl"
-                        />
-                        
-                        {/* Floating civic icons around the person */}
-                        <motion.div
-                          animate={{ y: [0, -15, 0] }}
-                          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                          className="absolute top-20 right-8 bg-white/90 backdrop-blur-sm border-2 border-civic-teal/40 rounded-2xl p-3 shadow-xl"
-                        >
-                          <MapPin className="w-8 h-8 text-civic-teal" />
-                        </motion.div>
-
-                        <motion.div
-                          animate={{ y: [0, 15, 0] }}
-                          transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-                          className="absolute top-40 left-8 bg-white/90 backdrop-blur-sm border-2 border-civic-darkBlue/40 rounded-2xl p-3 shadow-xl"
-                        >
-                          <Camera className="w-8 h-8 text-civic-darkBlue" />
-                        </motion.div>
-
-                        <motion.div
-                          animate={{ y: [0, -12, 0] }}
-                          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                          className="absolute bottom-32 right-12 bg-white/90 backdrop-blur-sm border-2 border-accent-orange/40 rounded-2xl p-3 shadow-xl"
-                        >
-                          <BarChart3 className="w-8 h-8 text-accent-orange" />
-                        </motion.div>
-
-                        <motion.div
-                          animate={{ 
-                            rotate: [0, 360],
-                          }}
-                          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                          className="absolute top-1/2 left-12 bg-white/90 backdrop-blur-sm border-2 border-purple-400/40 rounded-2xl p-3 shadow-xl"
-                        >
-                          <Brain className="w-8 h-8 text-purple-500" />
-                        </motion.div>
-                      </div>
-
-                      {/* Reflection effect */}
-                      <div className="relative mt-2 h-32 overflow-hidden">
-                        <div 
-                          className="absolute inset-0 bg-gradient-to-br from-civic-lightBlue/20 via-white/10 to-civic-teal/10 rounded-3xl"
-                          style={{
-                            transform: 'scaleY(-1)',
-                            maskImage: 'linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 80%)',
-                            WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 80%)'
-                          }}
-                        >
-                          <div className="h-full blur-sm opacity-40"></div>
-                        </div>
-                      </div>
-                    </motion.div>
-                  </div>
-                </div>
+                  <span className="relative z-10">LEARN MORE</span>
+                </motion.button>
               </motion.div>
-            </div>
+
+              {/* Floating Icons Around Title */}
+              <div className="absolute inset-0 pointer-events-none">
+                <motion.div
+                  animate={{
+                    y: [0, -20, 0],
+                    rotate: [0, 10, 0]
+                  }}
+                  transition={{ duration: 4, repeat: Infinity, delay: 0 }}
+                  className="absolute top-20 left-10 opacity-40"
+                >
+                  <MapPin className="w-12 h-12 text-civic-teal" />
+                </motion.div>
+                <motion.div
+                  animate={{
+                    y: [0, -15, 0],
+                    rotate: [0, -10, 0]
+                  }}
+                  transition={{ duration: 3.5, repeat: Infinity, delay: 0.5 }}
+                  className="absolute top-40 right-20 opacity-40"
+                >
+                  <Camera className="w-10 h-10 text-civic-darkBlue" />
+                </motion.div>
+                <motion.div
+                  animate={{
+                    y: [0, -25, 0],
+                    rotate: [0, 15, 0]
+                  }}
+                  transition={{ duration: 4.5, repeat: Infinity, delay: 1 }}
+                  className="absolute bottom-32 left-20 opacity-40"
+                >
+                  <BarChart3 className="w-11 h-11 text-civic-teal" />
+                </motion.div>
+                <motion.div
+                  animate={{
+                    y: [0, -18, 0],
+                    rotate: [0, -12, 0]
+                  }}
+                  transition={{ duration: 3.8, repeat: Infinity, delay: 1.5 }}
+                  className="absolute bottom-40 right-10 opacity-40"
+                >
+                  <Brain className="w-10 h-10 text-civic-darkBlue" />
+                </motion.div>
+              </div>
+            </motion.div>
           </div>
         </section>
 

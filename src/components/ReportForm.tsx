@@ -208,18 +208,18 @@ export function ReportForm({ onBack }: { onBack?: () => void }) {
               </button>
             </div>
           )}
-          <h2 className="text-3xl font-bold text-slate-900 mb-2">Report an Issue</h2>
-          <p className="text-slate-600">Help improve your community by reporting civic issues</p>
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900 mb-2">Report an Issue</h2>
+          <p className="text-sm sm:text-base text-slate-600">Help improve your community by reporting civic issues</p>
         </motion.div>
 
-        <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
+        <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5 md:space-y-6 relative z-10">
           {/* Title */}
           <motion.div
             initial={{ x: -20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: 0.3 }}
           >
-            <label className="block text-slate-900 font-medium mb-2">
+            <label className="block text-slate-900 font-medium mb-1.5 sm:mb-2 text-sm sm:text-base">
               Title <span className="text-red-500">*</span>
             </label>
             <input
@@ -227,7 +227,7 @@ export function ReportForm({ onBack }: { onBack?: () => void }) {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Brief description of the issue"
-              className="w-full px-4 py-3 bg-white/80 border border-civic-teal/30 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-civic-teal focus:border-transparent transition-all"
+              className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-white/80 border border-civic-teal/30 rounded-lg text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-civic-teal focus:border-transparent transition-all"
               required
             />
           </motion.div>
@@ -238,7 +238,7 @@ export function ReportForm({ onBack }: { onBack?: () => void }) {
             animate={{ x: 0, opacity: 1 }}
             transition={{ delay: 0.4 }}
           >
-            <label className="block text-slate-900 font-medium mb-2">
+            <label className="block text-slate-900 font-medium mb-1.5 sm:mb-2 text-sm sm:text-base">
               Description <span className="text-red-500">*</span>
             </label>
             <textarea
@@ -246,7 +246,7 @@ export function ReportForm({ onBack }: { onBack?: () => void }) {
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Detailed description of the issue..."
               rows={4}
-              className="w-full px-4 py-3 bg-white/80 border border-civic-teal/30 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-civic-teal focus:border-transparent resize-none transition-all"
+              className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-white/80 border border-civic-teal/30 rounded-lg text-sm sm:text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-civic-teal focus:border-transparent resize-none transition-all"
               required
             />
           </motion.div>

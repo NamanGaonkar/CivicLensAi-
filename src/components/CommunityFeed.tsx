@@ -312,7 +312,7 @@ export function CommunityFeed() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="max-w-5xl mx-auto space-y-4 sm:space-y-6 md:space-y-8 px-3 sm:px-0"
+      className="max-w-5xl mx-auto space-y-4 sm:space-y-6 md:space-y-8 px-3 sm:px-0 pb-6 md:pb-0"
     >
       {/* Header */}
       <motion.div
