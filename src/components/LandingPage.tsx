@@ -146,63 +146,15 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
       </nav>
 
       <div className="relative z-10 pt-20">
-        {/* Hero Section - Maximum Animation Effects */}
+        {/* Hero Section - Clean & Fast */}
         <section className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-          {/* Animated particles background */}
-          <motion.div
-            className="absolute inset-0 z-0"
-            style={{
-              background: 'radial-gradient(circle at 30% 50%, rgba(20, 184, 166, 0.15) 0%, transparent 50%), radial-gradient(circle at 70% 50%, rgba(8, 145, 178, 0.15) 0%, transparent 50%)'
-            }}
-          >
-            <Particles />
-          </motion.div>
-
-          {/* Floating orbs */}
-          <motion.div
-            animate={{
-              x: [0, 100, 0],
-              y: [0, -100, 0],
-              scale: [1, 1.2, 1],
-              opacity: [0.3, 0.6, 0.3]
-            }}
-            transition={{
-              duration: 8,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-            className="absolute top-20 left-10 w-64 h-64 bg-civic-teal/20 rounded-full blur-3xl"
-          />
-          <motion.div
-            animate={{
-              x: [0, -100, 0],
-              y: [0, 100, 0],
-              scale: [1, 1.3, 1],
-              opacity: [0.3, 0.5, 0.3]
-            }}
-            transition={{
-              duration: 10,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: 1
-            }}
-            className="absolute bottom-20 right-10 w-96 h-96 bg-civic-darkBlue/20 rounded-full blur-3xl"
-          />
-          <motion.div
-            animate={{
-              x: [0, 50, 0],
-              y: [0, -50, 0],
-              scale: [1, 1.1, 1],
-              opacity: [0.2, 0.4, 0.2]
-            }}
-            transition={{
-              duration: 12,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: 2
-            }}
-            className="absolute top-1/2 left-1/3 w-72 h-72 bg-civic-lightBlue/20 rounded-full blur-3xl"
-          />
+          {/* Simple gradient background - no lag */}
+          <div className="absolute inset-0 bg-gradient-to-br from-civic-lightBlue/30 via-white to-civic-teal/20" />
+          
+          {/* Subtle static decorative elements */}
+          <div className="absolute top-20 left-10 w-64 h-64 bg-civic-teal/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-20 right-10 w-96 h-96 bg-civic-darkBlue/10 rounded-full blur-3xl" />
+          <div className="absolute top-1/2 left-1/3 w-72 h-72 bg-civic-lightBlue/10 rounded-full blur-3xl" />
 
           <div className="max-w-4xl mx-auto w-full relative z-10 text-center">
             {/* Centered Content */}
@@ -212,103 +164,47 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
               transition={{ duration: 0.8 }}
               className="space-y-8"
             >
-              {/* Small Badge with Animation */}
+              {/* Small Badge with subtle animation */}
               <motion.div
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
                 className="inline-block"
               >
-                <motion.div
-                  animate={{
-                    boxShadow: [
-                      "0 0 20px rgba(20, 184, 166, 0.4)",
-                      "0 0 30px rgba(20, 184, 166, 0.7)",
-                      "0 0 20px rgba(20, 184, 166, 0.4)"
-                    ]
-                  }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                  className="px-6 py-2.5 bg-gradient-to-r from-civic-teal to-civic-darkBlue rounded-full border-2 border-white/50"
-                >
+                <div className="px-6 py-2.5 bg-gradient-to-r from-civic-teal to-civic-darkBlue rounded-full border-2 border-white/50 shadow-lg">
                   <span className="text-sm sm:text-base font-black text-white uppercase tracking-wider flex items-center gap-2">
                     <Brain className="w-4 h-4" />
                     AI POWERED PLATFORM
                   </span>
-                </motion.div>
+                </div>
               </motion.div>
 
-              {/* Main Title with Multiple Effects */}
+              {/* Main Title - Simple animations */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
                 className="space-y-4 relative"
               >
-                {/* Glowing background behind title */}
-                <motion.div
-                  animate={{
-                    scale: [1, 1.05, 1],
-                    opacity: [0.3, 0.5, 0.3]
-                  }}
-                  transition={{ duration: 3, repeat: Infinity }}
-                  className="absolute inset-0 bg-gradient-to-r from-civic-teal/20 via-civic-lightBlue/20 to-civic-teal/20 blur-3xl"
-                />
-                
-                <motion.h1
-                  className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black leading-[1.1] tracking-tight relative"
-                  animate={{
-                    y: [0, -5, 0]
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
-                >
-                  <motion.span
-                    animate={{
-                      textShadow: [
-                        "0 0 20px rgba(51, 65, 85, 0.3)",
-                        "0 0 30px rgba(51, 65, 85, 0.5)",
-                        "0 0 20px rgba(51, 65, 85, 0.3)"
-                      ]
-                    }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                    className="text-slate-700"
-                  >
-                    CIVIC{" "}
-                  </motion.span>
-                  <motion.span
-                    animate={{
-                      backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"]
-                    }}
-                    transition={{ duration: 5, repeat: Infinity }}
-                    style={{ backgroundSize: "200% 200%" }}
-                    className="bg-gradient-to-r from-civic-teal via-civic-darkBlue to-civic-teal bg-clip-text text-transparent"
-                  >
+                <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black leading-[1.1] tracking-tight relative">
+                  <span className="text-slate-700">CIVIC </span>
+                  <span className="bg-gradient-to-r from-civic-teal via-civic-darkBlue to-civic-teal bg-clip-text text-transparent">
                     LENS
-                  </motion.span>
-                </motion.h1>
+                  </span>
+                </h1>
               </motion.div>
 
-              {/* Description with Fade Animation */}
+              {/* Description - Static */}
               <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.4 }}
-                className="text-slate-700 font-medium text-base sm:text-lg md:text-xl leading-relaxed max-w-2xl mx-auto relative"
+                className="text-slate-700 font-medium text-base sm:text-lg md:text-xl leading-relaxed max-w-2xl mx-auto"
               >
-                <motion.span
-                  animate={{
-                    opacity: [0.8, 1, 0.8]
-                  }}
-                  transition={{ duration: 3, repeat: Infinity }}
-                >
-                  Empower your community with AI-driven civic issue reporting and resolution. Track problems in real-time, engage with your neighbors, and build a better future together.
-                </motion.span>
+                Empower your community with AI-driven civic issue reporting and resolution. Track problems in real-time, engage with your neighbors, and build a better future together.
               </motion.p>
 
-              {/* CTA Buttons with Advanced Animations */}
+              {/* CTA Buttons - Simplified */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -317,106 +213,33 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
               >
                 <motion.button
                   onClick={onGetStarted}
-                  className="px-8 py-3.5 border-2 border-civic-darkBlue text-civic-darkBlue font-bold rounded-full text-base relative overflow-hidden group"
+                  className="px-8 py-3.5 border-2 border-civic-darkBlue text-civic-darkBlue font-bold rounded-full text-base shadow-lg hover:bg-civic-darkBlue hover:text-white transition-all"
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.95 }}
-                  animate={{
-                    boxShadow: [
-                      "0 0 20px rgba(8, 145, 178, 0.3)",
-                      "0 0 30px rgba(8, 145, 178, 0.5)",
-                      "0 0 20px rgba(8, 145, 178, 0.3)"
-                    ]
-                  }}
-                  transition={{ duration: 2, repeat: Infinity }}
                 >
-                  <motion.span
-                    className="absolute inset-0 bg-civic-darkBlue opacity-0 group-hover:opacity-100 transition-opacity"
-                    initial={{ x: "-100%" }}
-                    whileHover={{ x: 0 }}
-                  />
-                  <span className="relative z-10 group-hover:text-white transition-colors">
-                    {!isAuthenticated ? 'GET STARTED' : 'GO TO DASHBOARD'}
-                  </span>
+                  {!isAuthenticated ? 'GET STARTED' : 'GO TO DASHBOARD'}
                 </motion.button>
 
                 <motion.button
-                  className="px-8 py-3.5 bg-gradient-to-r from-civic-teal via-civic-darkBlue to-civic-teal text-white font-bold rounded-full text-base relative overflow-hidden group"
+                  onClick={() => {
+                    document.getElementById('features-section')?.scrollIntoView({ 
+                      behavior: 'smooth',
+                      block: 'start'
+                    });
+                  }}
+                  className="px-8 py-3.5 bg-gradient-to-r from-civic-teal to-civic-darkBlue text-white font-bold rounded-full text-base shadow-lg hover:shadow-xl transition-all"
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.95 }}
-                  animate={{
-                    backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
-                    boxShadow: [
-                      "0 0 20px rgba(20, 184, 166, 0.5)",
-                      "0 10px 40px rgba(20, 184, 166, 0.8)",
-                      "0 0 20px rgba(20, 184, 166, 0.5)"
-                    ]
-                  }}
-                  transition={{ 
-                    backgroundPosition: { duration: 3, repeat: Infinity },
-                    boxShadow: { duration: 2, repeat: Infinity }
-                  }}
-                  style={{ backgroundSize: "200% 200%" }}
                 >
-                  <motion.span
-                    animate={{
-                      rotate: [0, 360]
-                    }}
-                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                  />
-                  <span className="relative z-10">LEARN MORE</span>
+                  LEARN MORE
                 </motion.button>
               </motion.div>
-
-              {/* Floating Icons Around Title */}
-              <div className="absolute inset-0 pointer-events-none">
-                <motion.div
-                  animate={{
-                    y: [0, -20, 0],
-                    rotate: [0, 10, 0]
-                  }}
-                  transition={{ duration: 4, repeat: Infinity, delay: 0 }}
-                  className="absolute top-20 left-10 opacity-40"
-                >
-                  <MapPin className="w-12 h-12 text-civic-teal" />
-                </motion.div>
-                <motion.div
-                  animate={{
-                    y: [0, -15, 0],
-                    rotate: [0, -10, 0]
-                  }}
-                  transition={{ duration: 3.5, repeat: Infinity, delay: 0.5 }}
-                  className="absolute top-40 right-20 opacity-40"
-                >
-                  <Camera className="w-10 h-10 text-civic-darkBlue" />
-                </motion.div>
-                <motion.div
-                  animate={{
-                    y: [0, -25, 0],
-                    rotate: [0, 15, 0]
-                  }}
-                  transition={{ duration: 4.5, repeat: Infinity, delay: 1 }}
-                  className="absolute bottom-32 left-20 opacity-40"
-                >
-                  <BarChart3 className="w-11 h-11 text-civic-teal" />
-                </motion.div>
-                <motion.div
-                  animate={{
-                    y: [0, -18, 0],
-                    rotate: [0, -12, 0]
-                  }}
-                  transition={{ duration: 3.8, repeat: Infinity, delay: 1.5 }}
-                  className="absolute bottom-40 right-10 opacity-40"
-                >
-                  <Brain className="w-10 h-10 text-civic-darkBlue" />
-                </motion.div>
-              </div>
             </motion.div>
           </div>
         </section>
 
         {/* Features Section */}
-        <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-white via-civic-lightBlue/20 to-white">
+        <section id="features-section" className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-white via-civic-lightBlue/20 to-white">
           <div className="max-w-7xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
