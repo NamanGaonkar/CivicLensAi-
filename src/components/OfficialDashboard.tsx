@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { supabase } from "../lib/supabase";
 import { 
   ClipboardList, 
   Filter, 
@@ -8,284 +9,440 @@ import {
   MessageSquare,
   CheckCircle2,
   AlertCircle,
-  Building2
+  Building2,
+  LogOut,
+  Search,
+  MapPin,
+  Calendar,
+  Send,
+  X,
+  FileText
 } from "lucide-react";
 
 import { toast } from "sonner";
 
-export function OfficialDashboard() {
-  const [selectedDepartment, setSelectedDepartment] = useState("all");
-  const [selectedReport, setSelectedReport] = useState<string | null>(null);
-  const [assignmentData, setAssignmentData] = useState({
-    department: "",
-    responseTimeline: "",
-    officialComment: ""
+interface OfficialDashboardProps {
+  onLogout: () => void;
+  userEmail: string;
+}
+
+interface Report {
+  id: number;
+  title: string;
+  description: string;
+  category: string;
+  status: string;
+  priority: string;
+  location: string;
+  created: string;
+  userName: string;
+  responses: Response[];
+}
+
+interface Response {
+  id: number;
+  responderName: string;
+  text: string;
+  statusUpdate?: string;
+  created: string;
+}
+
+export function OfficialDashboard({ onLogout, userEmail }: OfficialDashboardProps) {
+  const [reports, setReports] = useState<Report[]>([]);
+  const [selectedReport, setSelectedReport] = useState<Report | null>(null);
+  const [responseText, setResponseText] = useState("");
+  const [statusUpdate, setStatusUpdate] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterStatus, setFilterStatus] = useState("all");
+
+  // Fetch real data from Supabase
+  useEffect(() => {
+    fetchReports();
+  }, []);
+
+  const fetchReports = async () => {
+    try {
+      // First fetch all reports
+      const { data: reportsData, error: reportsError } = await supabase
+        .from('reports')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (reportsError) throw reportsError;
+
+      console.log('Official Dashboard - Fetched reports:', reportsData);
+
+      // Fetch user info and responses for each report
+      const reportsWithResponses = await Promise.all(
+        (reportsData || []).map(async (report) => {
+          // Get user info
+          const { data: userData } = await supabase
+            .from('profiles')
+            .select('full_name, email')
+            .eq('id', report.user_id)
+            .single();
+
+          // Get responses
+          const { data: responses } = await supabase
+            .from('report_responses')
+            .select('*')
+            .eq('report_id', report.id)
+            .order('created_at', { ascending: false });
+
+          return {
+            id: report.id,
+            title: report.title,
+            description: report.description,
+            category: report.category,
+            status: report.status,
+            priority: report.priority || 'medium',
+            location: report.location,
+            created: new Date(report.created_at).toLocaleDateString(),
+            userName: userData?.full_name || 'Unknown User',
+            responses: (responses || []).map(r => ({
+              id: r.id,
+              responderName: r.responder_name,
+              text: r.response_text,
+              statusUpdate: r.status_update,
+              created: new Date(r.created_at).toLocaleDateString()
+            }))
+          };
+        })
+      );
+
+      setReports(reportsWithResponses);
+      console.log('Official Dashboard - Reports loaded successfully:', reportsWithResponses);
+    } catch (error) {
+      console.error('Error fetching reports:', error);
+      toast.error('Failed to load reports');
+    }
+  };
+
+  const handleSubmitResponse = async () => {
+    if (!selectedReport || !responseText.trim()) {
+      toast.error('Please enter a response');
+      return;
+    }
+
+    console.log('Submitting response for report:', selectedReport.id);
+    console.log('Response text:', responseText);
+    console.log('Status update:', statusUpdate);
+    console.log('User email:', userEmail);
+
+    try {
+      // Insert response into database
+      const { data: responseData, error: responseError } = await supabase
+        .from('report_responses')
+        .insert({
+          report_id: String(selectedReport.id),
+          responder_email: userEmail,
+          responder_name: 'Official',
+          response_text: responseText,
+          status_update: statusUpdate || null
+        })
+        .select();
+
+      if (responseError) {
+        console.error('Response insert error:', responseError);
+        throw responseError;
+      }
+      
+      console.log('Response inserted successfully:', responseData);
+
+      // Update report status if status was changed
+      if (statusUpdate) {
+        console.log('Updating report status to:', statusUpdate, 'for report ID:', selectedReport.id);
+        
+        // Use RPC function to bypass RLS
+        const { data: updateData, error: updateError } = await supabase
+          .rpc('update_report_status', {
+            report_uuid: String(selectedReport.id),
+            new_status: statusUpdate
+          });
+
+        if (updateError) {
+          console.error('Status update error:', updateError);
+          throw updateError;
+        }
+        
+        console.log('Status updated successfully via RPC');
+      } else {
+        console.log('No status update selected, keeping current status');
+      }
+
+      toast.success('Response submitted successfully');
+      setResponseText('');
+      setStatusUpdate('');
+      setSelectedReport(null);
+      fetchReports(); // Refresh the reports list
+    } catch (error: any) {
+      console.error('Error submitting response:', error);
+      console.error('Error details:', error.message, error.details, error.hint);
+      toast.error(`Failed to submit response: ${error.message || 'Unknown error'}`);
+    }
+  };
+
+  const filteredReports = reports.filter(r => {
+    const matchesSearch = r.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         r.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesFilter = filterStatus === "all" || r.status === filterStatus;
+    return matchesSearch && matchesFilter;
   });
 
-  // Placeholder data - replace with actual queries
-  const departments = [
-    "All Departments",
-    "Public Works",
-    "Sanitation",
-    "Transportation",
-    "Parks & Recreation",
-    "Utilities",
-    "Public Safety"
-  ];
-
   const stats = [
-    { label: "Total Reports", value: 156, icon: ClipboardList, color: "text-civic-teal" },
-    { label: "Pending", value: 42, icon: AlertCircle, color: "text-accent-orange" },
-    { label: "In Progress", value: 38, icon: Clock, color: "text-civic-darkBlue" },
-    { label: "Resolved", value: 76, icon: CheckCircle2, color: "text-green-600" }
+    { label: "Total Reports", value: reports.length, icon: FileText, color: "text-blue-600" },
+    { label: "Open Issues", value: reports.filter(r => r.status === "open").length, icon: AlertCircle, color: "text-red-600" },
+    { label: "In Progress", value: reports.filter(r => r.status === "in_progress").length, icon: Clock, color: "text-orange-600" },
+    { label: "Resolved", value: reports.filter(r => r.status === "resolved").length, icon: CheckCircle2, color: "text-green-600" }
   ];
-
-  const mockReports = [
-    {
-      _id: "1",
-      description: "Pothole on Main Street",
-      location: "Main St & 5th Ave",
-      category: "road",
-      status: "pending",
-      createdAt: Date.now() - 86400000,
-      assignedDepartment: null,
-      priority: "high"
-    },
-    {
-      _id: "2",
-      description: "Broken streetlight",
-      location: "Park Avenue",
-      category: "streetlight",
-      status: "in-progress",
-      createdAt: Date.now() - 172800000,
-      assignedDepartment: "Public Works",
-      responseTimeline: "48 hours",
-      priority: "medium"
-    }
-  ];
-
-  const handleAssignReport = (reportId: string) => {
-    if (!assignmentData.department || !assignmentData.responseTimeline) {
-      toast.error("Please fill in all required fields");
-      return;
-    }
-    toast.success("Report assigned successfully! (Backend integration pending)");
-    setSelectedReport(null);
-    setAssignmentData({ department: "", responseTimeline: "", officialComment: "" });
-  };
-
-  const handleAddComment = (reportId: string) => {
-    if (!assignmentData.officialComment.trim()) {
-      toast.error("Please enter a comment");
-      return;
-    }
-    toast.success("Official comment added! (Backend integration pending)");
-    setAssignmentData({ ...assignmentData, officialComment: "" });
-  };
 
   return (
-    <div className="space-y-6">
+    <div className="min-h-screen bg-slate-50">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-900">Official Dashboard</h1>
-          <p className="text-slate-600 mt-1">Manage and respond to citizen reports</p>
-        </div>
-        <div className="flex items-center space-x-2 px-4 py-2 bg-civic-lightBlue/30 border border-civic-teal rounded-xl">
-          <Building2 className="w-5 h-5 text-civic-teal" />
-          <span className="font-semibold text-civic-darkBlue">Public Works Department</span>
-        </div>
-      </div>
-
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        {stats.map((stat, index) => (
-          <motion.div
-            key={stat.label}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-            className="glass-card p-6"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-slate-600 mb-1">{stat.label}</p>
-                <p className={`text-3xl font-bold ${stat.color}`}>{stat.value}</p>
-              </div>
-              <stat.icon className={`w-12 h-12 ${stat.color} opacity-20`} />
+      <header className="bg-gradient-to-r from-civic-teal to-civic-darkBlue text-white p-6 shadow-lg">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+              <UserCheck className="w-6 h-6" />
             </div>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Department Filter */}
-      <div className="glass-card p-4">
-        <div className="flex items-center space-x-4">
-          <Filter className="w-5 h-5 text-civic-teal" />
-          <select
-            value={selectedDepartment}
-            onChange={(e) => setSelectedDepartment(e.target.value)}
-            className="flex-1 px-4 py-2 border border-slate-300 rounded-xl focus:border-civic-teal focus:outline-none text-slate-900"
+            <div>
+              <h1 className="text-2xl font-bold">Official Dashboard</h1>
+              <p className="text-white/80 text-sm">{userEmail}</p>
+            </div>
+          </div>
+          <button
+            onClick={onLogout}
+            className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors"
           >
-            {departments.map((dept) => (
-              <option key={dept} value={dept.toLowerCase().replace(/ /g, "-")}>
-                {dept}
-              </option>
-            ))}
-          </select>
+            <LogOut className="w-4 h-4" />
+            Logout
+          </button>
         </div>
-      </div>
+      </header>
 
-      {/* Reports List */}
-      <div className="space-y-4">
-        {mockReports.map((report, index) => (
-          <motion.div
-            key={report._id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-            className="glass-card p-6"
-          >
-            <div className="flex items-start justify-between mb-4">
-              <div className="flex-1">
-                <div className="flex items-center space-x-3 mb-2">
-                  <h3 className="text-xl font-bold text-slate-900">{report.description}</h3>
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                      report.status === "pending"
-                        ? "bg-accent-orange/20 text-accent-orange"
-                        : report.status === "in-progress"
-                        ? "bg-civic-darkBlue/20 text-civic-darkBlue"
-                        : "bg-green-100 text-green-700"
-                    }`}
-                  >
-                    {report.status.replace("-", " ").toUpperCase()}
-                  </span>
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                      report.priority === "high"
-                        ? "bg-red-100 text-red-700"
-                        : report.priority === "medium"
-                        ? "bg-yellow-100 text-yellow-700"
-                        : "bg-blue-100 text-blue-700"
-                    }`}
-                  >
-                    {report.priority?.toUpperCase() || "NORMAL"}
-                  </span>
+      <div className="max-w-7xl mx-auto p-6">
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {stats.map((stat, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className="bg-white rounded-xl p-6 shadow-md border border-slate-200"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <div className={`w-12 h-12 bg-gradient-to-br ${
+                  stat.label === "Total Reports" ? "from-blue-500 to-blue-600" :
+                  stat.label === "Open Issues" ? "from-red-500 to-red-600" :
+                  stat.label === "In Progress" ? "from-orange-500 to-orange-600" :
+                  "from-green-500 to-green-600"
+                } rounded-lg flex items-center justify-center`}>
+                  <stat.icon className="w-6 h-6 text-white" />
                 </div>
-                <p className="text-slate-600 mb-2">{report.location}</p>
-                <p className="text-sm text-slate-500">
-                  Reported: {new Date(report.createdAt).toLocaleString()}
-                </p>
+              </div>
+              <h3 className="text-2xl font-bold text-slate-900 mb-1">{stat.value}</h3>
+              <p className="text-sm text-slate-600">{stat.label}</p>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Main Content */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Reports List */}
+          <div className="bg-white rounded-xl shadow-md border border-slate-200 p-6">
+            <div className="mb-6">
+              <h2 className="text-xl font-bold text-slate-900 mb-4">Citizen Reports</h2>
+              
+              {/* Search and Filter */}
+              <div className="flex gap-3 mb-4">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                  <input
+                    type="text"
+                    placeholder="Search reports..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:border-civic-teal focus:ring-2 focus:ring-civic-teal/20 outline-none text-sm"
+                  />
+                </div>
+                <select
+                  value={filterStatus}
+                  onChange={(e) => setFilterStatus(e.target.value)}
+                  className="px-3 py-2 border border-slate-300 rounded-lg focus:border-civic-teal outline-none text-sm"
+                >
+                  <option value="all">All Status</option>
+                  <option value="open">Open</option>
+                  <option value="in_progress">In Progress</option>
+                  <option value="resolved">Resolved</option>
+                </select>
               </div>
             </div>
 
-            {/* Assignment Section */}
-            {selectedReport === report._id ? (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                className="mt-4 pt-4 border-t border-slate-200 space-y-4"
-              >
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Reports List */}
+            <div className="space-y-3 max-h-[600px] overflow-y-auto">
+              {filteredReports.map((report) => (
+                <motion.div
+                  key={report.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  onClick={() => setSelectedReport(report)}
+                  className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                    selectedReport?.id === report.id
+                      ? "border-civic-teal bg-civic-lightBlue/10"
+                      : "border-slate-200 hover:border-civic-teal/50"
+                  }`}
+                >
+                  <div className="flex items-start justify-between mb-2">
+                    <h3 className="font-semibold text-slate-900 flex-1">{report.title}</h3>
+                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                      report.status === "resolved" ? "bg-green-100 text-green-700" :
+                      report.status === "in_progress" ? "bg-blue-100 text-blue-700" :
+                      "bg-red-100 text-red-700"
+                    }`}>
+                      {report.status}
+                    </span>
+                  </div>
+                  <p className="text-sm text-slate-600 mb-2 line-clamp-2">{report.description}</p>
+                  <div className="flex items-center gap-3 text-xs text-slate-500">
+                    <span className="flex items-center gap-1">
+                      <MapPin className="w-3 h-3" />
+                      {report.location}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Calendar className="w-3 h-3" />
+                      {report.created}
+                    </span>
+                    {report.responses.length > 0 && (
+                      <span className="flex items-center gap-1 text-civic-teal">
+                        <MessageSquare className="w-3 h-3" />
+                        {report.responses.length}
+                      </span>
+                    )}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          {/* Report Details & Response Form */}
+          <div className="bg-white rounded-xl shadow-md border border-slate-200 p-6">
+            {selectedReport ? (
+              <div>
+                <div className="flex items-start justify-between mb-6">
+                  <h2 className="text-xl font-bold text-slate-900">Report Details</h2>
+                  <button
+                    onClick={() => setSelectedReport(null)}
+                    className="p-1 hover:bg-slate-100 rounded-lg transition-colors"
+                  >
+                    <X className="w-5 h-5 text-slate-500" />
+                  </button>
+                </div>
+
+                {/* Report Info */}
+                <div className="mb-6 p-4 bg-slate-50 rounded-lg">
+                  <h3 className="font-semibold text-slate-900 mb-2">{selectedReport.title}</h3>
+                  <p className="text-sm text-slate-700 mb-3">{selectedReport.description}</p>
+                  <div className="grid grid-cols-2 gap-3 text-sm">
+                    <div>
+                      <span className="text-slate-500">Category:</span>
+                      <span className="ml-2 font-medium text-slate-900">{selectedReport.category}</span>
+                    </div>
+                    <div>
+                      <span className="text-slate-500">Priority:</span>
+                      <span className={`ml-2 font-medium ${
+                        selectedReport.priority === "high" ? "text-red-600" :
+                        selectedReport.priority === "medium" ? "text-orange-600" :
+                        "text-yellow-600"
+                      }`}>{selectedReport.priority}</span>
+                    </div>
+                    <div>
+                      <span className="text-slate-500">Reported by:</span>
+                      <span className="ml-2 font-medium text-slate-900">{selectedReport.userName}</span>
+                    </div>
+                    <div>
+                      <span className="text-slate-500">Date:</span>
+                      <span className="ml-2 font-medium text-slate-900">{selectedReport.created}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Previous Responses */}
+                {selectedReport.responses.length > 0 && (
+                  <div className="mb-6">
+                    <h3 className="font-semibold text-slate-900 mb-3">Responses</h3>
+                    <div className="space-y-3 max-h-[200px] overflow-y-auto">
+                      {selectedReport.responses.map((response) => (
+                        <div key={response.id} className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="font-medium text-blue-900">{response.responderName}</span>
+                            <span className="text-xs text-blue-600">{response.created}</span>
+                          </div>
+                          <p className="text-sm text-blue-800 mb-1">{response.text}</p>
+                          {response.statusUpdate && (
+                            <span className="text-xs px-2 py-0.5 bg-blue-200 text-blue-900 rounded-full">
+                              Status updated to: {response.statusUpdate}
+                            </span>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Response Form */}
+                <div className="space-y-4">
+                  <h3 className="font-semibold text-slate-900">Add Response</h3>
+                  
                   <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-2">
-                      Assign Department
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                      Your Response
+                    </label>
+                    <textarea
+                      value={responseText}
+                      onChange={(e) => setResponseText(e.target.value)}
+                      placeholder="Enter your response to the citizen..."
+                      rows={4}
+                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:border-civic-teal focus:ring-2 focus:ring-civic-teal/20 outline-none resize-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                      Update Status (Optional)
                     </label>
                     <select
-                      value={assignmentData.department}
-                      onChange={(e) =>
-                        setAssignmentData({ ...assignmentData, department: e.target.value })
-                      }
-                      className="w-full px-4 py-2 border border-slate-300 rounded-xl focus:border-civic-teal focus:outline-none"
+                      value={statusUpdate}
+                      onChange={(e) => setStatusUpdate(e.target.value)}
+                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:border-civic-teal focus:ring-2 focus:ring-civic-teal/20 outline-none"
                     >
-                      <option value="">Select Department</option>
-                      {departments.slice(1).map((dept) => (
-                        <option key={dept} value={dept}>
-                          {dept}
-                        </option>
-                      ))}
+                      <option value="">Keep current status</option>
+                      <option value="in_progress">In Progress</option>
+                      <option value="resolved">Resolved</option>
+                      <option value="closed">Closed</option>
                     </select>
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-2">
-                      Response Timeline
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="e.g., 48 hours, 5 days"
-                      value={assignmentData.responseTimeline}
-                      onChange={(e) =>
-                        setAssignmentData({ ...assignmentData, responseTimeline: e.target.value })
-                      }
-                      className="w-full px-4 py-2 border border-slate-300 rounded-xl focus:border-civic-teal focus:outline-none"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">
-                    Official Comment
-                  </label>
-                  <textarea
-                    placeholder="Add an official response or update..."
-                    value={assignmentData.officialComment}
-                    onChange={(e) =>
-                      setAssignmentData({ ...assignmentData, officialComment: e.target.value })
-                    }
-                    rows={3}
-                    className="w-full px-4 py-2 border border-slate-300 rounded-xl focus:border-civic-teal focus:outline-none resize-none"
-                  />
-                </div>
-
-                <div className="flex justify-end space-x-3">
                   <button
-                    onClick={() => setSelectedReport(null)}
-                    className="px-6 py-2 border border-slate-300 text-slate-700 font-semibold rounded-xl hover:bg-slate-50"
+                    onClick={handleSubmitResponse}
+                    disabled={!responseText.trim()}
+                    className="w-full bg-gradient-to-r from-civic-teal to-civic-darkBlue text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={() => handleAssignReport(report._id)}
-                    className="px-6 py-2 bg-gradient-to-r from-civic-teal to-civic-darkBlue text-white font-semibold rounded-xl"
-                  >
-                    Assign & Save
+                    <Send className="w-4 h-4" />
+                    Send Response
                   </button>
                 </div>
-              </motion.div>
+              </div>
             ) : (
-              <div className="flex items-center space-x-3 mt-4 pt-4 border-t border-slate-200">
-                {report.assignedDepartment ? (
-                  <>
-                    <div className="flex-1 text-sm text-slate-600">
-                      <span className="font-semibold">Assigned to:</span> {report.assignedDepartment}
-                      {report.responseTimeline && (
-                        <span className="ml-4">
-                          <span className="font-semibold">Timeline:</span> {report.responseTimeline}
-                        </span>
-                      )}
-                    </div>
-                    <button
-                      onClick={() => setSelectedReport(report._id)}
-                      className="px-4 py-2 text-civic-teal font-semibold hover:bg-civic-teal/10 rounded-lg"
-                    >
-                      Update
-                    </button>
-                  </>
-                ) : (
-                  <button
-                    onClick={() => setSelectedReport(report._id)}
-                    className="flex items-center space-x-2 px-6 py-2 bg-civic-teal text-white font-semibold rounded-xl hover:bg-civic-teal/90"
-                  >
-                    <UserCheck className="w-5 h-5" />
-                    <span>Claim & Assign</span>
-                  </button>
-                )}
+              <div className="flex items-center justify-center h-full text-slate-400">
+                <div className="text-center">
+                  <FileText className="w-16 h-16 mx-auto mb-4" />
+                  <p>Select a report to view details and respond</p>
+                </div>
               </div>
             )}
-          </motion.div>
-        ))}
+          </div>
+        </div>
       </div>
     </div>
   );

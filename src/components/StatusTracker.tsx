@@ -9,7 +9,9 @@ export function StatusTracker({ userReports = [] }: StatusTrackerProps) {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "resolved":
+      case "closed":
         return <CheckCircle2 className="w-6 h-6 text-green-600" />;
+      case "in_progress":
       case "in-progress":
         return <Clock className="w-6 h-6 text-civic-darkBlue" />;
       case "rejected":
@@ -22,7 +24,9 @@ export function StatusTracker({ userReports = [] }: StatusTrackerProps) {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "resolved":
+      case "closed":
         return "bg-green-100 text-green-700 border-green-300";
+      case "in_progress":
       case "in-progress":
         return "bg-civic-lightBlue text-civic-darkBlue border-civic-teal";
       case "rejected":
@@ -63,6 +67,8 @@ export function StatusTracker({ userReports = [] }: StatusTrackerProps) {
           const timeline = getTimeline(report);
           const location = report.address || `${report.area}, ${report.city}` || "Location not specified";
           
+          console.log('Report status for', report.title, ':', report.status);
+          
           return (
             <motion.div
               key={report.id}
@@ -86,7 +92,7 @@ export function StatusTracker({ userReports = [] }: StatusTrackerProps) {
                         report.status
                       )}`}
                     >
-                      {report.status.replace("-", " ").toUpperCase()}
+                      {report.status.replace(/_/g, " ").replace(/-/g, " ").toUpperCase()}
                     </div>
                   </div>
                 </div>
@@ -124,17 +130,17 @@ export function StatusTracker({ userReports = [] }: StatusTrackerProps) {
                     initial={{ width: 0 }}
                     animate={{
                       width:
-                        report.status === "resolved"
+                        report.status === "resolved" || report.status === "closed"
                           ? "100%"
-                          : report.status === "in-progress"
+                          : report.status === "in_progress" || report.status === "in-progress"
                           ? "50%"
                           : "25%"
                     }}
                     transition={{ duration: 1, delay: index * 0.1 }}
                     className={`h-full ${
-                      report.status === "resolved"
+                      report.status === "resolved" || report.status === "closed"
                         ? "bg-green-500"
-                        : report.status === "in-progress"
+                        : report.status === "in_progress" || report.status === "in-progress"
                         ? "bg-civic-teal"
                         : "bg-accent-orange"
                     }`}
@@ -142,16 +148,34 @@ export function StatusTracker({ userReports = [] }: StatusTrackerProps) {
                 </div>
               </div>
 
-              {/* Official Response */}
-              {report.officialComment && (
-                <div className="bg-civic-lightBlue/20 border-l-4 border-civic-teal p-4 rounded">
-                  <p className="text-sm font-semibold text-civic-darkBlue mb-1">Official Update:</p>
-                  <p className="text-slate-700">{report.officialComment}</p>
-                  {report.assignedDepartment && (
-                    <p className="text-xs text-slate-600 mt-2">
-                      Assigned to: {report.assignedDepartment}
-                    </p>
-                  )}
+              {/* Official Responses */}
+              {report.responses && report.responses.length > 0 && (
+                <div className="space-y-3 mt-4">
+                  <p className="text-sm font-semibold text-civic-darkBlue">Official Updates:</p>
+                  {report.responses.map((response: any, idx: number) => (
+                    <div key={idx} className="bg-civic-lightBlue/20 border-l-4 border-civic-teal p-4 rounded">
+                      <div className="flex items-start justify-between mb-2">
+                        <p className="text-sm font-semibold text-civic-darkBlue">
+                          {response.responder_name || 'Official'}
+                        </p>
+                        <p className="text-xs text-slate-500">
+                          {new Date(response.created_at).toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })}
+                        </p>
+                      </div>
+                      <p className="text-slate-700 mb-2">{response.response_text}</p>
+                      {response.status_update && (
+                        <div className="inline-flex items-center px-2 py-1 bg-civic-teal/20 text-civic-teal rounded text-xs font-medium">
+                          Status changed to: {response.status_update.replace('_', ' ').toUpperCase()}
+                        </div>
+                      )}
+                    </div>
+                  ))}
                 </div>
               )}
 

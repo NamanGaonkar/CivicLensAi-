@@ -21,6 +21,7 @@ CREATE TABLE profiles (
   organization TEXT,
   bio TEXT,
   avatar_url TEXT,
+  role TEXT DEFAULT 'citizen' CHECK (role IN ('citizen', 'official', 'admin')),
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -40,6 +41,16 @@ CREATE POLICY "Users can update own profile"
 CREATE POLICY "Users can insert own profile" 
   ON profiles FOR INSERT 
   WITH CHECK (auth.uid() = id);
+
+-- Admins can update any profile (for role management)
+CREATE POLICY "Admins can update any profile"
+  ON profiles FOR UPDATE
+  USING (
+    EXISTS (
+      SELECT 1 FROM profiles
+      WHERE profiles.id = auth.uid() AND profiles.role = 'admin'
+    )
+  );
 ```
 
 ---
@@ -95,6 +106,62 @@ CREATE INDEX reports_user_id_idx ON reports(user_id);
 CREATE INDEX reports_status_idx ON reports(status);
 CREATE INDEX reports_created_at_idx ON reports(created_at DESC);
 CREATE INDEX reports_location_idx ON reports(latitude, longitude);
+
+-- Officials and Admins can update report status
+CREATE POLICY "Officials can update reports"
+  ON reports FOR UPDATE
+  USING (
+    EXISTS (
+      SELECT 1 FROM profiles
+      WHERE profiles.id = auth.uid() AND profiles.role IN ('official', 'admin')
+    )
+  );
+```
+
+---
+
+## 2A. Create Report Responses Table
+
+```sql
+-- Report Responses table (for officials to respond to reports)
+CREATE TABLE report_responses (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  report_id UUID REFERENCES reports(id) ON DELETE CASCADE,
+  responder_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  responder_name TEXT NOT NULL,
+  response_text TEXT NOT NULL,
+  status_update TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Enable Row Level Security
+ALTER TABLE report_responses ENABLE ROW LEVEL SECURITY;
+
+-- Policies for responses
+CREATE POLICY "Anyone can view responses" 
+  ON report_responses FOR SELECT 
+  USING (true);
+
+CREATE POLICY "Officials and Admins can create responses" 
+  ON report_responses FOR INSERT 
+  WITH CHECK (
+    EXISTS (
+      SELECT 1 FROM profiles
+      WHERE profiles.id = auth.uid() AND profiles.role IN ('official', 'admin')
+    )
+  );
+
+CREATE POLICY "Responders can update own responses" 
+  ON report_responses FOR UPDATE 
+  USING (auth.uid() = responder_id);
+
+CREATE POLICY "Responders can delete own responses" 
+  ON report_responses FOR DELETE 
+  USING (auth.uid() = responder_id);
+
+-- Index for faster queries
+CREATE INDEX report_responses_report_id_idx ON report_responses(report_id);
+CREATE INDEX report_responses_created_at_idx ON report_responses(created_at DESC);
 ```
 
 ---
@@ -254,17 +321,6 @@ VALUES
 
 ```sql
 -- Posts table
-CREATE TABLE posts (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
-  user_name TEXT NOT NULL,
-  title TEXT NOT NULL,
-  content TEXT NOT NULL,
-  image_url TEXT,
-  upvotes INTEGER DEFAULT 0,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW()
-);
 
 -- Enable Row Level Security
 ALTER TABLE posts ENABLE ROW LEVEL SECURITY;

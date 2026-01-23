@@ -3,8 +3,15 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "./lib/supabase";
 
-export function SignInForm() {
-  const [flow, setFlow] = useState<"signIn" | "signUp">("signIn");
+interface SignInFormProps {
+  initialFlow?: "signIn" | "signUp";
+  onBackToLogin?: () => void;
+  onSuccess?: () => void;
+  role?: 'citizen' | 'official' | 'admin';
+}
+
+export function SignInForm({ initialFlow = "signIn", onBackToLogin, onSuccess, role = 'citizen' }: SignInFormProps = {}) {
+  const [flow, setFlow] = useState<"signIn" | "signUp">(initialFlow);
   const [submitting, setSubmitting] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -34,7 +41,7 @@ export function SignInForm() {
               
               if (error) throw error;
               
-              // Create profile
+              // Create profile with role
               if (data.user) {
                 const { error: profileError } = await supabase
                   .from('profiles')
@@ -47,6 +54,7 @@ export function SignInForm() {
                     city,
                     organization,
                     bio,
+                    role: role,
                   });
                 
                 if (profileError) console.error('Profile creation error:', profileError);
@@ -62,6 +70,7 @@ export function SignInForm() {
               
               if (error) throw error;
               toast.success("Signed in successfully!");
+              if (onSuccess) onSuccess();
             }
           } catch (error: any) {
             console.error('Auth error:', error);
@@ -144,6 +153,8 @@ export function SignInForm() {
         <button className="auth-button" type="submit" disabled={submitting}>
           {flow === "signIn" ? "Sign in" : "Sign up"}
         </button>
+        
+        {/* Toggle between sign in and sign up */}
         <div className="text-center text-sm text-secondary">
           <span>
             {flow === "signIn"
@@ -153,7 +164,13 @@ export function SignInForm() {
           <button
             type="button"
             className="text-civic-teal hover:text-civic-darkBlue hover:underline font-medium cursor-pointer"
-            onClick={() => setFlow(flow === "signIn" ? "signUp" : "signIn")}
+            onClick={() => {
+              if (flow === "signUp" && onBackToLogin) {
+                onBackToLogin();
+              } else {
+                setFlow(flow === "signIn" ? "signUp" : "signIn");
+              }
+            }}
           >
             {flow === "signIn" ? "Sign up instead" : "Sign in instead"}
           </button>

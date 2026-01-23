@@ -10,18 +10,21 @@ import { CommunityFeed } from "./components/CommunityFeed";
 import { BeforeAfter } from "./components/BeforeAfter";
 import { UserProfile } from "./components/UserProfile";
 import { OfficialDashboard } from "./components/OfficialDashboard";
+import { UnifiedLoginPage } from "./components/UnifiedLoginPage";
+import { AdminDashboard } from "./components/AdminDashboard";
 import { StatusTracker } from "./components/StatusTracker";
 import { GoogleMapsProvider } from "./components/GoogleMapsProvider";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MapPin, Users, User, ShieldCheck, Activity, BarChart3 } from "lucide-react";
+import { MapPin, Users, User, ShieldCheck, Activity, BarChart3, ArrowLeft } from "lucide-react";
 import { useAuth } from "./hooks/useAuth";
 import { supabase } from "./lib/supabase";
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<"dashboard" | "report" | "landing" | "community" | "beforeafter" | "profile" | "official" | "status">("landing");
+  const [currentView, setCurrentView] = useState<"dashboard" | "report" | "landing" | "community" | "beforeafter" | "profile" | "official" | "status" | "login" | "signup" | "admin-dash" | "official-dash">("landing");
   const [showAuth, setShowAuth] = useState(false);
-  const [userRole, setUserRole] = useState<"citizen" | "official">("citizen"); // In production, fetch from user profile
+  const [userRole, setUserRole] = useState<"citizen" | "official" | "admin">("citizen");
+  const [signupRole, setSignupRole] = useState<'citizen' | 'official' | 'admin'>('citizen');
   const [userReports, setUserReports] = useState<any[]>([]);
   const { user, loading } = useAuth();
 
@@ -33,26 +36,77 @@ export default function App() {
 
   const fetchUserReports = async () => {
     try {
-      const { data, error } = await supabase
+      const { data: reportsData, error } = await supabase
         .from('reports')
         .select('*')
         .eq('user_id', user?.id)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setUserReports(data || []);
+
+      // Fetch responses for each report
+      const reportsWithResponses = await Promise.all(
+        (reportsData || []).map(async (report) => {
+          const { data: responses } = await supabase
+            .from('report_responses')
+            .select('*')
+            .eq('report_id', report.id)
+            .order('created_at', { ascending: false });
+
+          return {
+            ...report,
+            responses: responses || []
+          };
+        })
+      );
+
+      setUserReports(reportsWithResponses);
     } catch (error) {
       console.error('Error fetching user reports:', error);
     }
   };
 
   const handleGetStarted = () => {
-    setShowAuth(true);
+    setCurrentView("login");
   };
 
   const handleBackToLanding = () => {
     setCurrentView("landing");
     setShowAuth(false);
+  };
+
+  const handleCitizenLogin = async (email: string, password: string) => {
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+    
+    setUserRole('citizen');
+    setCurrentView('dashboard');
+  };
+
+  const handleAdminLogin = async (email: string, password: string) => {
+    // Hardcoded admin credentials - no auth required
+    if (email === 'admin@civiclens.com' && password === 'admin123') {
+      setUserRole('admin');
+      setCurrentView('admin-dash');
+      return;
+    }
+    throw new Error('Invalid admin credentials');
+  };
+
+  const handleOfficialLogin = async (email: string, password: string) => {
+    // Hardcoded official credentials - no auth required
+    if (email === 'official@civiclens.com' && password === 'official123') {
+      setUserRole('official');
+      setCurrentView('official-dash');
+      return;
+    }
+    throw new Error('Invalid official credentials');
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setUserRole('citizen');
+    setCurrentView('landing');
   };
 
   if (loading) {
@@ -69,7 +123,83 @@ export default function App() {
   return (
     <GoogleMapsProvider>
       <div className="min-h-screen">
-        {user ? (
+        {/* Unified Login Page */}
+        {currentView === "login" && (
+          <UnifiedLoginPage
+            onCitizenLogin={handleCitizenLogin}
+            onOfficialLogin={handleOfficialLogin}
+            onAdminLogin={handleAdminLogin}
+            onBackToLanding={handleBackToLanding}
+            onSignUpClick={(role) => {
+              setSignupRole(role);
+              setCurrentView("signup");
+            }}
+          />
+        )}
+
+        {/* Sign Up Page */}
+        {currentView === "signup" && (
+          <div className="min-h-screen bg-gradient-to-br from-civic-lightBlue/30 via-white to-civic-teal/20 flex items-center justify-center p-4 sm:p-6">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="w-full max-w-md"
+            >
+              {/* Back Button - Mobile Optimized */}
+              <motion.button
+                onClick={() => setCurrentView("login")}
+                className="mb-4 sm:mb-6 text-slate-600 hover:text-slate-900 transition-colors flex items-center gap-2 group px-2 py-1 rounded-lg hover:bg-white/50"
+                whileHover={{ x: -5 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span className="text-sm sm:text-base font-medium">Back to Sign In</span>
+              </motion.button>
+              
+              <div className={`bg-white/80 backdrop-blur-xl rounded-2xl shadow-2xl p-6 sm:p-8 border ${
+                signupRole === 'admin' ? 'border-red-500/30' :
+                signupRole === 'official' ? 'border-blue-500/30' :
+                'border-civic-teal/20'
+              }`}>
+                <div className="mb-6">
+                  <h2 className={`text-xl sm:text-2xl font-bold mb-2 ${
+                    signupRole === 'admin' ? 'text-red-600' :
+                    signupRole === 'official' ? 'text-blue-600' :
+                    'text-slate-900'
+                  }`}>
+                    Create {signupRole === 'citizen' ? 'Citizen' : signupRole === 'official' ? 'Official' : 'Admin'} Account
+                  </h2>
+                  <p className="text-sm sm:text-base text-slate-600">
+                    {signupRole === 'citizen' && 'Join CivicLens to report issues and engage with your community'}
+                    {signupRole === 'official' && 'Create an official account to respond to citizen reports'}
+                    {signupRole === 'admin' && 'Create an administrator account with full system access'}
+                  </p>
+                </div>
+                <SignInForm 
+                  initialFlow="signUp" 
+                  onBackToLogin={() => setCurrentView("login")}
+                  role={signupRole}
+                />
+              </div>
+            </motion.div>
+          </div>
+        )}
+
+        {/* Admin Dashboard */}
+        {currentView === "admin-dash" && (
+          <AdminDashboard onLogout={handleLogout} />
+        )}
+
+        {/* Official Dashboard */}
+        {currentView === "official-dash" && (
+          <OfficialDashboard
+            onLogout={handleLogout}
+            userEmail="official@civiclens.com"
+          />
+        )}
+
+        {/* Rest of the app */}
+        {!["login", "signup", "admin-dash", "official-dash"].includes(currentView) && user ? (
         <AnimatePresence mode="wait">
           {currentView === "landing" ? (
             <motion.div
@@ -265,7 +395,7 @@ export default function App() {
                       exit={{ opacity: 0, y: -20 }}
                       transition={{ duration: 0.3 }}
                     >
-                      <OfficialDashboard />
+                      <OfficialDashboard onLogout={handleLogout} userEmail={user?.email || ""} />
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -320,85 +450,15 @@ export default function App() {
                     <Users className="w-5 h-5 mb-0.5" />
                     <span className="text-xs font-medium">Community</span>
                   </motion.button>
-
-                  {/* My Status */}
-                  <motion.button
-                    onClick={() => setCurrentView("status")}
-                    className={`flex flex-col items-center justify-center py-2 px-1 rounded-lg transition-all ${
-                      currentView === "status"
-                        ? "bg-civic-teal text-white"
-                        : "text-slate-600 hover:text-civic-teal hover:bg-civic-lightBlue/30"
-                    }`}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Activity className="w-5 h-5 mb-0.5" />
-                    <span className="text-xs font-medium">Status</span>
-                  </motion.button>
                 </div>
               </nav>
             </motion.div>
           )}
         </AnimatePresence>
-        ) : (
-        <AnimatePresence mode="wait">
-          {!showAuth ? (
-            <motion.div
-              key="landing-unauth"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <LandingPage onGetStarted={handleGetStarted} isAuthenticated={false} />
-            </motion.div>
-          ) : (
-            <motion.div
-              key="auth"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.5 }}
-              className="min-h-screen bg-gradient-to-br from-civic-lightBlue via-white to-blue-50 flex items-center justify-center p-8"
-            >
-              <div className="w-full max-w-md">
-                <motion.button
-                  onClick={handleBackToLanding}
-                  className="mb-8 text-slate-700 hover:text-slate-900 transition-colors flex items-center space-x-2"
-                  whileHover={{ x: -5 }}
-                >
-                  <span>←</span>
-                  <span>Back to Landing</span>
-                </motion.button>
-                
-                <motion.div
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.2 }}
-                  className="text-center mb-8"
-                >
-                  <div className="flex justify-center mb-4">
-                    <Logo size="lg" showText={true} textColor="text-slate-900" />
-                  </div>
-                  <p className="text-xl text-slate-800 font-semibold">
-                    AI-Powered Civic Engagement Platform
-                  </p>
-                  <p className="text-slate-600 mt-2">
-                    Sign in to start transforming your community
-                  </p>
-                </motion.div>
-                
-                <motion.div
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.4 }}
-                >
-                  <SignInForm />
-                </motion.div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-        )}
+        ) : currentView === "landing" && !user ? (
+          // Unauthenticated Landing Page
+          <LandingPage onGetStarted={handleGetStarted} isAuthenticated={false} />
+        ) : null}
 
       <Toaster />
     </div>
