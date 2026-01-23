@@ -137,10 +137,10 @@ export function Dashboard({ onNavigate }: DashboardProps = {}) {
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.1 }}
-        className="text-center"
+        className="text-center px-3 sm:px-0"
       >
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 mb-1 sm:mb-2">City Dashboard</h2>
-        <p className="text-sm sm:text-base text-slate-600">Real-time civic engagement analytics</p>
+        <p className="text-xs sm:text-sm md:text-base text-slate-600">Real-time civic engagement analytics</p>
         
         {hasNoData && (
           <motion.div
@@ -176,7 +176,7 @@ export function Dashboard({ onNavigate }: DashboardProps = {}) {
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.2 }}
-        className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6"
+        className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-6 px-3 sm:px-0"
       >
         {[
           { title: "Total Reports", value: stats.totalReports, change: "+12%", icon: <BarChart3 className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />, color: "blue" as const },
@@ -196,7 +196,7 @@ export function Dashboard({ onNavigate }: DashboardProps = {}) {
       </motion.div>
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6 lg:gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6 lg:gap-8 px-3 sm:px-0">
         {/* Left Column - Charts and Analytics */}
         <motion.div
           initial={{ x: -20, opacity: 0 }}
@@ -205,7 +205,7 @@ export function Dashboard({ onNavigate }: DashboardProps = {}) {
           className="lg:col-span-2 space-y-4 sm:space-y-6 md:space-y-8"
         >
           <TrendsChart data={stats.trendsData} />
-          <div className="h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px]">
+          <div className="h-[250px] sm:h-[350px] md:h-[450px] lg:h-[600px]">
             <GoogleInteractiveMap reports={reports} />
           </div>
         </motion.div>

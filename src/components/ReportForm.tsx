@@ -431,6 +431,7 @@ export function ReportForm({ onBack }: { onBack?: () => void }) {
                 ref={imageInputRef}
                 type="file"
                 accept="image/*"
+                capture="environment"
                 onChange={handleImageSelect}
                 className="hidden"
               />

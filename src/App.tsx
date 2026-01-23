@@ -399,9 +399,10 @@ export default function App() {
                     </motion.div>
                   )}
                 </AnimatePresence>
-                  {/* Chatbot: render only on the dashboard view (per original request) */}
-                  {currentView === "dashboard" && <AIChatbot />}
               </main>
+
+              {/* Global Chatbot - Available on all pages */}
+              {!["login", "signup", "admin-dash", "official-dash"].includes(currentView) && <AIChatbot />}
 
               {/* Mobile-only floating Report button (visible when nav links are hidden) */}
               {/* REMOVED - replaced with bottom navigation */}

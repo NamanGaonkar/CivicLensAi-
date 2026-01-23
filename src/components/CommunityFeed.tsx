@@ -389,6 +389,7 @@ export function CommunityFeed() {
               ref={imageInputRef}
               type="file"
               accept="image/*"
+              capture="environment"
               onChange={(e) => handleImageSelect(e.target.files?.[0] || null)}
               className="hidden"
             />
