@@ -458,17 +458,40 @@ export function ReportForm({ onBack }: { onBack?: () => void }) {
                   </button>
                 </motion.div>
               ) : (
-                <div className="space-y-2">
+                <div className="space-y-4">
                   <Camera className="w-12 h-12 text-slate-400 mx-auto" />
-                  <div className="text-slate-700">
-                    <button
-                      type="button"
-                      onClick={() => imageInputRef.current?.click()}
-                      className="text-civic-teal hover:text-civic-darkBlue underline transition-colors"
-                    >
-                      Click to upload
-                    </button>{" "}
-                    or drag and drop
+                  <div className="text-slate-700 text-center">
+                    <p className="mb-3">Choose how to add your photo:</p>
+                    <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const input = imageInputRef.current;
+                          if (input) {
+                            input.setAttribute('capture', 'environment');
+                            input.click();
+                          }
+                        }}
+                        className="flex items-center justify-center gap-2 px-4 py-2 bg-civic-teal text-white rounded-lg hover:bg-civic-darkBlue transition-colors"
+                      >
+                        <Camera className="w-4 h-4" />
+                        Take Photo
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const input = imageInputRef.current;
+                          if (input) {
+                            input.removeAttribute('capture');
+                            input.click();
+                          }
+                        }}
+                        className="flex items-center justify-center gap-2 px-4 py-2 bg-white border-2 border-civic-teal text-civic-teal rounded-lg hover:bg-civic-teal hover:text-white transition-colors"
+                      >
+                        <Upload className="w-4 h-4" />
+                        Choose File
+                      </button>
+                    </div>
                   </div>
                   <div className="text-slate-500 text-sm">PNG, JPG up to 10MB • AI analysis included</div>
                 </div>

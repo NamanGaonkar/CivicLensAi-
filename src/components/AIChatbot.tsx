@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, X, Send, Sparkles, Bot, User, Image as ImageIcon, Camera } from "lucide-react";
+import { MessageCircle, X, Send, Sparkles, Bot, User, Image as ImageIcon, Camera, Upload } from "lucide-react";
 
 export function AIChatbot() {
   const [isOpen, setIsOpen] = useState(false);
@@ -204,16 +204,35 @@ export function AIChatbot() {
                   ref={fileInputRef}
                   onChange={handleImageSelect}
                   accept="image/*"
-                  capture="environment"
                   className="hidden"
                 />
                 <button
                   type="button"
-                  onClick={() => fileInputRef.current?.click()}
+                  onClick={() => {
+                    const input = fileInputRef.current;
+                    if (input) {
+                      input.setAttribute('capture', 'environment');
+                      input.click();
+                    }
+                  }}
                   className="w-10 h-10 bg-civic-teal/10 border-2 border-civic-teal text-civic-teal rounded-xl hover:bg-civic-teal hover:text-white transition-all flex items-center justify-center flex-shrink-0"
-                  title="Take photo or upload image"
+                  title="Take photo"
                 >
                   <Camera className="w-5 h-5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const input = fileInputRef.current;
+                    if (input) {
+                      input.removeAttribute('capture');
+                      input.click();
+                    }
+                  }}
+                  className="w-10 h-10 bg-slate-100 border-2 border-slate-300 text-slate-600 rounded-xl hover:bg-slate-200 transition-all flex items-center justify-center flex-shrink-0"
+                  title="Upload file"
+                >
+                  <Upload className="w-5 h-5" />
                 </button>
                 <input
                   type="text"

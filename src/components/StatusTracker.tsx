@@ -59,8 +59,8 @@ export function StatusTracker({ userReports = [] }: StatusTrackerProps) {
   }
 
   return (
-    <div className="space-y-4 sm:space-y-6 px-3 sm:px-0 pb-6 md:pb-0">
-      <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">My Reports Status</h2>
+    <div className="w-full max-w-full overflow-x-hidden px-2 sm:px-3 md:px-0 pb-20 md:pb-6">
+      <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900 mb-4 sm:mb-6">My Reports Status</h2>
 
       <div className="space-y-3 sm:space-y-4">
         {userReports.map((report, index) => {

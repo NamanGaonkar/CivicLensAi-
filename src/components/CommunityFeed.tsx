@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ThumbsUp, MessageCircle, Send, Image as ImageIcon, X, Users, Sparkles, Trash2 } from "lucide-react";
+import { ThumbsUp, MessageCircle, Send, Image as ImageIcon, X, Users, Sparkles, Trash2, Camera, Upload } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../hooks/useAuth";
@@ -384,24 +384,46 @@ export function CommunityFeed() {
             )}
           </AnimatePresence>
 
-          <div className="flex items-center justify-between pt-2">
+          <div className="flex items-center justify-between pt-2 gap-2">
             <input
               ref={imageInputRef}
               type="file"
               accept="image/*"
-              capture="environment"
               onChange={(e) => handleImageSelect(e.target.files?.[0] || null)}
               className="hidden"
             />
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => imageInputRef.current?.click()}
-              className="flex items-center gap-2 px-5 py-2.5 border-2 border-civic-teal text-civic-teal rounded-xl hover:bg-civic-teal/10 transition-all font-semibold shadow-sm"
-            >
-              <ImageIcon className="w-5 h-5" />
-              <span>Add Photo</span>
-            </motion.button>
+            <div className="flex gap-2">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => {
+                  const input = imageInputRef.current;
+                  if (input) {
+                    input.setAttribute('capture', 'environment');
+                    input.click();
+                  }
+                }}
+                className="flex items-center gap-2 px-4 py-2.5 border-2 border-civic-teal text-civic-teal rounded-xl hover:bg-civic-teal hover:text-white transition-all font-semibold shadow-sm"
+              >
+                <Camera className="w-5 h-5" />
+                <span className="hidden sm:inline">Camera</span>
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => {
+                  const input = imageInputRef.current;
+                  if (input) {
+                    input.removeAttribute('capture');
+                    input.click();
+                  }
+                }}
+                className="flex items-center gap-2 px-4 py-2.5 border-2 border-civic-teal text-civic-teal rounded-xl hover:bg-civic-teal hover:text-white transition-all font-semibold shadow-sm"
+              >
+                <Upload className="w-5 h-5" />
+                <span className="hidden sm:inline">Upload</span>
+              </motion.button>
+            </div>
 
             <motion.button
               onClick={handleCreatePost}

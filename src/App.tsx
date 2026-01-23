@@ -438,6 +438,20 @@ export default function App() {
                     <span className="text-xs font-medium">Report</span>
                   </motion.button>
 
+                  {/* My Status */}
+                  <motion.button
+                    onClick={() => setCurrentView("status")}
+                    className={`flex flex-col items-center justify-center py-2 px-1 rounded-lg transition-all ${
+                      currentView === "status"
+                        ? "bg-civic-teal text-white"
+                        : "text-slate-600 hover:text-civic-teal hover:bg-civic-lightBlue/30"
+                    }`}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <Activity className="w-5 h-5 mb-0.5" />
+                    <span className="text-xs font-medium">My Status</span>
+                  </motion.button>
+
                   {/* Community */}
                   <motion.button
                     onClick={() => setCurrentView("community")}
