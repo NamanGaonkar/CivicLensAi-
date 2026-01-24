@@ -13,15 +13,18 @@ import { OfficialDashboard } from "./components/OfficialDashboard";
 import { UnifiedLoginPage } from "./components/UnifiedLoginPage";
 import { AdminDashboard } from "./components/AdminDashboard";
 import { StatusTracker } from "./components/StatusTracker";
+import { NotificationCenter } from "./components/NotificationCenter";
+import { NotificationSettings } from "./components/NotificationSettings";
 import { GoogleMapsProvider } from "./components/GoogleMapsProvider";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MapPin, Users, User, ShieldCheck, Activity, BarChart3, ArrowLeft } from "lucide-react";
+import { MapPin, Users, User, ShieldCheck, Activity, BarChart3, ArrowLeft, Settings } from "lucide-react";
 import { useAuth } from "./hooks/useAuth";
 import { supabase } from "./lib/supabase";
+import { requestNotificationPermission } from "./lib/notifications";
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<"dashboard" | "report" | "landing" | "community" | "beforeafter" | "profile" | "official" | "status" | "login" | "signup" | "admin-dash" | "official-dash">("landing");
+  const [currentView, setCurrentView] = useState<"dashboard" | "report" | "landing" | "community" | "beforeafter" | "profile" | "official" | "status" | "login" | "signup" | "admin-dash" | "official-dash" | "notifications">("landing");
   const [showAuth, setShowAuth] = useState(false);
   const [userRole, setUserRole] = useState<"citizen" | "official" | "admin">("citizen");
   const [signupRole, setSignupRole] = useState<'citizen' | 'official' | 'admin'>('citizen');
@@ -31,6 +34,8 @@ export default function App() {
   useEffect(() => {
     if (user) {
       fetchUserReports();
+      // Request notification permission when user logs in
+      requestNotificationPermission();
     }
   }, [user]);
 
@@ -302,7 +307,17 @@ export default function App() {
                         )}
                       </div>
                     </div>
-                    <div className="flex items-center space-x-3">
+                    <div className="flex items-center space-x-2 sm:space-x-3">
+                      <NotificationCenter />
+                      <motion.button
+                        onClick={() => setCurrentView("notifications")}
+                        className="p-2 rounded-lg hover:bg-civic-lightBlue/30 transition-colors"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        title="Notification Settings"
+                      >
+                        <Settings className="w-5 h-5 text-slate-700" />
+                      </motion.button>
                       <motion.button
                         onClick={() => setCurrentView("profile")}
                         className="p-2 rounded-lg hover:bg-civic-lightBlue/30 transition-colors"
@@ -385,6 +400,17 @@ export default function App() {
                       transition={{ duration: 0.3 }}
                     >
                       <UserProfile />
+                    </motion.div>
+                  )}
+                  {currentView === "notifications" && (
+                    <motion.div
+                      key="notifications"
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <NotificationSettings />
                     </motion.div>
                   )}
                   {currentView === "official" && userRole === "official" && (
