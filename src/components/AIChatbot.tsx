@@ -117,9 +117,9 @@ export function AIChatbot() {
     window.speechSynthesis.speak(utterance);
   };
 
-  const toggleVoiceInput = () => {
+  const toggleVoiceInput = async () => {
     if (!recognitionRef.current) {
-      alert("Voice recognition not supported in your browser");
+      alert("Voice recognition not supported in your browser. Please use Chrome, Edge, or Safari.");
       return;
     }
 
@@ -127,8 +127,16 @@ export function AIChatbot() {
       recognitionRef.current.stop();
       setIsListening(false);
     } else {
-      recognitionRef.current.start();
-      setIsListening(true);
+      try {
+        // Request microphone permission
+        await navigator.mediaDevices.getUserMedia({ audio: true });
+        recognitionRef.current.start();
+        setIsListening(true);
+      } catch (error) {
+        console.error("Microphone permission denied:", error);
+        alert("Microphone access denied. Please allow microphone access in your browser settings.");
+        setIsListening(false);
+      }
     }
   };
 
@@ -236,7 +244,14 @@ export function AIChatbot() {
                 </div>
                 <div className="flex items-center gap-2">
                   <button
-                    onClick={() => setVoiceEnabled(!voiceEnabled)}
+                    onClick={() => {
+                      setVoiceEnabled(!voiceEnabled);
+                      // Stop speaking when voice is disabled
+                      if (voiceEnabled && window.speechSynthesis) {
+                        window.speechSynthesis.cancel();
+                        setIsSpeaking(false);
+                      }
+                    }}
                     className="w-9 h-9 bg-white/20 hover:bg-white/30 rounded-xl flex items-center justify-center transition-colors"
                     title={voiceEnabled ? "Disable voice replies" : "Enable voice replies"}
                   >
@@ -342,7 +357,7 @@ export function AIChatbot() {
                   </button>
                 </div>
               )}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 md:gap-2">
                 <input
                   type="file"
                   ref={fileInputRef}
@@ -353,10 +368,10 @@ export function AIChatbot() {
                 <button
                   type="button"
                   onClick={toggleVoiceInput}
-                  className={`w-10 h-10 ${isListening ? 'bg-red-500 animate-pulse' : 'bg-purple-500'} text-white rounded-xl hover:opacity-90 transition-all flex items-center justify-center flex-shrink-0`}
+                  className={`w-9 h-9 md:w-10 md:h-10 ${isListening ? 'bg-red-500 animate-pulse' : 'bg-purple-500'} text-white rounded-xl hover:opacity-90 transition-all flex items-center justify-center flex-shrink-0`}
                   title={isListening ? "Stop listening" : "Voice input"}
                 >
-                  <Mic className="w-5 h-5" />
+                  <Mic className="w-4 h-4 md:w-5 md:h-5" />
                 </button>
                 <button
                   type="button"
@@ -367,10 +382,10 @@ export function AIChatbot() {
                       input.click();
                     }
                   }}
-                  className="w-10 h-10 bg-civic-teal/10 border-2 border-civic-teal text-civic-teal rounded-xl hover:bg-civic-teal hover:text-white transition-all flex items-center justify-center flex-shrink-0"
+                  className="w-9 h-9 md:w-10 md:h-10 bg-civic-teal/10 border-2 border-civic-teal text-civic-teal rounded-xl hover:bg-civic-teal hover:text-white transition-all flex items-center justify-center flex-shrink-0"
                   title="Take photo"
                 >
-                  <Camera className="w-5 h-5" />
+                  <Camera className="w-4 h-4 md:w-5 md:h-5" />
                 </button>
                 <button
                   type="button"
@@ -381,10 +396,10 @@ export function AIChatbot() {
                       input.click();
                     }
                   }}
-                  className="w-10 h-10 bg-slate-100 border-2 border-slate-300 text-slate-600 rounded-xl hover:bg-slate-200 transition-all flex items-center justify-center flex-shrink-0"
+                  className="w-9 h-9 md:w-10 md:h-10 bg-slate-100 border-2 border-slate-300 text-slate-600 rounded-xl hover:bg-slate-200 transition-all flex items-center justify-center flex-shrink-0"
                   title="Upload file"
                 >
-                  <Upload className="w-5 h-5" />
+                  <Upload className="w-4 h-4 md:w-5 md:h-5" />
                 </button>
                 <input
                   type="text"
@@ -392,14 +407,14 @@ export function AIChatbot() {
                   onChange={(e) => setInput(e.target.value)}
                   onKeyPress={(e) => e.key === "Enter" && !e.shiftKey && handleSendMessage()}
                   placeholder="Type your message..."
-                  className="flex-1 px-3 py-2.5 border-2 border-slate-300 rounded-xl focus:border-civic-teal focus:ring-2 focus:ring-civic-teal/20 outline-none text-sm md:text-base text-slate-900 placeholder-slate-400 bg-white"
+                  className="flex-1 min-w-0 px-2 md:px-3 py-2 md:py-2.5 border-2 border-slate-300 rounded-xl focus:border-civic-teal focus:ring-2 focus:ring-civic-teal/20 outline-none text-sm text-slate-900 placeholder-slate-400 bg-white"
                   autoComplete="off"
                 />
                 <button
                   type="button"
                   onClick={handleSendMessage}
                   disabled={isLoading || (!input.trim() && !selectedImage)}
-                  className="w-10 h-10 bg-gradient-to-br from-civic-teal to-civic-darkBlue text-white rounded-xl disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg transition-all flex items-center justify-center flex-shrink-0"
+                  className="w-9 h-9 md:w-10 md:h-10 bg-gradient-to-br from-civic-teal to-civic-darkBlue text-white rounded-xl disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg transition-all flex items-center justify-center flex-shrink-0"
                 >
                   <Send className="w-4 h-4" />
                 </button>
