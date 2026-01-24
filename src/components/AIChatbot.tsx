@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, X, Send, Sparkles, Bot, User, Image as ImageIcon, Camera, Upload } from "lucide-react";
+import { MessageCircle, X, Send, Sparkles, Bot, User, Image as ImageIcon, Camera, Upload, Mic, Volume2, VolumeX } from "lucide-react";
+import { generateAIResponse } from "../lib/gemini";
+import { supabase } from "../lib/supabase";
 
 export function AIChatbot() {
   const [isOpen, setIsOpen] = useState(false);
@@ -8,14 +10,18 @@ export function AIChatbot() {
     {
       id: "1",
       role: "assistant",
-      text: "Hi! 👋 I'm the CivicLens AI Assistant. I can help you understand civic issues, analyze reports, and provide insights. How can I help you today?"
+      text: "Hi! 👋 I'm the CivicLens AI Assistant. I can access your reports, check statuses, and help with civic issues. Try asking: 'Show my reports' or 'What's the status of my latest report?'"
     }
   ]);
   const [input, setInput] = useState("");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [voiceEnabled, setVoiceEnabled] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const recognitionRef = useRef<any>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -24,6 +30,107 @@ export function AIChatbot() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Initialize Speech Recognition
+  useEffect(() => {
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.continuous = false;
+      recognitionRef.current.interimResults = false;
+      
+      recognitionRef.current.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript;
+        setInput(transcript);
+        setIsListening(false);
+      };
+      
+      recognitionRef.current.onend = () => {
+        setIsListening(false);
+      };
+    }
+  }, []);
+
+  // Fetch database context for AI
+  const getDatabaseContext = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return "";
+
+      // Fetch user's reports
+      const { data: reports } = await supabase
+        .from("reports")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(10);
+
+      // Fetch user's responses
+      const { data: responses } = await supabase
+        .from("report_responses")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(5);
+
+      // Build context
+      let context = "\n\n[DATABASE CONTEXT - Use this to answer user questions]:\n";
+      
+      if (reports && reports.length > 0) {
+        context += `\nUser's Reports (${reports.length} total):\n`;
+        reports.forEach((r: any, i: number) => {
+          context += `${i + 1}. ${r.issue_type} - Status: ${r.status} - Location: ${r.location || 'N/A'} - Created: ${new Date(r.created_at).toLocaleDateString()}\n`;
+          if (r.description) context += `   Description: ${r.description}\n`;
+        });
+      } else {
+        context += "\nUser has no reports yet.\n";
+      }
+
+      if (responses && responses.length > 0) {
+        context += `\nRecent Official Responses (${responses.length}):\n`;
+        responses.forEach((r: any, i: number) => {
+          context += `${i + 1}. ${r.responder_name}: ${r.response_text}\n`;
+        });
+      }
+
+      return context;
+    } catch (error) {
+      console.error("Error fetching database context:", error);
+      return "";
+    }
+  };
+
+  const speakText = (text: string) => {
+    if (!voiceEnabled || !('speechSynthesis' in window)) return;
+    
+    // Stop any ongoing speech
+    window.speechSynthesis.cancel();
+    
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 1.0;
+    utterance.pitch = 1.0;
+    utterance.volume = 1.0;
+    
+    utterance.onstart = () => setIsSpeaking(true);
+    utterance.onend = () => setIsSpeaking(false);
+    utterance.onerror = () => setIsSpeaking(false);
+    
+    window.speechSynthesis.speak(utterance);
+  };
+
+  const toggleVoiceInput = () => {
+    if (!recognitionRef.current) {
+      alert("Voice recognition not supported in your browser");
+      return;
+    }
+
+    if (isListening) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+    } else {
+      recognitionRef.current.start();
+      setIsListening(true);
+    }
+  };
 
   const handleSendMessage = async () => {
     if (!input.trim() && !selectedImage) return;
@@ -36,38 +143,46 @@ export function AIChatbot() {
     };
 
     setMessages((prev) => [...prev, userMessage]);
+    const currentInput = input;
+    const currentImage = selectedImage;
     setInput("");
     setSelectedImage(null);
     setIsLoading(true);
 
-    // Simulate AI response delay
-    setTimeout(() => {
-      const responses = selectedImage
-        ? [
-            "I can see the image you shared. This appears to be a civic issue that needs attention.",
-            "Thanks for sharing the image! I can analyze this and provide insights.",
-            "Based on the image, I can help categorize this issue for better tracking.",
-            "Great! I've analyzed the image. Let me help you with this civic matter."
-          ]
-        : [
-            "That's a great question! Based on civic data, I can help you with that.",
-            "I'm analyzing the information you provided. Here's what I found...",
-            "Thanks for asking! Let me help you with insights on this civic issue.",
-            "I understand. This is an important matter for our community.",
-            "Based on similar civic reports, here's what typically helps..."
-          ];
-
-      const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+    try {
+      // Get database context
+      const dbContext = await getDatabaseContext();
+      
+      // Call real Gemini AI with database context
+      const aiResponse = await generateAIResponse(
+        messages,
+        currentInput + dbContext,
+        currentImage || undefined
+      );
 
       const assistantMessage = {
         id: (Date.now() + 1).toString(),
         role: "assistant" as const,
-        text: randomResponse
+        text: aiResponse
       };
 
       setMessages((prev) => [...prev, assistantMessage]);
+      
+      // Speak the response
+      if (voiceEnabled) {
+        speakText(aiResponse);
+      }
+    } catch (error) {
+      console.error("AI Error:", error);
+      const errorMessage = {
+        id: (Date.now() + 1).toString(),
+        role: "assistant" as const,
+        text: "Sorry, I encountered an error. Please try again."
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -115,15 +230,25 @@ export function AIChatbot() {
                     <div className="flex items-center space-x-2 mt-0.5">
                       <div className="w-2 h-2 bg-green-400 rounded-full"></div>
                       <p className="text-xs text-white/90">Online</p>
+                      {isSpeaking && <Volume2 className="w-3 h-3 animate-pulse" />}
                     </div>
                   </div>
                 </div>
-                <button
-                  onClick={() => setIsOpen(false)}
-                  className="w-9 h-9 bg-white/20 hover:bg-white/30 rounded-xl flex items-center justify-center transition-colors"
-                >
-                  <X className="w-5 h-5" />
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setVoiceEnabled(!voiceEnabled)}
+                    className="w-9 h-9 bg-white/20 hover:bg-white/30 rounded-xl flex items-center justify-center transition-colors"
+                    title={voiceEnabled ? "Disable voice replies" : "Enable voice replies"}
+                  >
+                    {voiceEnabled ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}
+                  </button>
+                  <button
+                    onClick={() => setIsOpen(false)}
+                    className="w-9 h-9 bg-white/20 hover:bg-white/30 rounded-xl flex items-center justify-center transition-colors"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -134,15 +259,34 @@ export function AIChatbot() {
                   key={message.id}
                   className={`flex items-start gap-2 ${message.role === "user" ? "flex-row-reverse" : "flex-row"}`}
                 >
-                  {/* Avatar */}
+                  {/* Avatar with animation */}
                   <div
-                    className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 ${
+                    className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 relative ${
                       message.role === "user"
                         ? "bg-gradient-to-br from-civic-teal to-civic-darkBlue text-white"
                         : "bg-gradient-to-br from-purple-500 to-purple-600 text-white"
                     }`}
                   >
-                    {message.role === "user" ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
+                    {message.role === "user" ? (
+                      <User className="w-4 h-4" />
+                    ) : (
+                      <>
+                        {/* AI Avatar with mouth animation */}
+                        <div className="relative w-full h-full flex items-center justify-center">
+                          <Bot className="w-4 h-4" />
+                          {/* Animated mouth when speaking */}
+                          {isSpeaking && messages[messages.length - 1]?.id === message.id && (
+                            <div className="absolute bottom-0.5 left-1/2 -translate-x-1/2">
+                              <div className="w-2 h-0.5 bg-white rounded-full animate-pulse"></div>
+                            </div>
+                          )}
+                        </div>
+                        {/* Speaking indicator - animated circle */}
+                        {isSpeaking && messages[messages.length - 1]?.id === message.id && (
+                          <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-white animate-ping"></div>
+                        )}
+                      </>
+                    )}
                   </div>
 
                   {/* Message Bubble */}
@@ -206,6 +350,14 @@ export function AIChatbot() {
                   accept="image/*"
                   className="hidden"
                 />
+                <button
+                  type="button"
+                  onClick={toggleVoiceInput}
+                  className={`w-10 h-10 ${isListening ? 'bg-red-500 animate-pulse' : 'bg-purple-500'} text-white rounded-xl hover:opacity-90 transition-all flex items-center justify-center flex-shrink-0`}
+                  title={isListening ? "Stop listening" : "Voice input"}
+                >
+                  <Mic className="w-5 h-5" />
+                </button>
                 <button
                   type="button"
                   onClick={() => {

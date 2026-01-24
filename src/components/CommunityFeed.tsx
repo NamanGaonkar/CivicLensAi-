@@ -48,7 +48,7 @@ export function CommunityFeed() {
   const fetchPosts = async () => {
     try {
       const { data: postsData, error: postsError } = await supabase
-        .from('posts')
+        .from('community_posts')
         .select('*')
         .order('created_at', { ascending: false });
 
@@ -154,11 +154,10 @@ export function CommunityFeed() {
 
       // Insert post
       const { error: insertError } = await supabase
-        .from('posts')
+        .from('community_posts')
         .insert({
           user_id: user.id,
           user_name: userName,
-          title: newPost.title,
           content: newPost.content,
           image_url: imageUrl
         });
@@ -270,7 +269,7 @@ export function CommunityFeed() {
           post_id: postId,
           user_id: user.id,
           user_name: userName,
-          text: commentText
+          content: commentText
         });
 
       if (error) throw error;
@@ -292,7 +291,7 @@ export function CommunityFeed() {
 
     try {
       const { error } = await supabase
-        .from('posts')
+        .from('community_posts')
         .delete()
         .eq('id', postId)
         .eq('user_id', user.id);
@@ -569,7 +568,7 @@ export function CommunityFeed() {
                                   {new Date(comment.created_at).toLocaleTimeString()}
                                 </span>
                               </div>
-                              <p className="text-slate-700">{comment.text}</p>
+                              <p className="text-slate-700">{comment.content}</p>
                             </div>
                           </motion.div>
                         ))}

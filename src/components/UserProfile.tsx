@@ -9,6 +9,7 @@ export function UserProfile() {
   const { user } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
   const [stats, setStats] = useState({
     totalReports: 0,
     resolvedReports: 0,
@@ -22,7 +23,8 @@ export function UserProfile() {
     city: "",
     state: "",
     organization: "",
-    bio: ""
+    bio: "",
+    avatarUrl: ""
   });
 
   useEffect(() => {
@@ -51,7 +53,8 @@ export function UserProfile() {
           city: data.city || "",
           state: data.state || "",
           organization: data.organization || "",
-          bio: data.bio || ""
+          bio: data.bio || "",
+          avatarUrl: data.avatar_url || ""
         });
       } else {
         // Set email from user if no profile exists
@@ -127,10 +130,73 @@ export function UserProfile() {
     }
   };
 
-  const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      toast.success("Avatar uploaded! (Backend integration pending)");
+    if (!file || !user) return;
+
+    // Validate file size (max 2MB)
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("Image must be less than 2MB");
+      return;
+    }
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast.error("Please upload an image file");
+      return;
+    }
+
+    try {
+      setUploading(true);
+
+      // Delete old avatar if exists
+      if (profileData.avatarUrl) {
+        const oldPath = profileData.avatarUrl.split('/').pop();
+        if (oldPath) {
+          await supabase.storage
+            .from('avatars')
+            .remove([`${user.id}/${oldPath}`]);
+        }
+      }
+
+      // Upload new avatar
+      const fileExt = file.name.split('.').pop();
+      const fileName = `avatar-${Date.now()}.${fileExt}`;
+      const filePath = `${user.id}/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: true
+        });
+
+      if (uploadError) throw uploadError;
+
+      // Get public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(filePath);
+
+      // Update profile with new avatar URL
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .upsert({
+          id: user.id,
+          email: user.email,
+          avatar_url: publicUrl,
+          updated_at: new Date().toISOString()
+        });
+
+      if (updateError) throw updateError;
+
+      setProfileData({ ...profileData, avatarUrl: publicUrl });
+      toast.success("Profile picture updated!");
+    } catch (error: any) {
+      console.error('Error uploading avatar:', error);
+      toast.error("Failed to upload profile picture");
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -160,17 +226,30 @@ export function UserProfile() {
         {/* Avatar Section */}
         <div className="flex flex-col items-center mb-8">
           <div className="relative">
-            <div className="w-32 h-32 rounded-full bg-gradient-to-br from-civic-teal to-civic-darkBlue flex items-center justify-center text-white text-4xl font-bold shadow-xl">
-              {profileData.fullName ? profileData.fullName[0].toUpperCase() : profileData.email ? profileData.email[0].toUpperCase() : 'U'}
-            </div>
+            {profileData.avatarUrl ? (
+              <img
+                src={profileData.avatarUrl}
+                alt="Profile"
+                className="w-32 h-32 rounded-full object-cover shadow-xl"
+              />
+            ) : (
+              <div className="w-32 h-32 rounded-full bg-gradient-to-br from-civic-teal to-civic-darkBlue flex items-center justify-center text-white text-4xl font-bold shadow-xl">
+                {profileData.fullName ? profileData.fullName[0].toUpperCase() : profileData.email ? profileData.email[0].toUpperCase() : 'U'}
+              </div>
+            )}
             {isEditing && (
               <label className="absolute bottom-0 right-0 p-3 bg-white rounded-full shadow-lg cursor-pointer hover:bg-slate-100 transition-colors">
-                <Camera className="w-5 h-5 text-civic-teal" />
+                {uploading ? (
+                  <div className="w-5 h-5 border-2 border-civic-teal border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <Camera className="w-5 h-5 text-civic-teal" />
+                )}
                 <input
                   type="file"
                   accept="image/*"
                   onChange={handleAvatarUpload}
                   className="hidden"
+                  disabled={uploading}
                 />
               </label>
             )}

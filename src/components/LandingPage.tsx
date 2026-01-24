@@ -13,7 +13,11 @@ import {
   CheckCircle,
   Star,
   Sparkles,
-  MessageSquare
+  MessageSquare,
+  Shield,
+  Image,
+  Zap,
+  TrendingUp
 } from "lucide-react";
 // AI chatbot is shown only on the dashboard now
 
@@ -25,47 +29,65 @@ interface LandingPageProps {
 export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPageProps) {
   const features = [
     {
+      icon: <Brain className="w-8 h-8" />,
+      title: "AI-Powered Chatbot Assistant",
+      description: "24/7 intelligent assistant that answers questions, analyzes images, and helps you report issues with Google Gemini AI",
+      color: "from-purple-500 to-pink-500"
+    },
+    {
+      icon: <Image className="w-8 h-8" />,
+      title: "Smart Image Analysis",
+      description: "Upload photos of civic issues - AI automatically identifies problem types, suggests severity levels, and recommends actions",
+      color: "from-civic-teal to-cyan-500"
+    },
+    {
       icon: <Camera className="w-8 h-8" />,
-      title: "AI-Powered Image Analysis",
-      description: "Upload photos and let our AI automatically categorize and prioritize civic issues",
+      title: "Dual Upload Options",
+      description: "Capture photos directly with your camera or choose from gallery - flexible reporting from any device",
       color: "from-civic-teal to-civic-darkBlue"
     },
     {
       icon: <MapPin className="w-8 h-8" />,
-      title: "Real-time Location Tracking",
-      description: "Precise GPS coordinates and interactive maps for accurate issue reporting",
+      title: "Real-Time Location Tracking",
+      description: "Precise GPS coordinates with interactive maps - pinpoint exact locations of civic issues for faster resolution",
       color: "from-civic-teal to-civic-darkBlue"
     },
     {
       icon: <BarChart3 className="w-8 h-8" />,
       title: "Advanced Analytics Dashboard",
-      description: "Comprehensive insights and trends to help city officials make data-driven decisions",
-      color: "from-civic-teal to-civic-darkBlue"
-    },
-    {
-      icon: <Brain className="w-8 h-8" />,
-      title: "Smart Prioritization",
-      description: "Machine learning algorithms automatically assess urgency and route issues efficiently",
-      color: "from-civic-darkBlue to-slate-700"
+      description: "Comprehensive insights, weekly trends, and resolution rates to help officials make data-driven decisions",
+      color: "from-civic-darkBlue to-blue-600"
     },
     {
       icon: <Users className="w-8 h-8" />,
-      title: "Community Engagement",
-      description: "Upvoting, commenting, and collaborative problem-solving for better communities",
+      title: "Community Engagement Feed",
+      description: "Share updates, vote on issues, comment, and collaborate with neighbors to build stronger communities",
       color: "from-civic-darkBlue to-slate-700"
     },
     {
-      icon: <MessageSquare className="w-8 h-8" />,
-      title: "AI Chat Assistant",
-      description: "Upload images and ask questions - our AI helps you understand issues and solutions",
-      color: "from-civic-darkBlue to-slate-700"
+      icon: <Shield className="w-8 h-8" />,
+      title: "Role-Based Access Control",
+      description: "Separate dashboards for citizens, officials, and admins with secure authentication and permissions",
+      color: "from-slate-600 to-slate-800"
+    },
+    {
+      icon: <Zap className="w-8 h-8" />,
+      title: "Real-Time Status Updates",
+      description: "Track your reports from submission to resolution with instant notifications and official responses",
+      color: "from-orange-500 to-red-500"
+    },
+    {
+      icon: <TrendingUp className="w-8 h-8" />,
+      title: "Before & After Gallery",
+      description: "Visual proof of community impact - see completed projects and celebrate civic improvements together",
+      color: "from-green-500 to-emerald-600"
     }
   ];
 
   const stats = [
     { number: "10K+", label: "Issues Resolved", icon: <CheckCircle className="w-6 h-6" /> },
     { number: "50+", label: "Cities Connected", icon: <Globe className="w-6 h-6" /> },
-    { number: "24/7", label: "Support", icon: <Sparkles className="w-6 h-6" /> },
+    { number: "AI", label: "Powered", icon: <Brain className="w-6 h-6" /> },
     { number: "4.9★", label: "User Rating", icon: <Star className="w-6 h-6" /> }
   ];
 
@@ -201,7 +223,7 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
                 transition={{ delay: 0.4 }}
                 className="text-slate-700 font-medium text-base sm:text-lg md:text-xl leading-relaxed max-w-2xl mx-auto"
               >
-                Empower your community with AI-driven civic issue reporting and resolution. Track problems in real-time, engage with your neighbors, and build a better future together.
+                Empower your community with <span className="font-bold text-civic-teal">Google Gemini AI</span>-driven civic issue reporting and resolution. Real-time tracking, intelligent image analysis, role-based dashboards, and community engagement - all in one platform.
               </motion.p>
 
               {/* CTA Buttons - Simplified */}
@@ -249,11 +271,11 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
               className="text-center mb-16"
             >
               <h2 className="text-5xl font-bold text-slate-900 mb-6">
-                Powerful Features for
-                <span className="bg-gradient-to-r from-civic-teal to-purple-500 bg-clip-text text-transparent"> Modern Cities</span>
+                Everything You Need for
+                <span className="bg-gradient-to-r from-civic-teal to-purple-500 bg-clip-text text-transparent"> Smart Civic Engagement</span>
               </h2>
               <p className="text-xl text-slate-700 max-w-3xl mx-auto">
-                Discover how CivicLens revolutionizes civic engagement with cutting-edge AI and real-time analytics
+                From AI-powered chatbots to role-based dashboards - discover the complete suite of features that make CivicLens the most advanced civic platform
               </p>
             </motion.div>
 
