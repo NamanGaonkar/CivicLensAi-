@@ -10,51 +10,235 @@
 
 ---
 
-## 📸 Screenshots
+## 📸 Screenshots & Demo
 
 <div align="center">
 
-### 🏠 Landing Page
-![Landing Page](assets/screenshot-1.png)
-*Modern, engaging landing page with video background and clear call-to-action*
+### 🏠 Landing Page & Hero
+<table>
+  <tr>
+    <td width="50%">
+      <img src="assets/landing-page.png" alt="Landing Page" />
+      <p><em>Modern landing page with video background</em></p>
+    </td>
+    <td width="50%">
+      <img src="assets/hero-section.png" alt="Hero Section" />
+      <p><em>Clear call-to-action and feature highlights</em></p>
+    </td>
+  </tr>
+</table>
 
-### 📊 Analytics Dashboard
-![Dashboard Overview](assets/screenshot-2.png)
-*Real-time analytics and insights at a glance*
+### 📊 Dashboard & Analytics
+<table>
+  <tr>
+    <td width="50%">
+      <img src="assets/dashboard-overview.png" alt="Dashboard" />
+      <p><em>Real-time analytics at a glance</em></p>
+    </td>
+    <td width="50%">
+      <img src="assets/stats-cards.png" alt="Stats Cards" />
+      <p><em>Key metrics and statistics</em></p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <img src="assets/trends-chart.png" alt="Trends Chart" />
+      <p><em>Visual trends and patterns</em></p>
+    </td>
+    <td width="50%">
+      <img src="assets/heatmap.png" alt="Heatmap" />
+      <p><em>Geographic issue distribution</em></p>
+    </td>
+  </tr>
+</table>
 
-### 🤖 AI Assistant
-![AI Chatbot](assets/screenshot-3.png)
-*Intelligent chatbot powered by Google Gemini AI*
+### 🤖 AI Assistant & Chatbot
+<table>
+  <tr>
+    <td width="50%">
+      <img src="assets/ai-chatbot.png" alt="AI Chatbot" />
+      <p><em>Intelligent assistant powered by Google Gemini</em></p>
+    </td>
+    <td width="50%">
+      <img src="assets/ai-image-analysis.png" alt="Image Analysis" />
+      <p><em>AI-powered image recognition</em></p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <img src="assets/chatbot-mobile.png" alt="Mobile Chat" />
+      <p><em>Responsive mobile chatbot</em></p>
+    </td>
+    <td width="50%">
+      <img src="assets/voice-input.png" alt="Voice Input" />
+      <p><em>Voice-to-text functionality</em></p>
+    </td>
+  </tr>
+</table>
 
 ### 📝 Report Submission
-![Report Form](assets/screenshot-4.png)
-*Intuitive form with interactive map location picker*
+<table>
+  <tr>
+    <td width="50%">
+      <img src="assets/report-form.png" alt="Report Form" />
+      <p><em>Intuitive issue reporting form</em></p>
+    </td>
+    <td width="50%">
+      <img src="assets/map-picker.png" alt="Map Picker" />
+      <p><em>Interactive location selection</em></p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <img src="assets/photo-upload.png" alt="Photo Upload" />
+      <p><em>Image upload with preview</em></p>
+    </td>
+    <td width="50%">
+      <img src="assets/category-selection.png" alt="Categories" />
+      <p><em>Smart categorization system</em></p>
+    </td>
+  </tr>
+</table>
 
-### 🗺️ Interactive Map
-![Reports Map](assets/screenshot-5.png)
-*Visual overview of all civic issues in your area*
-
-### 📱 Mobile Experience
-![Mobile Interface](assets/screenshot-6.png)
-*Fully responsive mobile-first design*
-
-### 🎨 Modern UI Design
-![Design Theme](assets/screenshot-7.png)
-*Clean, accessible interface with smooth animations*
+### 🗺️ Interactive Maps
+<table>
+  <tr>
+    <td width="50%">
+      <img src="assets/map-overview.png" alt="Map Overview" />
+      <p><em>All reports visualized on map</em></p>
+    </td>
+    <td width="50%">
+      <img src="assets/map-clusters.png" alt="Clusters" />
+      <p><em>Marker clustering for dense areas</em></p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <img src="assets/map-filters.png" alt="Map Filters" />
+      <p><em>Filter by category and status</em></p>
+    </td>
+    <td width="50%">
+      <img src="assets/map-popup.png" alt="Info Popup" />
+      <p><em>Detailed issue information</em></p>
+    </td>
+  </tr>
+</table>
 
 ### 👥 Community Features
-![Community Feed](assets/screenshot-8.png)
-*Engage with community posts, upvote, and comment*
+<table>
+  <tr>
+    <td width="50%">
+      <img src="assets/community-feed.png" alt="Community Feed" />
+      <p><em>Social engagement and discussions</em></p>
+    </td>
+    <td width="50%">
+      <img src="assets/upvote-system.png" alt="Upvotes" />
+      <p><em>Upvote important issues</em></p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <img src="assets/comments.png" alt="Comments" />
+      <p><em>Comment and collaborate</em></p>
+    </td>
+    <td width="50%">
+      <img src="assets/user-profile.png" alt="User Profile" />
+      <p><em>Track your contributions</em></p>
+    </td>
+  </tr>
+</table>
 
-### 🔔 Real-time Updates
-![Notifications](assets/screenshot-9.png)
-*Stay informed with instant notifications*
+### 🔔 Notifications & Alerts
+<table>
+  <tr>
+    <td width="50%">
+      <img src="assets/notification-center.png" alt="Notification Center" />
+      <p><em>Real-time notification panel</em></p>
+    </td>
+    <td width="50%">
+      <img src="assets/push-notification.png" alt="Push Alert" />
+      <p><em>Browser push notifications</em></p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <img src="assets/notification-settings.png" alt="Settings" />
+      <p><em>Customizable preferences</em></p>
+    </td>
+    <td width="50%">
+      <img src="assets/email-template.png" alt="Email" />
+      <p><em>Professional email alerts</em></p>
+    </td>
+  </tr>
+</table>
 
-### 📈 Advanced Analytics
-![Trends](assets/screenshot-10.png)
-*Deep insights into civic issue patterns and trends*
+### 📱 Mobile Experience
+<table>
+  <tr>
+    <td width="33%">
+      <img src="assets/mobile-home.png" alt="Mobile Home" />
+      <p><em>Mobile landing page</em></p>
+    </td>
+    <td width="33%">
+      <img src="assets/mobile-dashboard.png" alt="Mobile Dashboard" />
+      <p><em>Mobile dashboard view</em></p>
+    </td>
+    <td width="33%">
+      <img src="assets/mobile-report.png" alt="Mobile Report" />
+      <p><em>Mobile report form</em></p>
+    </td>
+  </tr>
+  <tr>
+    <td width="33%">
+      <img src="assets/mobile-chat.png" alt="Mobile Chat" />
+      <p><em>Mobile chatbot</em></p>
+    </td>
+    <td width="33%">
+      <img src="assets/mobile-notifications.png" alt="Mobile Alerts" />
+      <p><em>Mobile notifications</em></p>
+    </td>
+    <td width="33%">
+      <img src="assets/mobile-nav.png" alt="Mobile Nav" />
+      <p><em>Bottom navigation</em></p>
+    </td>
+  </tr>
+</table>
+
+### 🎨 UI/UX Design
+<table>
+  <tr>
+    <td width="50%">
+      <img src="assets/design-system.png" alt="Design System" />
+      <p><em>Consistent design language</em></p>
+    </td>
+    <td width="50%">
+      <img src="assets/animations.png" alt="Animations" />
+      <p><em>Smooth Framer Motion animations</em></p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <img src="assets/dark-mode.png" alt="Dark Mode" />
+      <p><em>Dark mode support (optional)</em></p>
+    </td>
+    <td width="50%">
+      <img src="assets/accessibility.png" alt="Accessibility" />
+      <p><em>Accessible and inclusive design</em></p>
+    </td>
+  </tr>
+</table>
+
+### 🎥 Demo Video
+<div align="center">
+  <a href="assets/demo-video.mp4">
+    <img src="assets/video-thumbnail.png" alt="Demo Video" width="80%" />
+  </a>
+  <p><em>Click to watch full demo (30 seconds)</em></p>
+</div>
 
 </div>
+
+> **📷 Note**: Replace placeholder images with actual screenshots from your application. Use tools like [Cleanshot](https://cleanshot.com/) or browser DevTools to capture high-quality screenshots.
 
 ---
 
