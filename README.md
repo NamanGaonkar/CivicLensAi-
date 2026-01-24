@@ -12,8 +12,6 @@
 
 ## 📸 Screenshots & Demo
 
-<div align="center">
-
 ### 🏠 Landing Page & Hero
 <table>
   <tr>
@@ -229,14 +227,10 @@
 </table>
 
 ### 🎥 Demo Video
-<div align="center">
-  <a href="assets/demo-video.mp4">
-    <img src="assets/video-thumbnail.png" alt="Demo Video" width="80%" />
-  </a>
-  <p><em>Click to watch full demo (30 seconds)</em></p>
-</div>
-
-</div>
+<a href="assets/demo-video.mp4">
+  <img src="assets/video-thumbnail.png" alt="Demo Video" width="80%" />
+</a>
+<p><em>Click to watch full demo (30 seconds)</em></p>
 
 > **📷 Note**: Replace placeholder images with actual screenshots from your application. Use tools like [Cleanshot](https://cleanshot.com/) or browser DevTools to capture high-quality screenshots.
 
