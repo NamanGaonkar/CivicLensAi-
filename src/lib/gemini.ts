@@ -18,31 +18,26 @@ export async function generateAIResponse(
 ): Promise<string> {
   try {
     // Check if API key is configured
-    console.log("API Key check:", API_KEY ? "Present (length: " + API_KEY.length + ")" : "Missing");
-    
-    if (!API_KEY || API_KEY === "your_gemini_api_key_here") {
+    if (!API_KEY || API_KEY === "your_gemini_api_key_here" || API_KEY.trim() === "") {
       return "⚠️ AI is not configured yet. Please add your Gemini API key to the .env file. Get a free key at: https://makersuite.google.com/app/apikey";
     }
 
-    // First, let's list available models and use the first one
-    console.log("Fetching available models...");
+    // Fetch available models and use the first one that supports generateContent
     const modelsResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${API_KEY}`);
-    let modelName = "gemini-1.5-flash-latest"; // default
+    let modelName = "gemini-1.5-flash";
     
     if (modelsResponse.ok) {
       const modelsData = await modelsResponse.json();
-      console.log("Available models:", modelsData);
-      
-      // Find a model that supports generateContent
       const availableModel = modelsData.models?.find((m: any) => 
-        m.supportedGenerationMethods?.includes('generateContent')
+        m.supportedGenerationMethods?.includes('generateContent') &&
+        m.name.includes('gemini')
       );
-      
       if (availableModel) {
-        modelName = availableModel.name.replace('models/', ''); // Remove 'models/' prefix
-        console.log("Using model:", modelName);
+        modelName = availableModel.name.replace('models/', '');
       }
     }
+    
+    console.log("Using model:", modelName);
 
     // Build context from conversation history
     const conversationContext = messages

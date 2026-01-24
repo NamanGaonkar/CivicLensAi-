@@ -28,7 +28,7 @@ interface Post {
 
 export function CommunityFeed() {
   const { user } = useAuth();
-  const [newPost, setNewPost] = useState({ title: "", content: "" });
+  const [newPost, setNewPost] = useState({ content: "" });
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [showComments, setShowComments] = useState<string | null>(null);
@@ -117,8 +117,8 @@ export function CommunityFeed() {
       return;
     }
 
-    if (!newPost.title.trim() || !newPost.content.trim()) {
-      toast.error("Please fill in title and content");
+    if (!newPost.content.trim()) {
+      toast.error("Please fill in content");
       return;
     }
 
@@ -165,7 +165,7 @@ export function CommunityFeed() {
       if (insertError) throw insertError;
 
       toast.success("Post shared with community!");
-      setNewPost({ title: "", content: "" });
+      setNewPost({ content: "" });
       setSelectedImage(null);
       setImagePreview(null);
       fetchPosts();
@@ -342,14 +342,6 @@ export function CommunityFeed() {
         </div>
         
         <div className="space-y-4">
-          <input
-            type="text"
-            placeholder="Give your post a title..."
-            value={newPost.title}
-            onChange={(e) => setNewPost({ ...newPost, title: e.target.value })}
-            className="w-full px-5 py-3.5 bg-white border-2 border-civic-teal/30 rounded-xl focus:border-civic-teal focus:outline-none focus:ring-2 focus:ring-civic-teal/20 text-slate-900 placeholder-slate-400 font-medium transition-all"
-          />
-          
           <textarea
             placeholder="Share what's happening in your community..."
             value={newPost.content}
@@ -497,7 +489,6 @@ export function CommunityFeed() {
               </div>
 
               {/* Post Content */}
-              <h3 className="text-2xl font-bold text-slate-900 mb-3">{post.title}</h3>
               <p className="text-slate-700 mb-5 text-lg leading-relaxed">{post.content}</p>
 
               {post.image_url && (
@@ -505,7 +496,7 @@ export function CommunityFeed() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   src={post.image_url} 
-                  alt={post.title} 
+                  alt="Post image" 
                   className="w-full h-80 object-cover rounded-xl mb-6 shadow-md" 
                 />
               )}

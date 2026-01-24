@@ -25,3 +25,8 @@ dist-ssr
 
 # Ignored for the template, you probably want to remove it:
 package-lock.json
+
+# Environment variables - NEVER COMMIT
+.env
+.env.local
+.env*.local
