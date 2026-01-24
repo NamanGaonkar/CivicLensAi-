@@ -50,6 +50,7 @@
   </tr>
 </table>
 
+<<<<<<< HEAD
 ### 🤖 AI Assistant & Chatbot
 <table>
   <tr>
@@ -235,6 +236,9 @@
 > **📷 Note**: Replace placeholder images with actual screenshots from your application. Use tools like [Cleanshot](https://cleanshot.com/) or browser DevTools to capture high-quality screenshots.
 
 ---
+=======
+try out the rest by signing up for the website!! 
+>>>>>>> 75ee0358274b5dcc0c453437bdb5b9d4115d24f3
 
 ## ✨ Overview
 
