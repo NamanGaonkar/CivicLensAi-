@@ -70,8 +70,6 @@ try out the rest of the features  by signing up for the website!!
 
 ## 🎯 Core Features
 
-## 🎯 Core Features
-
 ### 🗣️ Smart Issue Reporting
 - **Interactive Map Picker**: Click to select exact location of civic issues
 - **Photo Upload**: Visual documentation with image support
