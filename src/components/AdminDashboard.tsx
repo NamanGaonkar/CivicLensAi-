@@ -28,11 +28,16 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
   const [reports, setReports] = useState<any[]>([]);
   const [selectedReport, setSelectedReport] = useState<any>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [recentActivityCount, setRecentActivityCount] = useState(0);
+  const [totalComments, setTotalComments] = useState(0);
+  const [totalUpvotes, setTotalUpvotes] = useState(0);
 
   // Fetch real data from Supabase
   useEffect(() => {
     fetchUsers();
     fetchReports();
+    fetchRecentActivity();
+    fetchSystemMetrics();
   }, []);
 
   const fetchUsers = async () => {
@@ -84,6 +89,7 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
           
           return {
             id: report.id,
+            user_id: report.user_id,
             title: report.title,
             description: report.description,
             category: report.category,
@@ -93,7 +99,8 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
             image_url: report.image_url,
             userName: userData?.full_name || 'Unknown',
             userEmail: userData?.email || '',
-            created: new Date(report.created_at).toLocaleDateString()
+            created: new Date(report.created_at).toLocaleDateString(),
+            created_at: report.created_at
           };
         })
       );
@@ -103,6 +110,42 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
     } catch (error) {
       console.error('Error fetching reports:', error);
       toast.error('Failed to load reports');
+    }
+  };
+
+  const fetchRecentActivity = async () => {
+    try {
+      const twentyFourHoursAgo = new Date();
+      twentyFourHoursAgo.setHours(twentyFourHoursAgo.getHours() - 24);
+      
+      const { count, error } = await supabase
+        .from('reports')
+        .select('*', { count: 'exact', head: true })
+        .gte('created_at', twentyFourHoursAgo.toISOString());
+
+      if (error) throw error;
+      setRecentActivityCount(count || 0);
+    } catch (error) {
+      console.error('Error fetching recent activity:', error);
+    }
+  };
+
+  const fetchSystemMetrics = async () => {
+    try {
+      // Fetch total comments from post_comments
+      const { count: commentsCount } = await supabase
+        .from('post_comments')
+        .select('*', { count: 'exact', head: true });
+
+      // Fetch total upvotes from post_upvotes
+      const { count: upvotesCount } = await supabase
+        .from('post_upvotes')
+        .select('*', { count: 'exact', head: true });
+
+      setTotalComments(commentsCount || 0);
+      setTotalUpvotes(upvotesCount || 0);
+    } catch (error) {
+      console.error('Error fetching system metrics:', error);
     }
   };
 
@@ -129,10 +172,63 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
     }
   };
 
-  const handleStatusChange = (userId: number, newStatus: string) => {
-    // API call to update user status
-    console.log(`Updating user ${userId} status to: ${newStatus}`);
-    setUsers(users.map(u => u.id === userId ? { ...u, status: newStatus } : u));
+  const handleStatusChange = async (userId: string, newStatus: string) => {
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ status: newStatus })
+        .eq('id', userId);
+
+      if (error) throw error;
+      setUsers(users.map(u => u.id === userId ? { ...u, status: newStatus } : u));
+      toast.success(`User status updated to ${newStatus}`);
+    } catch (error) {
+      console.error('Error updating user status:', error);
+      toast.error('Failed to update user status');
+    }
+  };
+
+  const handleReportStatusChange = async (reportId: string, newStatus: string) => {
+    try {
+      const { error } = await supabase
+        .from('reports')
+        .update({ status: newStatus })
+        .eq('id', reportId);
+
+      if (error) throw error;
+      
+      setReports(reports.map(r => r.id === reportId ? { ...r, status: newStatus } : r));
+      if (selectedReport?.id === reportId) {
+        setSelectedReport({ ...selectedReport, status: newStatus });
+      }
+      
+      toast.success(`Report status updated to ${newStatus}`);
+      await fetchRecentActivity(); // Refresh metrics
+    } catch (error) {
+      console.error('Error updating report status:', error);
+      toast.error('Failed to update report status');
+    }
+  };
+
+  const handleReportPriorityChange = async (reportId: string, newPriority: string) => {
+    try {
+      const { error } = await supabase
+        .from('reports')
+        .update({ priority: newPriority })
+        .eq('id', reportId);
+
+      if (error) throw error;
+      
+      setReports(reports.map(r => r.id === reportId ? { ...r, priority: newPriority } : r));
+      if (selectedReport?.id === reportId) {
+        setSelectedReport({ ...selectedReport, priority: newPriority });
+      }
+      
+      toast.success(`Report priority updated to ${newPriority}`);
+    } catch (error) {
+      console.error('Error updating report priority:', error);
+      toast.error('Failed to update report priority');
+    }
   };
 
   return (
@@ -216,11 +312,15 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
                 <div className="space-y-4">
                   <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
                     <h3 className="font-semibold text-blue-900 mb-2">Recent Activity</h3>
-                    <p className="text-sm text-blue-700">23 new reports in the last 24 hours</p>
+                    <p className="text-sm text-blue-700">{recentActivityCount} new reports in the last 24 hours</p>
                   </div>
                   <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
                     <h3 className="font-semibold text-green-900 mb-2">System Health</h3>
                     <p className="text-sm text-green-700">All systems operational</p>
+                  </div>
+                  <div className="p-4 bg-purple-50 border border-purple-200 rounded-lg">
+                    <h3 className="font-semibold text-purple-900 mb-2">Community Engagement</h3>
+                    <p className="text-sm text-purple-700">{totalComments} comments • {totalUpvotes} upvotes</p>
                   </div>
                 </div>
               </div>
@@ -383,23 +483,28 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
                       </div>
                       <div>
                         <h3 className="text-sm font-semibold text-slate-500 mb-1">Status</h3>
-                        <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${
-                          selectedReport.status === "resolved" ? "bg-green-100 text-green-700" :
-                          selectedReport.status === "in_progress" ? "bg-blue-100 text-blue-700" :
-                          "bg-slate-100 text-slate-700"
-                        }`}>
-                          {selectedReport.status.replace('_', ' ').toUpperCase()}
-                        </span>
+                        <select
+                          value={selectedReport.status}
+                          onChange={(e) => handleReportStatusChange(selectedReport.id, e.target.value)}
+                          className="px-3 py-1 border border-slate-300 rounded-lg text-sm font-medium focus:border-red-500 outline-none"
+                        >
+                          <option value="pending">PENDING</option>
+                          <option value="in_progress">IN PROGRESS</option>
+                          <option value="resolved">RESOLVED</option>
+                          <option value="rejected">REJECTED</option>
+                        </select>
                       </div>
                       <div>
                         <h3 className="text-sm font-semibold text-slate-500 mb-1">Priority</h3>
-                        <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${
-                          selectedReport.priority === "high" ? "bg-red-100 text-red-700" :
-                          selectedReport.priority === "medium" ? "bg-orange-100 text-orange-700" :
-                          "bg-yellow-100 text-yellow-700"
-                        }`}>
-                          {selectedReport.priority.toUpperCase()}
-                        </span>
+                        <select
+                          value={selectedReport.priority}
+                          onChange={(e) => handleReportPriorityChange(selectedReport.id, e.target.value)}
+                          className="px-3 py-1 border border-slate-300 rounded-lg text-sm font-medium focus:border-red-500 outline-none"
+                        >
+                          <option value="low">LOW</option>
+                          <option value="medium">MEDIUM</option>
+                          <option value="high">HIGH</option>
+                        </select>
                       </div>
                       <div>
                         <h3 className="text-sm font-semibold text-slate-500 mb-1">Submitted By</h3>
