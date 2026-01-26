@@ -1,10 +1,11 @@
 import { useState, useRef } from "react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
-import { Camera, MapPin, Tag, Upload, Navigation } from "lucide-react";
+import { Camera, MapPin, Tag, Upload, Navigation, Sparkles, Brain } from "lucide-react";
 import { GoogleInteractiveMap } from "./GoogleInteractiveMap";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../hooks/useAuth";
+import { classifyIssue, getDepartmentsByCategory } from "../lib/classifier";
 
 export function ReportForm({ onBack }: { onBack?: () => void }) {
   const { user } = useAuth();
@@ -24,6 +25,10 @@ export function ReportForm({ onBack }: { onBack?: () => void }) {
   const [tagInput, setTagInput] = useState("");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [department, setDepartment] = useState("");
+  const [priority, setPriority] = useState<"low" | "medium" | "high">("medium");
+  const [isClassifying, setIsClassifying] = useState(false);
+  const [aiSuggestion, setAiSuggestion] = useState<string>("");
   
   const imageInputRef = useRef<HTMLInputElement>(null);
 
@@ -53,6 +58,45 @@ export function ReportForm({ onBack }: { onBack?: () => void }) {
     const file = event.target.files?.[0];
     if (file) {
       setSelectedImage(file);
+    }
+  };
+
+  const handleAutoClassify = async () => {
+    if (!description.trim()) {
+      toast.error("Please provide a description first");
+      return;
+    }
+
+    setIsClassifying(true);
+    toast.info("🤖 AI analyzing your report...");
+
+    try {
+      let imageBase64: string | undefined;
+
+      // Convert image to base64 if available
+      if (selectedImage) {
+        imageBase64 = await new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result as string);
+          reader.readAsDataURL(selectedImage);
+        });
+      }
+
+      // Call ML classifier
+      const result = await classifyIssue(description, imageBase64);
+
+      // Apply AI suggestions
+      setCategory(result.category);
+      setDepartment(result.department);
+      setPriority(result.priority);
+      setAiSuggestion(`${result.reasoning} (${result.confidence}% confidence)`);
+
+      toast.success(`✨ AI classified as ${result.category} → ${result.department}`);
+    } catch (error) {
+      console.error("Auto-classification error:", error);
+      toast.error("AI classification failed, please select manually");
+    } finally {
+      setIsClassifying(false);
     }
   };
 
@@ -140,6 +184,8 @@ export function ReportForm({ onBack }: { onBack?: () => void }) {
           title,
           description,
           category,
+          department: department || getDepartmentsByCategory(category)[0],
+          priority: priority,
           latitude: location.lat,
           longitude: location.lng,
           address: location.address,
@@ -266,6 +312,60 @@ export function ReportForm({ onBack }: { onBack?: () => void }) {
               {categories.map((cat) => (
                 <option key={cat} value={cat} className="bg-white text-slate-900">
                   {cat}
+                </option>
+              ))}
+            </select>
+          </motion.div>
+
+          {/* AI Auto-Classification */}
+          <motion.div
+            initial={{ x: -20, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ delay: 0.55 }}
+            className="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg p-4"
+          >
+            <button
+              type="button"
+              onClick={handleAutoClassify}
+              disabled={isClassifying || !description}
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            >
+              {isClassifying ? (
+                <>
+                  <Brain className="w-5 h-5 animate-pulse" />
+                  AI Analyzing...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-5 h-5" />
+                  Auto-Classify with AI
+                </>
+              )}
+            </button>
+            {aiSuggestion && (
+              <p className="mt-2 text-sm text-purple-700 flex items-start gap-2">
+                <Sparkles className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                <span>{aiSuggestion}</span>
+              </p>
+            )}
+          </motion.div>
+
+          {/* Department */}
+          <motion.div
+            initial={{ x: -20, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ delay: 0.56 }}
+          >
+            <label className="block text-slate-900 font-medium mb-2">Department</label>
+            <select
+              value={department}
+              onChange={(e) => setDepartment(e.target.value)}
+              className="w-full px-4 py-3 bg-white/80 border border-civic-teal/30 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-civic-teal focus:border-transparent transition-all"
+            >
+              <option value="">Auto-assign based on category</option>
+              {getDepartmentsByCategory(category).map((dept) => (
+                <option key={dept} value={dept}>
+                  {dept}
                 </option>
               ))}
             </select>
