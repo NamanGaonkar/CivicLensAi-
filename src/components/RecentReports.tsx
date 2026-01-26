@@ -146,6 +146,32 @@ export function RecentReports({ reports }: RecentReportsProps) {
                     </div>
                   </div>
 
+                  {selectedReport.department && (
+                    <div className="flex items-start space-x-3">
+                      <Tag className="w-5 h-5 text-purple-600 mt-0.5" />
+                      <div>
+                        <p className="text-sm font-semibold text-slate-700">Department</p>
+                        <p className="text-slate-600">{selectedReport.department}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {selectedReport.priority && (
+                    <div className="flex items-start space-x-3">
+                      <Tag className="w-5 h-5 text-orange-600 mt-0.5" />
+                      <div>
+                        <p className="text-sm font-semibold text-slate-700">Priority</p>
+                        <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${
+                          selectedReport.priority === 'high' ? 'bg-red-100 text-red-700' :
+                          selectedReport.priority === 'medium' ? 'bg-orange-100 text-orange-700' :
+                          'bg-yellow-100 text-yellow-700'
+                        }`}>
+                          {selectedReport.priority.toUpperCase()}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+
                   <div className="flex items-start space-x-3">
                     <Calendar className="w-5 h-5 text-civic-teal mt-0.5" />
                     <div>

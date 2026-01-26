@@ -94,7 +94,9 @@ export function ReportForm({ onBack }: { onBack?: () => void }) {
       toast.success(`✨ AI classified as ${result.category} → ${result.department}`);
     } catch (error) {
       console.error("Auto-classification error:", error);
-      toast.error("AI classification failed, please select manually");
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      toast.error(`AI classification failed: ${errorMessage}`);
+      setAiSuggestion("");
     } finally {
       setIsClassifying(false);
     }
@@ -177,27 +179,34 @@ export function ReportForm({ onBack }: { onBack?: () => void }) {
       }
 
       // Insert report
+      const reportData: any = {
+        user_id: user.id,
+        title,
+        description,
+        category,
+        latitude: location.lat,
+        longitude: location.lng,
+        address: location.address,
+        area: location.area,
+        city: location.city,
+        state: location.state,
+        pincode: location.pincode,
+        tags,
+        image_url: imageUrl,
+        status: 'open'
+      };
+
+      // Add department and priority only if they exist (for backward compatibility)
+      if (department) {
+        reportData.department = department;
+      }
+      if (priority) {
+        reportData.priority = priority;
+      }
+
       const { error } = await supabase
         .from('reports')
-        .insert({
-          user_id: user.id,
-          title,
-          description,
-          category,
-          department: department || getDepartmentsByCategory(category)[0],
-          priority: priority,
-          latitude: location.lat,
-          longitude: location.lng,
-          address: location.address,
-          area: location.area,
-          city: location.city,
-          state: location.state,
-          pincode: location.pincode,
-          tags,
-          image_url: imageUrl,
-          status: 'open',
-          priority: 'medium'
-        });
+        .insert(reportData);
 
       if (error) throw error;
 

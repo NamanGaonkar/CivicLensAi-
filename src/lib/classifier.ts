@@ -47,7 +47,22 @@ Respond in this EXACT JSON format:
   "reasoning": "brief explanation"
 }`;
 
-    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+    // Fetch available models and use the first one that supports generateContent
+    const modelsResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${API_KEY}`);
+    let modelName = "gemini-1.5-flash-latest";
+    
+    if (modelsResponse.ok) {
+      const modelsData = await modelsResponse.json();
+      const availableModel = modelsData.models?.find((m: any) => 
+        m.supportedGenerationMethods?.includes('generateContent') &&
+        m.name.includes('gemini')
+      );
+      if (availableModel) {
+        modelName = availableModel.name.replace('models/', '');
+      }
+    }
+
+    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${API_KEY}`;
 
     let requestBody: any;
 
@@ -112,14 +127,8 @@ Respond in this EXACT JSON format:
   } catch (error) {
     console.error("Classification error:", error);
     
-    // Fallback classification
-    return {
-      category: "Infrastructure",
-      department: "Public Works",
-      priority: "medium",
-      confidence: 50,
-      reasoning: "Auto-classification unavailable, using default values"
-    };
+    // Throw the error so UI can handle it properly
+    throw error;
   }
 }
 
