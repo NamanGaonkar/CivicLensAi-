@@ -30,6 +30,9 @@ export function ReportForm({ onBack }: { onBack?: () => void }) {
   const [isClassifying, setIsClassifying] = useState(false);
   const [aiSuggestion, setAiSuggestion] = useState<string>("");
   
+  // Check if AI features are available
+  const isAIEnabled = !!import.meta.env.VITE_GEMINI_API_KEY;
+  
   const imageInputRef = useRef<HTMLInputElement>(null);
 
 
@@ -326,38 +329,54 @@ export function ReportForm({ onBack }: { onBack?: () => void }) {
             </select>
           </motion.div>
 
-          {/* AI Auto-Classification */}
-          <motion.div
-            initial={{ x: -20, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ delay: 0.55 }}
-            className="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg p-4"
-          >
-            <button
-              type="button"
-              onClick={handleAutoClassify}
-              disabled={isClassifying || !description}
-              className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+          {/* AI Auto-Classification - Only show if API key is configured */}
+          {isAIEnabled ? (
+            <motion.div
+              initial={{ x: -20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ delay: 0.55 }}
+              className="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg p-4"
             >
-              {isClassifying ? (
-                <>
-                  <Brain className="w-5 h-5 animate-pulse" />
-                  AI Analyzing...
-                </>
-              ) : (
-                <>
-                  <Sparkles className="w-5 h-5" />
-                  Auto-Classify with AI
-                </>
+              <button
+                type="button"
+                onClick={handleAutoClassify}
+                disabled={isClassifying || !description}
+                className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              >
+                {isClassifying ? (
+                  <>
+                    <Brain className="w-5 h-5 animate-pulse" />
+                    AI Analyzing...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-5 h-5" />
+                    Auto-Classify with AI
+                  </>
+                )}
+              </button>
+              {aiSuggestion && (
+                <p className="mt-2 text-sm text-purple-700 flex items-start gap-2">
+                  <Sparkles className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                  <span>{aiSuggestion}</span>
+                </p>
               )}
-            </button>
-            {aiSuggestion && (
-              <p className="mt-2 text-sm text-purple-700 flex items-start gap-2">
-                <Sparkles className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                <span>{aiSuggestion}</span>
+            </motion.div>
+          ) : (
+            <motion.div
+              initial={{ x: -20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ delay: 0.55 }}
+              className="bg-yellow-50 border border-yellow-200 rounded-lg p-4"
+            >
+              <p className="text-sm text-yellow-800 flex items-start gap-2">
+                <span className="text-lg">⚠️</span>
+                <span>
+                  <strong>AI Classification Unavailable:</strong> Configure VITE_GEMINI_API_KEY environment variable to enable AI-powered auto-classification.
+                </span>
               </p>
-            )}
-          </motion.div>
+            </motion.div>
+          )}
 
           {/* Department */}
           <motion.div
