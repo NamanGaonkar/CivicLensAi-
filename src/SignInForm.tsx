@@ -38,29 +38,59 @@ export function SignInForm({ initialFlow = "signIn", onBackToLogin, onSuccess, r
                 email,
                 password,
               });
-              
+
               if (error) throw error;
-              
-              // Create profile with role
-              if (data.user) {
-                const { error: profileError } = await supabase
-                  .from('profiles')
-                  .insert({
-                    id: data.user.id,
-                    email,
-                    full_name: fullName,
-                    display_name: displayName,
-                    phone,
-                    city,
-                    organization,
-                    bio,
-                    role: role,
-                  });
-                
-                if (profileError) console.error('Profile creation error:', profileError);
+
+              // After signUp, the client may or may not be signed in immediately
+              // (depending on email-confirmation settings). Only attempt to
+              // create/upsert the profile if there's an active session so that
+              // the RLS policy (auth.uid() = id) permits the insert.
+              const { data: sessionData } = await supabase.auth.getSession();
+              const currentUser = sessionData?.session?.user ?? data.user;
+
+              if (!currentUser) {
+                // No active session — likely email confirmation required.
+                toast.success("Account created! Please check your email to verify before signing in.");
+              } else {
+                // Create or update profile with role (use upsert to avoid duplicate/constraint issues)
+                const profilePayload = {
+                  id: currentUser.id,
+                  email,
+                  full_name: fullName || null,
+                  display_name: displayName || null,
+                  phone: phone || null,
+                  city: city || null,
+                  organization: organization || null,
+                  bio: bio || null,
+                  role: role,
+                };
+
+                try {
+                  // Try upsert first (insert or update on conflict)
+                  const { error: upsertError } = await supabase
+                    .from('profiles')
+                    .upsert(profilePayload, { returning: 'minimal' });
+
+                  if (upsertError) {
+                    console.warn('Profile upsert failed, attempting update:', upsertError);
+                    // Fallback: try update (in case profile exists but upsert blocked)
+                    const { error: updateError } = await supabase
+                      .from('profiles')
+                      .update(profilePayload)
+                      .eq('id', currentUser.id);
+
+                    if (updateError) {
+                      console.error('Profile update error:', updateError);
+                      toast.error('Failed to create user profile. Please contact support.');
+                    }
+                  }
+                } catch (err) {
+                  console.error('Unexpected profile creation error:', err);
+                  toast.error('Failed to create user profile. Please try again.');
+                }
+
+                toast.success("Account created and profile saved!");
               }
-              
-              toast.success("Account created! Please check your email to verify.");
             } else {
               // Sign in existing user
               const { error } = await supabase.auth.signInWithPassword({

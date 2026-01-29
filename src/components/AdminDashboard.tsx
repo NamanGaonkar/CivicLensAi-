@@ -329,21 +329,22 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
             {/* User Management Tab */}
             {activeTab === "users" && (
               <div>
-                <div className="flex items-center justify-between mb-6">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-3">
                   <h2 className="text-xl font-bold text-slate-900">User Management</h2>
-                  <div className="relative">
+                  <div className="relative w-full sm:w-auto">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                     <input
                       type="text"
                       placeholder="Search users..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none"
+                      className="pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none w-full sm:w-64"
                     />
                   </div>
                 </div>
 
-                <div className="overflow-x-auto">
+                {/* Responsive user list: table on desktop, cards on mobile */}
+                <div className="hidden min-[500px]:block overflow-x-auto">
                   <table className="w-full">
                     <thead className="bg-slate-100 border-b border-slate-200">
                       <tr>
@@ -393,6 +394,51 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
                       ))}
                     </tbody>
                   </table>
+                </div>
+                {/* Mobile card view */}
+                <div className="block min-[500px]:hidden space-y-4">
+                  {users.filter(u => 
+                    u.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    u.email.toLowerCase().includes(searchTerm.toLowerCase())
+                  ).map((user) => (
+                    <div key={user.id} className="rounded-xl border border-slate-200 p-4 bg-white shadow-sm flex flex-col gap-2">
+                      <div className="flex flex-col gap-1">
+                        <span className="font-semibold text-slate-900 text-base">{user.name}</span>
+                        <span className="text-slate-600 text-sm break-all">{user.email}</span>
+                      </div>
+                      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs text-slate-500">Role:</span>
+                          <select
+                            value={user.role}
+                            onChange={(e) => handleRoleChange(user.id, e.target.value)}
+                            className="px-2 py-1 border border-slate-300 rounded-lg text-xs focus:border-red-500 outline-none"
+                          >
+                            <option value="citizen">Citizen</option>
+                            <option value="official">Official</option>
+                            <option value="admin">Admin</option>
+                          </select>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs text-slate-500">Status:</span>
+                          <select
+                            value={user.status}
+                            onChange={(e) => handleStatusChange(user.id, e.target.value)}
+                            className="px-2 py-1 border border-slate-300 rounded-lg text-xs focus:border-red-500 outline-none"
+                          >
+                            <option value="active">Active</option>
+                            <option value="suspended">Suspended</option>
+                            <option value="banned">Banned</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div className="flex justify-end mt-2">
+                        <button className="text-red-600 hover:text-red-700 text-xs font-medium">
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             )}
