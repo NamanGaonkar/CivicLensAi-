@@ -197,7 +197,7 @@ export function OfficialDashboard({ onLogout, userEmail }: OfficialDashboardProp
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="official-root min-h-screen bg-slate-50">
       {/* Header */}
       <header className="bg-gradient-to-r from-civic-teal to-civic-darkBlue text-white p-6 shadow-lg">
         <div className="max-w-7xl mx-auto flex items-center justify-between">

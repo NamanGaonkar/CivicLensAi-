@@ -232,7 +232,7 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="admin-root min-h-screen bg-slate-50">
       {/* Header */}
       <header className="bg-gradient-to-r from-red-500 to-orange-500 text-white p-6 shadow-lg">
         <div className="max-w-7xl mx-auto flex items-center justify-between">

@@ -3,9 +3,149 @@
 @tailwind utilities;
 
 :root {
-  --color-light: #ffffff;
-  --color-dark: #171717;
+  --bg: #ffffff;
+  --text: #0f172a;
+  --muted: #64748b;
+  --card-bg: rgba(255,255,255,0.9);
+  --card-border: rgba(0,145,185,0.12);
+  --selection-bg: rgba(0, 145, 185, 0.3);
 }
+
+/* Dark theme variables when .dark is present on html */
+.dark {
+  --bg: #071022;
+  --text: #e6eef6;
+  --muted: #94a3b8;
+  --card-bg: rgba(10,15,25,0.6);
+  --card-border: rgba(255,255,255,0.06);
+  --selection-bg: rgba(0,145,185,0.22);
+}
+
+/* Balanced dark-mode approach with proper contrast */
+.dark {
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+/* Landing page specific dark mode adjustments */
+.dark .landing-root {
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+/* Dashboard dark mode adjustments */
+.dark .admin-root,
+.dark .dashboard-root,
+.dark .official-root {
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+/* Dark-mode utility overrides for better readability */
+.dark .text-slate-900,
+.dark .text-slate-800,
+.dark .text-slate-700,
+.dark .text-gray-900,
+.dark .text-gray-800,
+.dark .text-gray-700 {
+  color: #e2e8f0 !important;
+}
+
+.dark .text-slate-600,
+.dark .text-gray-600 {
+  color: #cbd5e1 !important;
+}
+
+.dark .text-slate-500,
+.dark .text-gray-500,
+.dark .text-slate-400,
+.dark .text-gray-400 {
+  color: #94a3b8 !important;
+}
+
+/* Background overrides for better dark mode contrast */
+.dark .bg-white,
+.dark .bg-white\/80,
+.dark .bg-white\/50,
+.dark .bg-white\/30,
+.dark .bg-white\/90 {
+  background-color: rgba(30, 41, 59, 0.8) !important;
+  color: #e2e8f0 !important;
+}
+
+.dark .bg-gray-50,
+.dark .bg-gray-100,
+.dark .bg-slate-50 {
+  background-color: #1e293b !important;
+  color: #e2e8f0 !important;
+}
+
+/* Border and input adjustments for dark mode */
+.dark .border-gray-200,
+.dark .border-gray-100,
+.dark .border-slate-200 {
+  border-color: #475569 !important;
+}
+
+.dark .auth-input-field {
+  background: #1e293b !important;
+  border-color: #475569 !important;
+  color: #e2e8f0 !important;
+}
+
+.dark .hover\:bg-white:hover,
+.dark .hover\:bg-gray-50:hover {
+  background-color: #334155 !important;
+}
+
+/* Login form specific dark mode fixes */
+.dark input[type="email"],
+.dark input[type="password"],
+.dark input {
+  background: #1e293b !important;
+  border-color: #475569 !important;
+  color: #e2e8f0 !important;
+}
+
+.dark input::placeholder {
+  color: #94a3b8 !important;
+}
+
+.dark label {
+  color: #cbd5e1 !important;
+}
+
+/* Chatbot specific styles to ensure readability and glassy footer */
+.chat-window {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  color: var(--text);
+}
+
+.chat-body {
+  background: transparent;
+  color: var(--text);
+}
+
+.assistant-bubble {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  color: var(--text);
+}
+
+.chat-footer {
+  background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+  backdrop-filter: blur(8px);
+  border-top: 1px solid var(--card-border);
+}
+
+.chat-input {
+  background: rgba(255,255,255,0.02);
+  color: var(--text);
+  border-color: var(--card-border) !important;
+}
+
+.text-muted { color: var(--muted); }
 
 .accent-text {
   @apply text-slate-600;
@@ -28,8 +168,8 @@ body {
     "Segoe UI Emoji",
     "Segoe UI Symbol",
     "Noto Color Emoji";
-  color: var(--color-dark);
-  background: var(--color-light);
+  color: var(--text);
+  background: var(--bg);
   overflow-x: hidden;
 }
 
@@ -51,7 +191,9 @@ h1, h2, h3, h4, h5, h6, p {
 
 /* Glass morphism effect */
 .glass-card {
-  @apply backdrop-blur-xl bg-white/90 border border-civic-teal/20 rounded-xl shadow-xl;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  @apply backdrop-blur-xl rounded-xl shadow-xl;
 }
 
 /* Enhanced glass effect with better shadows */
@@ -66,7 +208,7 @@ html {
 
 /* Selection styling */
 ::selection {
-  background: rgba(0, 145, 185, 0.3);
+  background: var(--selection-bg);
   color: white;
 }
 

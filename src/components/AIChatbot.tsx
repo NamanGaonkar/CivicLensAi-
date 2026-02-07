@@ -224,7 +224,7 @@ export function AIChatbot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="fixed z-[60] bg-white shadow-2xl rounded-2xl md:rounded-3xl border border-slate-200 flex flex-col inset-x-2 bottom-2 top-16 md:bottom-24 md:right-6 md:left-auto md:top-auto md:w-[420px] md:h-[650px]"
+            className="fixed z-[60] chat-window shadow-2xl rounded-2xl md:rounded-3xl flex flex-col inset-x-2 bottom-2 top-16 md:bottom-24 md:right-6 md:left-auto md:top-auto md:w-[420px] md:h-[650px]"
           >
             {/* Header */}
             <div className="bg-gradient-to-r from-civic-teal to-civic-darkBlue text-white p-3 md:p-4 rounded-t-2xl">
@@ -268,7 +268,7 @@ export function AIChatbot() {
             </div>
 
             {/* Messages Area */}
-            <div className="flex-1 overflow-y-auto p-3 md:p-4 space-y-3 md:space-y-4 bg-slate-50">
+            <div className="flex-1 overflow-y-auto p-3 md:p-4 space-y-3 md:space-y-4 chat-body">
               {messages.map((message) => (
                 <div
                   key={message.id}
@@ -310,7 +310,7 @@ export function AIChatbot() {
                       className={`px-3 py-2.5 rounded-2xl ${
                         message.role === "user"
                           ? "bg-gradient-to-br from-civic-teal to-civic-darkBlue text-white"
-                          : "bg-white border border-slate-200 text-slate-900"
+                          : "assistant-bubble"
                       }`}
                     >
                       {message.image && (
@@ -318,7 +318,7 @@ export function AIChatbot() {
                       )}
                       <p className="text-sm leading-relaxed">{message.text}</p>
                     </div>
-                    <p className={`text-[10px] mt-1 px-1 ${message.role === "user" ? "text-right text-slate-400" : "text-slate-400"}`}>
+                    <p className={`text-[10px] mt-1 px-1 ${message.role === "user" ? "text-right text-slate-400" : "text-muted"}`}>
                       {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </p>
                   </div>
@@ -331,7 +331,7 @@ export function AIChatbot() {
                   <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 text-white flex items-center justify-center flex-shrink-0">
                     <Bot className="w-4 h-4" />
                   </div>
-                  <div className="bg-white border border-slate-200 px-3 py-2.5 rounded-2xl">
+                  <div className="assistant-bubble px-3 py-2.5 rounded-2xl">
                     <div className="flex space-x-1.5">
                       <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: "0s" }}></div>
                       <div className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
@@ -344,7 +344,7 @@ export function AIChatbot() {
             </div>
 
             {/* Input Area */}
-            <div className="border-t border-slate-200 p-2 md:p-3 bg-white rounded-b-2xl">
+            <div className="chat-footer border-t p-2 md:p-3 rounded-b-2xl">
               {/* Image Preview */}
               {selectedImage && (
                 <div className="mb-2 relative inline-block">
@@ -407,7 +407,7 @@ export function AIChatbot() {
                   onChange={(e) => setInput(e.target.value)}
                   onKeyPress={(e) => e.key === "Enter" && !e.shiftKey && handleSendMessage()}
                   placeholder="Type your message..."
-                  className="flex-1 min-w-0 px-2 md:px-3 py-2 md:py-2.5 border-2 border-slate-300 rounded-xl focus:border-civic-teal focus:ring-2 focus:ring-civic-teal/20 outline-none text-sm text-slate-900 placeholder-slate-400 bg-white"
+                  className="flex-1 min-w-0 px-2 md:px-3 py-2 md:py-2.5 border-2 rounded-xl focus:border-civic-teal focus:ring-2 focus:ring-civic-teal/20 outline-none text-sm chat-input"
                   autoComplete="off"
                 />
                 <button

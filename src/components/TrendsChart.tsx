@@ -13,7 +13,21 @@ interface TrendsChartProps {
 }
 
 export function TrendsChart({ data }: TrendsChartProps) {
-  const maxValue = Math.max(...data.datasets.flatMap(d => d.data));
+  const rawMax = Math.max(...data.datasets.flatMap(d => d.data));
+
+  // Compute a "nice" maximum for the Y axis (round up to 1,2,5 * power of 10)
+  const getNiceMax = (v: number) => {
+    if (!isFinite(v) || v <= 0) return 3;
+    const pow = Math.pow(10, Math.floor(Math.log10(v)));
+    const candidates = [1, 2, 5, 10];
+    for (let c of candidates) {
+      const n = c * pow;
+      if (v <= n) return n;
+    }
+    return 10 * pow;
+  };
+
+  const maxValue = getNiceMax(rawMax);
 
   // Map old colors to new civic palette
   const mapColor = (color: string) => {
@@ -34,11 +48,13 @@ export function TrendsChart({ data }: TrendsChartProps) {
       <div className="relative h-48 sm:h-64">
         {/* Y-axis labels */}
         <div className="absolute left-0 top-0 h-full flex flex-col justify-between text-xs text-slate-500 pr-2 sm:pr-4">
-          <span>{maxValue}</span>
-          <span>{Math.round(maxValue * 0.75)}</span>
-          <span>{Math.round(maxValue * 0.5)}</span>
-          <span>{Math.round(maxValue * 0.25)}</span>
-          <span>0</span>
+          {(() => {
+            const step = Math.max(1, Math.round(maxValue / 4));
+            const ticks = [maxValue, step * 3, step * 2, step * 1, 0];
+            return ticks.map((t, i) => (
+              <span key={i}>{t}</span>
+            ));
+          })()}
         </div>
         
         {/* Chart area */}
@@ -53,19 +69,25 @@ export function TrendsChart({ data }: TrendsChartProps) {
           {/* Chart bars */}
           <div className="absolute inset-0 flex items-end justify-between px-1 sm:px-4">
             {data.labels.map((label, index) => (
-              <div key={label} className="flex flex-col items-center space-y-1 sm:space-y-2 flex-1 max-w-[60px]">
-                <div className="flex space-x-0.5 sm:space-x-1 items-end h-36 sm:h-48">
-                  {data.datasets.map((dataset, datasetIndex) => (
-                    <div
-                      key={dataset.label}
-                      className="w-2 sm:w-4 rounded-t transition-all duration-500 hover:opacity-80"
-                      style={{
-                        height: `${(dataset.data[index] / maxValue) * 100}%`,
-                        backgroundColor: mapColor(dataset.borderColor),
-                      }}
-                      title={`${dataset.label}: ${dataset.data[index]}`}
-                    ></div>
-                  ))}
+              <div key={label} className="flex flex-col items-center space-y-1 sm:space-y-2 flex-1 max-w-[80px]">
+                <div className="flex items-end h-36 sm:h-48 w-full justify-center gap-2">
+                  {data.datasets.map((dataset, datasetIndex) => {
+                    const value = dataset.data[index] ?? 0;
+                    const pct = maxValue > 0 ? (value / maxValue) * 100 : 0;
+                    const minHeight = value > 0 && pct < 6 ? 6 : pct; // ensure tiny values are visible
+                    return (
+                      <div
+                        key={dataset.label}
+                        className="rounded-t transition-all duration-500 hover:opacity-80"
+                        style={{
+                          width: `${Math.max(8, 100 / Math.max(3, data.datasets.length * 3))}%`,
+                          height: `${minHeight}%`,
+                          backgroundColor: mapColor(dataset.borderColor),
+                        }}
+                        title={`${dataset.label}: ${value}`}
+                      ></div>
+                    );
+                  })}
                 </div>
                 <span className="text-[10px] sm:text-xs text-slate-600 truncate w-full text-center">{label}</span>
               </div>

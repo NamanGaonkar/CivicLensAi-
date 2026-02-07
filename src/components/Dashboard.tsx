@@ -130,7 +130,7 @@ export function Dashboard({ onNavigate }: DashboardProps = {}) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="space-y-4 sm:space-y-6 md:space-y-8"
+      className="dashboard-root space-y-4 sm:space-y-6 md:space-y-8"
     >
       {/* Header */}
       <motion.div

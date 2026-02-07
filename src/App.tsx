@@ -19,6 +19,7 @@ import { GoogleMapsProvider } from "./components/GoogleMapsProvider";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MapPin, Users, User, ShieldCheck, Activity, BarChart3, ArrowLeft, Settings } from "lucide-react";
+import { ThemeToggle } from "./components/ThemeToggle";
 import { useAuth } from "./hooks/useAuth";
 import { supabase } from "./lib/supabase";
 import { requestNotificationPermission } from "./lib/notifications";
@@ -309,6 +310,7 @@ export default function App() {
                     </div>
                     <div className="flex items-center space-x-2 sm:space-x-3">
                       <NotificationCenter />
+                      <ThemeToggle />
                       <motion.button
                         onClick={() => setCurrentView("notifications")}
                         className="p-2 rounded-lg hover:bg-civic-lightBlue/30 transition-colors"

@@ -20,6 +20,7 @@ export function NotificationCenter() {
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [showPreview, setShowPreview] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -107,21 +108,54 @@ export function NotificationCenter() {
   return (
     <>
       {/* Notification Bell Button */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 rounded-full hover:bg-gray-100 transition-colors"
-      >
-        <Bell className="w-6 h-6 text-gray-700" />
-        {unreadCount > 0 && (
-          <motion.span
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center"
+      <div className="relative inline-block">
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          onMouseEnter={() => setShowPreview(true)}
+          onMouseLeave={() => setShowPreview(false)}
+          className="relative p-2 rounded-full hover:bg-gray-100 transition-colors"
+        >
+          <Bell className="w-6 h-6 text-gray-700" />
+          {unreadCount > 0 && (
+            <motion.span
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center"
+            >
+              {unreadCount > 9 ? "9+" : unreadCount}
+            </motion.span>
+          )}
+        </button>
+
+        {showPreview && notifications.length > 0 && (
+          <div
+            onMouseEnter={() => setShowPreview(true)}
+            onMouseLeave={() => setShowPreview(false)}
+            className="absolute right-0 mt-2 w-80 bg-white border border-gray-200 rounded-lg shadow-lg z-50 p-3 text-sm"
           >
-            {unreadCount > 9 ? "9+" : unreadCount}
-          </motion.span>
+            <div className="flex items-start gap-3">
+              <div className="flex-1">
+                <div className="flex items-center justify-between">
+                  <strong className="text-gray-900">{notifications[0].title}</strong>
+                  <span className="text-xs text-gray-400">{new Date(notifications[0].created_at).toLocaleTimeString()}</span>
+                </div>
+                <p className="text-gray-600 mt-1 line-clamp-3">{notifications[0].message}</p>
+                <div className="mt-2 text-right">
+                  <button
+                    onClick={() => {
+                      setIsOpen(true);
+                      setShowPreview(false);
+                    }}
+                    className="text-civic-teal hover:text-civic-darkBlue text-xs font-medium"
+                  >
+                    View all
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         )}
-      </button>
+      </div>
 
       {/* Notification Panel */}
       <AnimatePresence>

@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import Particles from "./Particles";
 import { Logo } from "./Logo";
+import { ThemeToggle } from "./ThemeToggle";
 import TextType from "./TextType";
 import { 
   MapPin, 
@@ -92,7 +93,7 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-civic-lightBlue via-white to-civic-lightBlue relative overflow-hidden">
+    <div className="landing-root min-h-screen bg-gradient-to-br from-civic-lightBlue via-white to-civic-lightBlue dark:from-transparent dark:via-transparent dark:to-civic-darkBlue/10 relative overflow-hidden">
       {/* Background gradient with new civic palette */}
       <div className="absolute inset-0 -z-30">
         <div className="absolute inset-0 bg-gradient-to-br from-civic-lightBlue via-white to-blue-50"></div>
@@ -130,24 +131,27 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
       </div>
 
       {/* Top Navigation Bar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 px-2 sm:px-4 lg:px-8 py-3 sm:py-4 lg:py-6 backdrop-blur-lg">
+      <nav className="fixed top-0 left-0 right-0 z-50 px-2 sm:px-4 lg:px-8 py-3 sm:py-4 lg:py-6 backdrop-blur-lg bg-white/70 dark:bg-transparent">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           {/* Logo on the left */}
-          <motion.div
+            <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <Logo size="md" showText={true} textColor="text-slate-900" />
+            <Logo size="md" showText={true} textColor="text-slate-900 dark:text-slate-100" />
           </motion.div>
 
-          {/* Get started and Demo buttons on the right */}
+          {/* Get started, theme toggle and Demo buttons on the right */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
-            className="flex space-x-2 sm:space-x-3"
+            className="flex items-center space-x-2 sm:space-x-3"
           >
+            <div className="-mr-1">
+              <ThemeToggle />
+            </div>
             <motion.button
               onClick={onGetStarted}
               className="px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 bg-gradient-to-r from-civic-teal to-civic-darkBlue text-white font-semibold rounded-lg text-xs sm:text-sm shadow-lg hover:shadow-civic-teal/50 transition-all"
@@ -171,7 +175,7 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
         {/* Hero Section - Clean & Fast */}
         <section className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 relative overflow-hidden">
           {/* Simple gradient background - no lag */}
-          <div className="absolute inset-0 bg-gradient-to-br from-civic-lightBlue/30 via-white to-civic-teal/20" />
+          <div className="absolute inset-0 bg-gradient-to-br from-civic-lightBlue/30 via-white to-civic-teal/20 dark:from-transparent dark:via-transparent dark:to-black/20" />
           
           {/* Subtle static decorative elements */}
           <div className="absolute top-20 left-10 w-64 h-64 bg-civic-teal/10 rounded-full blur-3xl" />
@@ -209,8 +213,8 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
                 className="space-y-4 relative"
               >
                 <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black leading-[1.1] tracking-tight relative">
-                  <span className="text-slate-700">CIVIC </span>
-                  <span className="bg-gradient-to-r from-civic-teal via-civic-darkBlue to-civic-teal bg-clip-text text-transparent">
+                  <span className="text-slate-700 dark:text-slate-100">CIVIC </span>
+                  <span className="bg-gradient-to-r from-civic-teal via-civic-darkBlue to-civic-teal bg-clip-text text-transparent dark:text-white">
                     LENS
                   </span>
                 </h1>
@@ -221,7 +225,7 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.4 }}
-                className="text-slate-700 font-medium text-base sm:text-lg md:text-xl leading-relaxed max-w-2xl mx-auto"
+                className="text-slate-700 dark:text-slate-300 font-medium text-base sm:text-lg md:text-xl leading-relaxed max-w-2xl mx-auto"
               >
                 Empower your community with <span className="font-bold text-civic-teal">Google Gemini AI</span>-driven civic issue reporting and resolution. Real-time tracking, intelligent image analysis, role-based dashboards, and community engagement - all in one platform.
               </motion.p>
@@ -235,7 +239,7 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
               >
                 <motion.button
                   onClick={onGetStarted}
-                  className="px-8 py-3.5 border-2 border-civic-darkBlue text-civic-darkBlue font-bold rounded-full text-base shadow-lg hover:bg-civic-darkBlue hover:text-white transition-all"
+                  className="px-8 py-3.5 border-2 border-civic-darkBlue text-civic-darkBlue dark:text-white dark:border-[rgba(255,255,255,0.06)] font-bold rounded-full text-base shadow-lg hover:bg-civic-darkBlue hover:text-white transition-all"
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -261,7 +265,7 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
         </section>
 
         {/* Features Section */}
-        <section id="features-section" className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-white via-civic-lightBlue/20 to-white">
+        <section id="features-section" className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-white via-civic-lightBlue/20 to-white dark:from-transparent dark:via-transparent dark:to-transparent">
           <div className="max-w-7xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -270,11 +274,11 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
               viewport={{ once: true }}
               className="text-center mb-16"
             >
-              <h2 className="text-5xl font-bold text-slate-900 mb-6">
+              <h2 className="text-5xl font-bold text-slate-900 dark:text-slate-100 mb-6">
                 Everything You Need for
                 <span className="bg-gradient-to-r from-civic-teal to-purple-500 bg-clip-text text-transparent"> Smart Civic Engagement</span>
               </h2>
-              <p className="text-xl text-slate-700 max-w-3xl mx-auto">
+              <p className="text-xl text-slate-700 dark:text-slate-300 max-w-3xl mx-auto">
                 From AI-powered chatbots to role-based dashboards - discover the complete suite of features that make CivicLens the most advanced civic platform
               </p>
             </motion.div>
@@ -294,7 +298,7 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
                   }}
                   className="group relative"
                 >
-                  <div className="bg-white backdrop-blur-xl border-2 border-civic-teal/30 p-4 sm:p-6 md:p-8 h-full rounded-2xl relative overflow-hidden shadow-xl hover:shadow-2xl hover:border-civic-teal transition-all duration-300">
+                  <div className="bg-white dark:bg-[rgba(10,15,25,0.55)] backdrop-blur-xl border-2 border-civic-teal/30 dark:border-[rgba(255,255,255,0.06)] p-4 sm:p-6 md:p-8 h-full rounded-2xl relative overflow-hidden shadow-xl hover:shadow-2xl hover:border-civic-teal transition-all duration-300">
                     {/* Gradient Background */}
                     <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}></div>
                     
@@ -308,10 +312,10 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
                     </motion.div>
                     
                     {/* Content */}
-                    <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 mb-2 sm:mb-4 group-hover:text-civic-teal transition-all duration-300">
+                    <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-100 mb-2 sm:mb-4 group-hover:text-civic-teal transition-all duration-300">
                       {feature.title}
                     </h3>
-                    <p className="text-sm sm:text-base text-slate-600 leading-relaxed group-hover:text-slate-800 transition-colors duration-300">
+                    <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed group-hover:text-slate-800 transition-colors duration-300">
                       {feature.description}
                     </p>
                     
@@ -327,7 +331,7 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
         </section>
 
         {/* CTA Section */}
-        <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-white to-civic-lightBlue/30">
+        <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-white to-civic-lightBlue/30 dark:bg-transparent">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -371,7 +375,7 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
         </section>
 
         {/* Footer */}
-        <footer className="py-8 sm:py-12 px-4 sm:px-6 lg:px-8 border-t-2 border-civic-teal/30 bg-civic-lightBlue/20">
+        <footer className="py-8 sm:py-12 px-4 sm:px-6 lg:px-8 border-t-2 border-civic-teal/30 bg-civic-lightBlue/20 dark:bg-transparent">
           <div className="max-w-7xl mx-auto">
             <motion.div
               initial={{ opacity: 0 }}
