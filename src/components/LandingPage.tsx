@@ -339,18 +339,18 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
             viewport={{ once: true }}
             className="max-w-4xl mx-auto text-center"
           >
-            <div className="bg-gradient-to-br from-white to-civic-lightBlue/50 backdrop-blur-xl border-2 border-civic-teal/40 p-12 rounded-3xl relative overflow-hidden shadow-2xl">
+            <div className="bg-gradient-to-br from-white to-civic-lightBlue/50 dark:from-slate-800 dark:to-slate-700 backdrop-blur-xl border-2 border-civic-teal/40 dark:border-slate-600 p-12 rounded-3xl relative overflow-hidden shadow-2xl">
               {/* Background Animation */}
-              <div className="absolute inset-0 bg-gradient-to-r from-civic-teal/5 to-purple-500/5"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-civic-teal/5 to-purple-500/5 dark:from-slate-700/20 dark:to-slate-600/20"></div>
               
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                className="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-r from-civic-teal/20 to-purple-500/20 rounded-full blur-xl"
+                className="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-r from-civic-teal/20 to-purple-500/20 dark:from-civic-teal/10 dark:to-purple-500/10 rounded-full blur-xl"
               ></motion.div>
               
               <div className="relative z-10">
-                <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 mb-6 sm:mb-8 px-4 sm:px-0">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 dark:text-white mb-6 sm:mb-8 px-4 sm:px-0">
                   Ready to Transform Your Community?
                 </h2>
                 
@@ -385,15 +385,15 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
               className="text-center"
             >
               <div className="flex items-center justify-center space-x-2 mb-4">
-                <Logo size="md" showText={true} textColor="text-slate-900" />
+                <Logo size="md" showText={true} textColor="text-slate-900 dark:text-white" />
               </div>
               
-              <p className="text-slate-700 text-sm sm:text-base mb-4">
+              <p className="text-slate-700 dark:text-slate-300 text-sm sm:text-base mb-4">
                 Empowering communities through intelligent civic engagement
               </p>
               
               <motion.p 
-                className="text-slate-600 text-xs sm:text-sm"
+                className="text-slate-600 dark:text-slate-400 text-xs sm:text-sm"
                 whileHover={{ scale: 1.05 }}
               >
                 Made by{" "}

@@ -199,37 +199,37 @@ export function OfficialDashboard({ onLogout, userEmail }: OfficialDashboardProp
   return (
     <div className="official-root min-h-screen bg-slate-50">
       {/* Header */}
-      <header className="bg-gradient-to-r from-civic-teal to-civic-darkBlue text-white p-6 shadow-lg">
+      <header className="bg-gradient-to-r from-civic-teal to-civic-darkBlue text-white p-3 sm:p-6 shadow-lg">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-              <UserCheck className="w-6 h-6" />
+          <div className="flex items-center gap-2 sm:gap-4">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+              <UserCheck className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold">Official Dashboard</h1>
-              <p className="text-white/80 text-sm">{userEmail}</p>
+              <h1 className="text-lg sm:text-2xl font-bold">Official Dashboard</h1>
+              <p className="text-white/80 text-xs sm:text-sm hidden sm:block">{userEmail}</p>
             </div>
           </div>
           <button
             onClick={onLogout}
-            className="flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors"
+            className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors"
           >
             <LogOut className="w-4 h-4" />
-            Logout
+            <span className="hidden sm:inline">Logout</span>
           </button>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto p-6">
+      <div className="max-w-7xl mx-auto p-3 sm:p-6">
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
           {stats.map((stat, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="bg-white rounded-xl p-6 shadow-md border border-slate-200"
+              className="bg-white rounded-xl p-3 sm:p-6 shadow-md border border-slate-200"
             >
               <div className="flex items-center justify-between mb-4">
                 <div className={`w-12 h-12 bg-gradient-to-br ${
@@ -248,14 +248,14 @@ export function OfficialDashboard({ onLogout, userEmail }: OfficialDashboardProp
         </div>
 
         {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-6">
           {/* Reports List */}
-          <div className="bg-white rounded-xl shadow-md border border-slate-200 p-6">
-            <div className="mb-6">
-              <h2 className="text-xl font-bold text-slate-900 mb-4">Citizen Reports</h2>
+          <div className="bg-white rounded-xl shadow-md border border-slate-200 p-3 sm:p-6">
+            <div className="mb-4 sm:mb-6">
+              <h2 className="text-lg sm:text-xl font-bold text-slate-900 mb-2 sm:mb-4">Citizen Reports</h2>
               
               {/* Search and Filter */}
-              <div className="flex gap-3 mb-4">
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mb-3 sm:mb-4">
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                   <input
@@ -269,7 +269,7 @@ export function OfficialDashboard({ onLogout, userEmail }: OfficialDashboardProp
                 <select
                   value={filterStatus}
                   onChange={(e) => setFilterStatus(e.target.value)}
-                  className="px-3 py-2 border border-slate-300 rounded-lg focus:border-civic-teal outline-none text-sm"
+                  className="px-3 py-2 border border-slate-300 rounded-lg focus:border-civic-teal outline-none text-sm w-full sm:w-auto"
                 >
                   <option value="all">All Status</option>
                   <option value="open">Open</option>
@@ -326,7 +326,7 @@ export function OfficialDashboard({ onLogout, userEmail }: OfficialDashboardProp
           </div>
 
           {/* Report Details & Response Form */}
-          <div className="bg-white rounded-xl shadow-md border border-slate-200 p-6">
+          <div className="bg-white rounded-xl shadow-md border border-slate-200 p-3 sm:p-6">
             {selectedReport ? (
               <div>
                 <div className="flex items-start justify-between mb-6">

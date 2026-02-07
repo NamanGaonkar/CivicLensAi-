@@ -139,7 +139,7 @@ export function Dashboard({ onNavigate }: DashboardProps = {}) {
         transition={{ delay: 0.1 }}
         className="text-center px-3 sm:px-0"
       >
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 mb-1 sm:mb-2">City Dashboard</h2>
+        <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-slate-900 mb-1 sm:mb-2">City Dashboard</h2>
         <p className="text-xs sm:text-sm md:text-base text-slate-600">Real-time civic engagement analytics</p>
         
         {hasNoData && (
@@ -205,7 +205,7 @@ export function Dashboard({ onNavigate }: DashboardProps = {}) {
           className="lg:col-span-2 space-y-4 sm:space-y-6 md:space-y-8"
         >
           <TrendsChart data={stats.trendsData} />
-          <div className="h-[250px] sm:h-[350px] md:h-[450px] lg:h-[600px]">
+          <div className="h-[200px] sm:h-[250px] md:h-[350px] lg:h-[450px] xl:h-[600px]">
             <GoogleInteractiveMap reports={reports} />
           </div>
         </motion.div>
