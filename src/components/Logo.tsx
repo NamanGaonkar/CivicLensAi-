@@ -4,10 +4,17 @@ interface LogoProps {
   size?: "sm" | "md" | "lg";
   showText?: boolean;
   textColor?: string;
+  lensColor?: string;
   className?: string;
 }
 
-export function Logo({ size = "md", showText = true, textColor = "text-slate-900", className = "" }: LogoProps) {
+export function Logo({
+  size = "md",
+  showText = true,
+  textColor = "text-slate-900",
+  lensColor = "text-civic-teal",
+  className = "",
+}: LogoProps) {
   const sizes = {
     sm: { box: "w-8 h-8", text: "text-lg", icon: "text-xs" },
     md: { box: "w-10 h-10", text: "text-xl", icon: "text-sm" },
@@ -41,7 +48,7 @@ export function Logo({ size = "md", showText = true, textColor = "text-slate-900
       {/* Logo Text */}
       {showText && (
         <span className={`${currentSize.text} font-bold ${textColor} tracking-tight`}>
-          CIVIC<span className="text-civic-teal">LENS</span>
+          CIVIC<span className={lensColor}>LENS</span>
         </span>
       )}
     </div>

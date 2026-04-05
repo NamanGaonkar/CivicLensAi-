@@ -24,16 +24,16 @@ interface RecentReportsProps {
 export function RecentReports({ reports }: RecentReportsProps) {
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
   const priorityColors = {
-    critical: "bg-accent-orange/20 text-accent-orange border-accent-orange/30",
-    high: "bg-accent-orange/20 text-orange-500 border-orange-500/30",
-    medium: "bg-accent-yellow/20 text-accent-yellow border-accent-yellow/30",
-    low: "bg-civic-lightBlue/30 text-civic-teal border-civic-teal/30",
+    critical: "bg-rose-100 text-rose-600 border-rose-200",
+    high: "bg-orange-100 text-orange-600 border-orange-200",
+    medium: "bg-amber-100 text-amber-600 border-amber-200",
+    low: "bg-violet-100 text-violet-600 border-violet-200",
   };
 
   const statusColors = {
-    open: "bg-accent-orange/20 text-accent-orange",
-    in_progress: "bg-accent-yellow/20 text-accent-yellow",
-    resolved: "bg-civic-teal/20 text-civic-teal",
+    open: "bg-orange-100 text-orange-600",
+    in_progress: "bg-amber-100 text-amber-600",
+    resolved: "bg-violet-100 text-violet-600",
     closed: "bg-gray-500/20 text-gray-400",
   };
 
@@ -46,7 +46,7 @@ export function RecentReports({ reports }: RecentReportsProps) {
           <div
             key={report.id}
             onClick={() => setSelectedReport(report)}
-            className="p-4 bg-white rounded-lg border border-civic-teal/20 hover:border-civic-teal/40 hover:shadow-md transition-all duration-200 cursor-pointer"
+            className="p-4 bg-white rounded-lg border border-violet-200/50 hover:border-violet-300 hover:shadow-md transition-all duration-200 cursor-pointer"
           >
             <div className="flex items-start justify-between mb-2">
               <h4 className="font-medium text-slate-900 truncate flex-1 mr-2">
@@ -139,7 +139,7 @@ export function RecentReports({ reports }: RecentReportsProps) {
                 {/* Details Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="flex items-start space-x-3">
-                    <Tag className="w-5 h-5 text-civic-teal mt-0.5" />
+                    <Tag className="w-5 h-5 text-violet-500 mt-0.5" />
                     <div>
                       <p className="text-sm font-semibold text-slate-700">Category</p>
                       <p className="text-slate-600">{selectedReport.category}</p>
@@ -173,7 +173,7 @@ export function RecentReports({ reports }: RecentReportsProps) {
                   )}
 
                   <div className="flex items-start space-x-3">
-                    <Calendar className="w-5 h-5 text-civic-teal mt-0.5" />
+                    <Calendar className="w-5 h-5 text-violet-500 mt-0.5" />
                     <div>
                       <p className="text-sm font-semibold text-slate-700">Reported On</p>
                       <p className="text-slate-600">
@@ -188,7 +188,7 @@ export function RecentReports({ reports }: RecentReportsProps) {
 
                   {selectedReport.address && (
                     <div className="flex items-start space-x-3 md:col-span-2">
-                      <MapPin className="w-5 h-5 text-civic-teal mt-0.5" />
+                      <MapPin className="w-5 h-5 text-violet-500 mt-0.5" />
                       <div>
                         <p className="text-sm font-semibold text-slate-700">Location</p>
                         <p className="text-slate-600">

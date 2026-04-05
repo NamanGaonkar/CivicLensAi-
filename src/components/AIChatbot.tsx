@@ -209,7 +209,7 @@ export function AIChatbot() {
       {/* Floating Action Button */}
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-20 right-4 md:bottom-6 md:right-6 z-50 w-14 h-14 md:w-16 md:h-16 bg-gradient-to-br from-civic-teal to-civic-darkBlue text-white rounded-full shadow-2xl hover:scale-110 transition-transform flex items-center justify-center"
+        className="fixed bottom-20 right-4 md:bottom-6 md:right-6 z-50 w-14 h-14 md:w-16 md:h-16 bg-gradient-to-br from-violet-500 to-fuchsia-500 text-white rounded-full shadow-2xl hover:scale-110 transition-transform flex items-center justify-center"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
       >
@@ -224,10 +224,10 @@ export function AIChatbot() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="fixed z-[60] chat-window shadow-2xl rounded-2xl md:rounded-3xl flex flex-col inset-x-2 bottom-2 top-16 md:bottom-24 md:right-6 md:left-auto md:top-auto md:w-[420px] md:h-[650px]"
+            className="fixed z-[60] chat-window shadow-2xl rounded-2xl md:rounded-3xl flex flex-col inset-x-2 bottom-2 top-16 md:bottom-24 md:right-6 md:left-auto md:top-auto md:w-[420px] md:h-[650px] border border-violet-200/60 bg-white/90 backdrop-blur-xl"
           >
             {/* Header */}
-            <div className="bg-gradient-to-r from-civic-teal to-civic-darkBlue text-white p-3 md:p-4 rounded-t-2xl">
+            <div className="bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white p-3 md:p-4 rounded-t-2xl">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
                   <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
@@ -268,7 +268,7 @@ export function AIChatbot() {
             </div>
 
             {/* Messages Area */}
-            <div className="flex-1 overflow-y-auto p-3 md:p-4 space-y-3 md:space-y-4 chat-body">
+            <div className="flex-1 overflow-y-auto p-3 md:p-4 space-y-3 md:space-y-4 chat-body bg-gradient-to-b from-violet-50/70 to-white">
               {messages.map((message) => (
                 <div
                   key={message.id}
@@ -278,8 +278,8 @@ export function AIChatbot() {
                   <div
                     className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 relative ${
                       message.role === "user"
-                        ? "bg-gradient-to-br from-civic-teal to-civic-darkBlue text-white"
-                        : "bg-gradient-to-br from-purple-500 to-purple-600 text-white"
+                        ? "bg-gradient-to-br from-violet-500 to-fuchsia-500 text-white"
+                        : "bg-gradient-to-br from-violet-500 to-fuchsia-500 text-white"
                     }`}
                   >
                     {message.role === "user" ? (
@@ -309,7 +309,7 @@ export function AIChatbot() {
                     <div
                       className={`px-3 py-2.5 rounded-2xl ${
                         message.role === "user"
-                          ? "bg-gradient-to-br from-civic-teal to-civic-darkBlue text-white"
+                          ? "bg-gradient-to-br from-violet-500 to-fuchsia-500 text-white"
                           : "assistant-bubble"
                       }`}
                     >
@@ -328,7 +328,7 @@ export function AIChatbot() {
               {/* Typing Indicator */}
               {isLoading && (
                 <div className="flex items-start gap-2">
-                  <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 text-white flex items-center justify-center flex-shrink-0">
+                  <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-violet-500 to-fuchsia-500 text-white flex items-center justify-center flex-shrink-0">
                     <Bot className="w-4 h-4" />
                   </div>
                   <div className="assistant-bubble px-3 py-2.5 rounded-2xl">
@@ -344,7 +344,7 @@ export function AIChatbot() {
             </div>
 
             {/* Input Area */}
-            <div className="chat-footer border-t p-2 md:p-3 rounded-b-2xl">
+            <div className="chat-footer border-t border-violet-200/60 p-2 md:p-3 rounded-b-2xl bg-white/90">
               {/* Image Preview */}
               {selectedImage && (
                 <div className="mb-2 relative inline-block">
@@ -368,7 +368,7 @@ export function AIChatbot() {
                 <button
                   type="button"
                   onClick={toggleVoiceInput}
-                  className={`w-9 h-9 md:w-10 md:h-10 ${isListening ? 'bg-red-500 animate-pulse' : 'bg-purple-500'} text-white rounded-xl hover:opacity-90 transition-all flex items-center justify-center flex-shrink-0`}
+                  className={`w-9 h-9 md:w-10 md:h-10 ${isListening ? 'bg-rose-500 animate-pulse' : 'bg-violet-500'} text-white rounded-xl hover:opacity-90 transition-all flex items-center justify-center flex-shrink-0`}
                   title={isListening ? "Stop listening" : "Voice input"}
                 >
                   <Mic className="w-4 h-4 md:w-5 md:h-5" />
@@ -382,7 +382,7 @@ export function AIChatbot() {
                       input.click();
                     }
                   }}
-                  className="w-9 h-9 md:w-10 md:h-10 bg-civic-teal/10 border-2 border-civic-teal text-civic-teal rounded-xl hover:bg-civic-teal hover:text-white transition-all flex items-center justify-center flex-shrink-0"
+                  className="w-9 h-9 md:w-10 md:h-10 bg-violet-50 border-2 border-violet-400 text-violet-600 rounded-xl hover:bg-violet-500 hover:text-white transition-all flex items-center justify-center flex-shrink-0"
                   title="Take photo"
                 >
                   <Camera className="w-4 h-4 md:w-5 md:h-5" />
@@ -396,7 +396,7 @@ export function AIChatbot() {
                       input.click();
                     }
                   }}
-                  className="w-9 h-9 md:w-10 md:h-10 bg-slate-100 border-2 border-slate-300 text-slate-600 rounded-xl hover:bg-slate-200 transition-all flex items-center justify-center flex-shrink-0"
+                  className="w-9 h-9 md:w-10 md:h-10 bg-violet-50 border-2 border-violet-200 text-violet-600 rounded-xl hover:bg-violet-100 transition-all flex items-center justify-center flex-shrink-0"
                   title="Upload file"
                 >
                   <Upload className="w-4 h-4 md:w-5 md:h-5" />
@@ -407,14 +407,14 @@ export function AIChatbot() {
                   onChange={(e) => setInput(e.target.value)}
                   onKeyPress={(e) => e.key === "Enter" && !e.shiftKey && handleSendMessage()}
                   placeholder="Type your message..."
-                  className="flex-1 min-w-0 px-2 md:px-3 py-2 md:py-2.5 border-2 rounded-xl focus:border-civic-teal focus:ring-2 focus:ring-civic-teal/20 outline-none text-sm chat-input"
+                  className="flex-1 min-w-0 px-2 md:px-3 py-2 md:py-2.5 border-2 border-violet-200 rounded-xl focus:border-violet-400 focus:ring-2 focus:ring-violet-400/20 outline-none text-sm chat-input bg-white"
                   autoComplete="off"
                 />
                 <button
                   type="button"
                   onClick={handleSendMessage}
                   disabled={isLoading || (!input.trim() && !selectedImage)}
-                  className="w-9 h-9 md:w-10 md:h-10 bg-gradient-to-br from-civic-teal to-civic-darkBlue text-white rounded-xl disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg transition-all flex items-center justify-center flex-shrink-0"
+                  className="w-9 h-9 md:w-10 md:h-10 bg-gradient-to-br from-violet-500 to-fuchsia-500 text-white rounded-xl disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg transition-all flex items-center justify-center flex-shrink-0"
                 >
                   <Send className="w-4 h-4" />
                 </button>

@@ -199,7 +199,7 @@ export function OfficialDashboard({ onLogout, userEmail }: OfficialDashboardProp
   return (
     <div className="official-root min-h-screen bg-slate-50">
       {/* Header */}
-      <header className="bg-gradient-to-r from-civic-teal to-civic-darkBlue text-white p-3 sm:p-6 shadow-lg">
+      <header className="bg-blue-600 text-white p-3 sm:p-6 shadow-lg">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2 sm:gap-4">
             <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
@@ -263,13 +263,13 @@ export function OfficialDashboard({ onLogout, userEmail }: OfficialDashboardProp
                     placeholder="Search reports..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:border-civic-teal focus:ring-2 focus:ring-civic-teal/20 outline-none text-sm"
+                    className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 outline-none text-sm"
                   />
                 </div>
                 <select
                   value={filterStatus}
                   onChange={(e) => setFilterStatus(e.target.value)}
-                  className="px-3 py-2 border border-slate-300 rounded-lg focus:border-civic-teal outline-none text-sm w-full sm:w-auto"
+                  className="px-3 py-2 border border-slate-300 rounded-lg focus:border-blue-600 outline-none text-sm w-full sm:w-auto"
                 >
                   <option value="all">All Status</option>
                   <option value="open">Open</option>
@@ -289,8 +289,8 @@ export function OfficialDashboard({ onLogout, userEmail }: OfficialDashboardProp
                   onClick={() => setSelectedReport(report)}
                   className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
                     selectedReport?.id === report.id
-                      ? "border-civic-teal bg-civic-lightBlue/10"
-                      : "border-slate-200 hover:border-civic-teal/50"
+                      ? "border-blue-600 bg-blue-50/10"
+                      : "border-slate-200 hover:border-blue-600/50"
                   }`}
                 >
                   <div className="flex items-start justify-between mb-2">
@@ -314,7 +314,7 @@ export function OfficialDashboard({ onLogout, userEmail }: OfficialDashboardProp
                       {report.created}
                     </span>
                     {report.responses.length > 0 && (
-                      <span className="flex items-center gap-1 text-civic-teal">
+                      <span className="flex items-center gap-1 text-blue-600">
                         <MessageSquare className="w-3 h-3" />
                         {report.responses.length}
                       </span>
@@ -403,7 +403,7 @@ export function OfficialDashboard({ onLogout, userEmail }: OfficialDashboardProp
                       onChange={(e) => setResponseText(e.target.value)}
                       placeholder="Enter your response to the citizen..."
                       rows={4}
-                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:border-civic-teal focus:ring-2 focus:ring-civic-teal/20 outline-none resize-none"
+                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 outline-none resize-none"
                     />
                   </div>
 
@@ -414,7 +414,7 @@ export function OfficialDashboard({ onLogout, userEmail }: OfficialDashboardProp
                     <select
                       value={statusUpdate}
                       onChange={(e) => setStatusUpdate(e.target.value)}
-                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:border-civic-teal focus:ring-2 focus:ring-civic-teal/20 outline-none"
+                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 outline-none"
                     >
                       <option value="">Keep current status</option>
                       <option value="in_progress">In Progress</option>
@@ -426,7 +426,7 @@ export function OfficialDashboard({ onLogout, userEmail }: OfficialDashboardProp
                   <button
                     onClick={handleSubmitResponse}
                     disabled={!responseText.trim()}
-                    className="w-full bg-gradient-to-r from-civic-teal to-civic-darkBlue text-white py-3 rounded-lg font-semibold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
                     <Send className="w-4 h-4" />
                     Send Response

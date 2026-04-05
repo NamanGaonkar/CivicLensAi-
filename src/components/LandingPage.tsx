@@ -1,24 +1,18 @@
 import { motion } from "framer-motion";
-import Particles from "./Particles";
 import { Logo } from "./Logo";
-import { ThemeToggle } from "./ThemeToggle";
-import TextType from "./TextType";
-import { 
+import {
   MapPin, 
   Camera, 
-  Brain, 
+  Brain,
   BarChart3, 
   Users, 
   Globe,
   ArrowRight,
   CheckCircle,
-  Star,
-  Sparkles,
   MessageSquare,
   Shield,
   Image,
-  Zap,
-  TrendingUp
+  Zap
 } from "lucide-react";
 // AI chatbot is shown only on the dashboard now
 
@@ -28,397 +22,280 @@ interface LandingPageProps {
 }
 
 export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPageProps) {
-  const features = [
+  const featureCards = [
     {
-      icon: <Brain className="w-8 h-8" />,
-      title: "AI-Powered Chatbot Assistant",
-      description: "24/7 intelligent assistant that answers questions, analyzes images, and helps you report issues with Google Gemini AI",
-      color: "from-purple-500 to-pink-500"
+      title: "Issue Reporting",
+      description: "Citizens can report local issues with photos, category, and location details.",
+      icon: MapPin,
     },
     {
-      icon: <Image className="w-8 h-8" />,
-      title: "Smart Image Analysis",
-      description: "Upload photos of civic issues - AI automatically identifies problem types, suggests severity levels, and recommends actions",
-      color: "from-civic-teal to-cyan-500"
+      title: "AI Image Analysis",
+      description: "AI helps classify reports faster so teams can prioritize the right action.",
+      icon: Camera,
     },
     {
-      icon: <Camera className="w-8 h-8" />,
-      title: "Dual Upload Options",
-      description: "Capture photos directly with your camera or choose from gallery - flexible reporting from any device",
-      color: "from-civic-teal to-civic-darkBlue"
+      title: "Role Dashboards",
+      description: "Separate experiences for citizens, officials, and admins in one platform.",
+      icon: Shield,
     },
     {
-      icon: <MapPin className="w-8 h-8" />,
-      title: "Real-Time Location Tracking",
-      description: "Precise GPS coordinates with interactive maps - pinpoint exact locations of civic issues for faster resolution",
-      color: "from-civic-teal to-civic-darkBlue"
+      title: "Community Feed",
+      description: "Residents can share updates, discuss progress, and stay informed.",
+      icon: Users,
     },
     {
-      icon: <BarChart3 className="w-8 h-8" />,
-      title: "Advanced Analytics Dashboard",
-      description: "Comprehensive insights, weekly trends, and resolution rates to help officials make data-driven decisions",
-      color: "from-civic-darkBlue to-blue-600"
+      title: "Status Tracking",
+      description: "Track issue progress from open to resolved with clear timeline visibility.",
+      icon: BarChart3,
     },
     {
-      icon: <Users className="w-8 h-8" />,
-      title: "Community Engagement Feed",
-      description: "Share updates, vote on issues, comment, and collaborate with neighbors to build stronger communities",
-      color: "from-civic-darkBlue to-slate-700"
+      title: "Notifications",
+      description: "Get updates when reports receive responses or status changes.",
+      icon: MessageSquare,
     },
     {
-      icon: <Shield className="w-8 h-8" />,
-      title: "Role-Based Access Control",
-      description: "Separate dashboards for citizens, officials, and admins with secure authentication and permissions",
-      color: "from-slate-600 to-slate-800"
+      title: "Map View",
+      description: "Visualize reports geographically to detect area-level patterns quickly.",
+      icon: Globe,
     },
     {
-      icon: <Zap className="w-8 h-8" />,
-      title: "Real-Time Status Updates",
-      description: "Track your reports from submission to resolution with instant notifications and official responses",
-      color: "from-orange-500 to-red-500"
+      title: "AI Assistant",
+      description: "In-app AI support helps users ask questions and navigate platform actions.",
+      icon: Brain,
     },
-    {
-      icon: <TrendingUp className="w-8 h-8" />,
-      title: "Before & After Gallery",
-      description: "Visual proof of community impact - see completed projects and celebrate civic improvements together",
-      color: "from-green-500 to-emerald-600"
-    }
-  ];
-
-  const stats = [
-    { number: "10K+", label: "Issues Resolved", icon: <CheckCircle className="w-6 h-6" /> },
-    { number: "50+", label: "Cities Connected", icon: <Globe className="w-6 h-6" /> },
-    { number: "AI", label: "Powered", icon: <Brain className="w-6 h-6" /> },
-    { number: "4.9★", label: "User Rating", icon: <Star className="w-6 h-6" /> }
   ];
 
   return (
-    <div className="landing-root min-h-screen bg-gradient-to-br from-civic-lightBlue via-white to-civic-lightBlue dark:from-transparent dark:via-transparent dark:to-civic-darkBlue/10 relative overflow-hidden">
-      {/* Background gradient with new civic palette */}
-      <div className="absolute inset-0 -z-30">
-        <div className="absolute inset-0 bg-gradient-to-br from-civic-lightBlue via-white to-blue-50"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(0,145,185,0.15),transparent_50%)]"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_80%,rgba(0,79,155,0.1),transparent_50%)]"></div>
-      </div>
-      
-      {/* Particle background (uses dynamic import of ogl) */}
-      <Particles particleCount={220} particleSpread={12} speed={0.12} className="-z-20" />
-      
-      {/* Animated Background */}
-      <div className="absolute inset-0 -z-20">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(100,200,255,0.1),rgba(255,255,255,0))]"></div>
-        {/* Floating Particles */}
-        {Array.from({ length: 20 }).map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-2 h-2 bg-white/20 rounded-full"
-            animate={{
-              x: [0, 100, 0],
-              y: [0, -100, 0],
-              opacity: [0, 1, 0],
-            }}
-            transition={{
-              duration: Math.random() * 10 + 10,
-              repeat: Infinity,
-              delay: Math.random() * 5,
-            }}
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-          />
-        ))}
+    <div className="landing-root min-h-screen bg-[#060810] text-slate-100 relative overflow-x-hidden">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-24 -left-20 w-[380px] h-[380px] rounded-full bg-fuchsia-600/20 blur-3xl" />
+        <div className="absolute top-40 -right-10 w-[380px] h-[380px] rounded-full bg-violet-600/25 blur-3xl" />
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full bg-purple-600/15 blur-3xl" />
       </div>
 
-      {/* Top Navigation Bar */}
-      <nav className="fixed top-0 left-0 right-0 z-50 px-2 sm:px-4 lg:px-8 py-3 sm:py-4 lg:py-6 backdrop-blur-lg bg-white/70 dark:bg-transparent">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          {/* Logo on the left */}
-            <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <Logo size="md" showText={true} textColor="text-slate-900 dark:text-slate-100" />
-          </motion.div>
+      <nav className="sticky top-0 z-50 px-3 sm:px-5 lg:px-8 py-3 sm:py-4">
+        <div className="max-w-7xl mx-auto rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl px-4 sm:px-6 py-3 flex items-center justify-between">
+          <Logo size="md" showText={true} textColor="text-white" />
 
-          {/* Get started, theme toggle and Demo buttons on the right */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            className="flex items-center space-x-2 sm:space-x-3"
+          <button
+            onClick={onGetStarted}
+            className="px-4 sm:px-6 py-2 rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white font-semibold hover:from-violet-400 hover:to-fuchsia-400 transition-colors"
           >
-            <div className="-mr-1">
-              <ThemeToggle />
-            </div>
-            <motion.button
-              onClick={onGetStarted}
-              className="px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 bg-gradient-to-r from-civic-teal to-civic-darkBlue text-white font-semibold rounded-lg text-xs sm:text-sm shadow-lg hover:shadow-civic-teal/50 transition-all"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              {isAuthenticated ? "Go to Dashboard" : "Get started"}
-            </motion.button>
-
-            {isAuthenticated && (
-              <button className="px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 border-2 border-civic-teal text-slate-900 rounded-lg bg-white/80 hover:bg-white backdrop-blur-md text-xs sm:text-sm font-semibold transition-all shadow-sm">
-                <span className="hidden sm:inline">Watch demo</span>
-                <span className="sm:hidden">Demo</span>
-              </button>
-            )}
-          </motion.div>
+            {isAuthenticated ? "Dashboard" : "Get Started"}
+          </button>
         </div>
       </nav>
 
-      <div className="relative z-10 pt-20">
-        {/* Hero Section - Clean & Fast */}
-        <section className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-          {/* Simple gradient background - no lag */}
-          <div className="absolute inset-0 bg-gradient-to-br from-civic-lightBlue/30 via-white to-civic-teal/20 dark:from-transparent dark:via-transparent dark:to-black/20" />
-          
-          {/* Subtle static decorative elements */}
-          <div className="absolute top-20 left-10 w-64 h-64 bg-civic-teal/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-20 right-10 w-96 h-96 bg-civic-darkBlue/10 rounded-full blur-3xl" />
-          <div className="absolute top-1/2 left-1/3 w-72 h-72 bg-civic-lightBlue/10 rounded-full blur-3xl" />
-
-          <div className="max-w-4xl mx-auto w-full relative z-10 text-center">
-            {/* Centered Content */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="space-y-8"
-            >
-              {/* Small Badge with subtle animation */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-                className="inline-block"
-              >
-                <div className="px-6 py-2.5 bg-gradient-to-r from-civic-teal to-civic-darkBlue rounded-full border-2 border-white/50 shadow-lg">
-                  <span className="text-sm sm:text-base font-black text-white uppercase tracking-wider flex items-center gap-2">
-                    <Brain className="w-4 h-4" />
-                    AI POWERED PLATFORM
-                  </span>
-                </div>
-              </motion.div>
-
-              {/* Main Title - Simple animations */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="space-y-4 relative"
-              >
-                <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black leading-[1.1] tracking-tight relative">
-                  <span className="text-slate-700 dark:text-slate-100">CIVIC </span>
-                  <span className="bg-gradient-to-r from-civic-teal via-civic-darkBlue to-civic-teal bg-clip-text text-transparent dark:text-white">
-                    LENS
-                  </span>
-                </h1>
-              </motion.div>
-
-              {/* Description - Static */}
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.4 }}
-                className="text-slate-700 dark:text-slate-300 font-medium text-base sm:text-lg md:text-xl leading-relaxed max-w-2xl mx-auto"
-              >
-                Empower your community with <span className="font-bold text-civic-teal">Google Gemini AI</span>-driven civic issue reporting and resolution. Real-time tracking, intelligent image analysis, role-based dashboards, and community engagement - all in one platform.
-              </motion.p>
-
-              {/* CTA Buttons - Simplified */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-                className="flex flex-col sm:flex-row gap-4 justify-center items-center"
-              >
-                <motion.button
-                  onClick={onGetStarted}
-                  className="px-8 py-3.5 border-2 border-civic-darkBlue text-civic-darkBlue dark:text-white dark:border-[rgba(255,255,255,0.06)] font-bold rounded-full text-base shadow-lg hover:bg-civic-darkBlue hover:text-white transition-all"
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  {!isAuthenticated ? 'GET STARTED' : 'GO TO DASHBOARD'}
-                </motion.button>
-
-                <motion.button
-                  onClick={() => {
-                    document.getElementById('features-section')?.scrollIntoView({ 
-                      behavior: 'smooth',
-                      block: 'start'
-                    });
-                  }}
-                  className="px-8 py-3.5 bg-gradient-to-r from-civic-teal to-civic-darkBlue text-white font-bold rounded-full text-base shadow-lg hover:shadow-xl transition-all"
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  LEARN MORE
-                </motion.button>
-              </motion.div>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* Features Section */}
-        <section id="features-section" className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-white via-civic-lightBlue/20 to-white dark:from-transparent dark:via-transparent dark:to-transparent">
-          <div className="max-w-7xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-              className="text-center mb-16"
-            >
-              <h2 className="text-5xl font-bold text-slate-900 dark:text-slate-100 mb-6">
-                Everything You Need for
-                <span className="bg-gradient-to-r from-civic-teal to-purple-500 bg-clip-text text-transparent"> Smart Civic Engagement</span>
-              </h2>
-              <p className="text-xl text-slate-700 dark:text-slate-300 max-w-3xl mx-auto">
-                From AI-powered chatbots to role-based dashboards - discover the complete suite of features that make CivicLens the most advanced civic platform
-              </p>
-            </motion.div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {features.map((feature, index) => (
-                <motion.div
-                  key={feature.title}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                  whileHover={{ 
-                    scale: 1.05, 
-                    rotateY: 5,
-                    boxShadow: "0 25px 50px rgba(14, 165, 233, 0.2)"
-                  }}
-                  className="group relative"
-                >
-                  <div className="bg-white dark:bg-[rgba(10,15,25,0.55)] backdrop-blur-xl border-2 border-civic-teal/30 dark:border-[rgba(255,255,255,0.06)] p-4 sm:p-6 md:p-8 h-full rounded-2xl relative overflow-hidden shadow-xl hover:shadow-2xl hover:border-civic-teal transition-all duration-300">
-                    {/* Gradient Background */}
-                    <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}></div>
-                    
-                    {/* Icon */}
-                    <motion.div
-                      className={`inline-flex p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-br ${feature.color} text-white mb-4 sm:mb-6 shadow-lg`}
-                      whileHover={{ rotate: 360 }}
-                      transition={{ duration: 0.6 }}
-                    >
-                      <span className="text-5 sm:text-6 md:text-8 w-6 h-6 sm:w-8 sm:h-8">{feature.icon}</span>
-                    </motion.div>
-                    
-                    {/* Content */}
-                    <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-100 mb-2 sm:mb-4 group-hover:text-civic-teal transition-all duration-300">
-                      {feature.title}
-                    </h3>
-                    <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed group-hover:text-slate-800 transition-colors duration-300">
-                      {feature.description}
-                    </p>
-                    
-                    {/* Hover Effect */}
-                    <motion.div
-                      className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-civic-teal to-purple-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"
-                    ></motion.div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* CTA Section */}
-        <section className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-white to-civic-lightBlue/30 dark:bg-transparent">
+      <section id="home-section" className="relative px-4 sm:px-6 lg:px-8 pt-8 sm:pt-14 pb-16 sm:pb-24">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-6 items-center">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="max-w-4xl mx-auto text-center"
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
           >
-            <div className="bg-gradient-to-br from-white to-civic-lightBlue/50 dark:from-slate-800 dark:to-slate-700 backdrop-blur-xl border-2 border-civic-teal/40 dark:border-slate-600 p-12 rounded-3xl relative overflow-hidden shadow-2xl">
-              {/* Background Animation */}
-              <div className="absolute inset-0 bg-gradient-to-r from-civic-teal/5 to-purple-500/5 dark:from-slate-700/20 dark:to-slate-600/20"></div>
-              
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                className="absolute -top-10 -right-10 w-40 h-40 bg-gradient-to-r from-civic-teal/20 to-purple-500/20 dark:from-civic-teal/10 dark:to-purple-500/10 rounded-full blur-xl"
-              ></motion.div>
-              
-              <div className="relative z-10">
-                <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 dark:text-white mb-6 sm:mb-8 px-4 sm:px-0">
-                  Ready to Transform Your Community?
-                </h2>
-                
-                <motion.button
-                  onClick={onGetStarted}
-                  className="group relative w-full sm:w-auto px-6 sm:px-10 py-3 sm:py-5 bg-gradient-to-r from-civic-teal to-civic-darkBlue text-white font-bold rounded-2xl text-base sm:text-lg md:text-xl shadow-xl hover:shadow-civic-teal/50"
-                  whileHover={{ 
-                    scale: 1.05, 
-                    boxShadow: "0 25px 50px rgba(0, 145, 185, 0.3)",
-                  }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <span className="flex items-center space-x-3">
-                    <span>Start Your Journey</span>
-                    <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
-                  </span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-civic-teal/80 to-civic-darkBlue/80 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity -z-10"></div>
-                </motion.button>
-              </div>
+            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold leading-tight text-white">
+              Transforming Civic Data
+              <br />
+              into <span className="text-violet-300">Intelligent</span>
+              <br />
+              <span className="text-fuchsia-300">Decisions</span>
+            </h1>
+
+            <p className="mt-6 text-slate-300 max-w-xl text-base sm:text-lg leading-relaxed">
+              CivicLens combines reporting, maps, analytics, role-based dashboards, and AI support
+              to help communities solve real civic issues faster.
+            </p>
+
+            <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4">
+              <button
+                onClick={onGetStarted}
+                className="px-6 py-3 rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white font-semibold hover:from-violet-400 hover:to-fuchsia-400 transition-colors"
+              >
+                {isAuthenticated ? "Open Dashboard" : "Sign In"}
+              </button>
+              <button
+                onClick={() => {
+                  document.getElementById("features-section")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                }}
+                className="px-6 py-3 rounded-xl border border-white/15 bg-white/5 text-slate-200 font-medium hover:bg-white/10 transition-colors"
+              >
+                Our Services
+              </button>
             </div>
           </motion.div>
-        </section>
 
-        {/* Footer */}
-        <footer className="py-8 sm:py-12 px-4 sm:px-6 lg:px-8 border-t-2 border-civic-teal/30 bg-civic-lightBlue/20 dark:bg-transparent">
-          <div className="max-w-7xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-              className="text-center"
-            >
-              <div className="flex items-center justify-center space-x-2 mb-4">
-                <Logo size="md" showText={true} textColor="text-slate-900 dark:text-white" />
-              </div>
-              
-              <p className="text-slate-700 dark:text-slate-300 text-sm sm:text-base mb-4">
-                Empowering communities through intelligent civic engagement
-              </p>
-              
-              <motion.p 
-                className="text-slate-600 dark:text-slate-400 text-xs sm:text-sm"
-                whileHover={{ scale: 1.05 }}
-              >
-                Made by{" "}
-                <span className="text-civic-teal font-semibold">
-                  Naman Gaonkar
-                </span>
-              </motion.p>
-            </motion.div>
-          </div>
-        </footer>
-      </div>
-
-        {/* Mobile-only sticky report CTA */}
-        <div className="sm:hidden fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50">
-          <button
-            onClick={onGetStarted}
-            aria-label="Report an issue"
-            className="w-[92%] mx-auto px-4 py-3 bg-civic-teal text-white font-bold rounded-xl shadow-2xl flex items-center justify-center space-x-3"
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.7, delay: 0.1 }}
+            className="relative h-[340px] sm:h-[430px] lg:h-[500px]"
           >
-            <MapPin className="w-5 h-5" />
-            <span>Report an Issue</span>
-          </button>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <motion.div
+                animate={{ scale: [1, 1.06, 1], rotate: [0, 2, -2, 0] }}
+                transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+                className="relative w-[260px] h-[260px] sm:w-[330px] sm:h-[330px] lg:w-[390px] lg:h-[390px] rounded-full"
+                style={{
+                  background:
+                    "radial-gradient(circle at 45% 40%, rgba(255,255,255,0.95) 0%, rgba(240,171,252,0.75) 20%, rgba(168,85,247,0.35) 50%, rgba(17,24,39,0) 72%)",
+                  boxShadow:
+                    "0 0 40px rgba(217,70,239,0.55), 0 0 120px rgba(139,92,246,0.45), inset 0 0 80px rgba(255,255,255,0.22)",
+                }}
+              >
+                <div className="absolute inset-8 rounded-full border border-fuchsia-200/40" />
+                <div className="absolute inset-14 rounded-full border border-violet-200/30" />
+                <div className="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-white/90 blur-sm" />
+              </motion.div>
+            </div>
+          </motion.div>
         </div>
+      </section>
 
-        {/* AI chatbot removed from landing page - available in dashboard only */}
+      <section id="about-section" className="px-4 sm:px-6 lg:px-8 pb-12 sm:pb-14">
+        <div className="max-w-7xl mx-auto rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-6 sm:p-8">
+          <h2 className="text-2xl sm:text-3xl font-bold text-white">About CivicLens</h2>
+          <p className="mt-4 text-slate-300 leading-relaxed max-w-4xl">
+            CivicLens is built for practical civic problem-solving. Citizens report issues, officials respond with
+            progress updates, and communities can track outcomes transparently using AI-assisted workflows.
+          </p>
+          <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+              <p className="text-violet-200 font-semibold">Simple reporting</p>
+              <p className="text-sm text-slate-300 mt-2">Share location, photos, and issue details in minutes.</p>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+              <p className="text-violet-200 font-semibold">Faster resolution</p>
+              <p className="text-sm text-slate-300 mt-2">Officials prioritize and respond with structured updates.</p>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-black/20 p-4">
+              <p className="text-violet-200 font-semibold">Public trust</p>
+              <p className="text-sm text-slate-300 mt-2">Track issue status from open to resolved.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="team-section" className="px-4 sm:px-6 lg:px-8 pb-12 sm:pb-14">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-2xl sm:text-3xl font-bold text-white">Who It Serves</h2>
+          <p className="mt-2 text-slate-300">CivicLens supports every role in the civic workflow.</p>
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="rounded-xl border border-white/10 bg-white/5 p-5">
+              <Users className="w-5 h-5 text-violet-200" />
+              <h3 className="mt-3 text-white font-semibold">Citizens</h3>
+              <p className="mt-2 text-sm text-slate-300">Report issues and monitor updates from officials.</p>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-white/5 p-5">
+              <Shield className="w-5 h-5 text-violet-200" />
+              <h3 className="mt-3 text-white font-semibold">Officials</h3>
+              <p className="mt-2 text-sm text-slate-300">Review reports and communicate status transparently.</p>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-white/5 p-5">
+              <BarChart3 className="w-5 h-5 text-violet-200" />
+              <h3 className="mt-3 text-white font-semibold">Admins</h3>
+              <p className="mt-2 text-sm text-slate-300">Monitor trends and keep system quality high.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="features-section" className="px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-8 sm:mb-10">
+            <h2 className="text-2xl sm:text-3xl font-bold text-white">All Platform Features</h2>
+            <p className="mt-2 text-slate-300">All key functions remain available across the app.</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+            {featureCards.map((feature) => (
+              <motion.div
+                key={feature.title}
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="rounded-xl border border-white/10 bg-white/5 backdrop-blur-md p-5"
+              >
+                <div className="w-10 h-10 rounded-lg bg-violet-400/20 text-violet-200 flex items-center justify-center mb-3">
+                  <feature.icon className="w-5 h-5" />
+                </div>
+                <h3 className="font-semibold text-white">{feature.title}</h3>
+                <p className="mt-2 text-sm text-slate-300 leading-relaxed">{feature.description}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="px-4 sm:px-6 lg:px-8 pb-16">
+        <div className="max-w-7xl mx-auto rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-6 sm:p-8">
+          <h2 className="text-2xl sm:text-3xl font-bold text-white">How it works</h2>
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="rounded-xl bg-black/20 border border-white/10 p-4">
+              <div className="flex items-center gap-2 text-violet-200 font-semibold">
+                <Image className="w-4 h-4" />
+                1. Report with details
+              </div>
+              <p className="mt-2 text-sm text-slate-300">Submit issue details with location and photos for better clarity.</p>
+            </div>
+            <div className="rounded-xl bg-black/20 border border-white/10 p-4">
+              <div className="flex items-center gap-2 text-violet-200 font-semibold">
+                <CheckCircle className="w-4 h-4" />
+                2. Official response
+              </div>
+              <p className="mt-2 text-sm text-slate-300">Officials review reports, respond, and update progress in real time.</p>
+            </div>
+            <div className="rounded-xl bg-black/20 border border-white/10 p-4">
+              <div className="flex items-center gap-2 text-violet-200 font-semibold">
+                <ArrowRight className="w-4 h-4" />
+                3. Track resolution
+              </div>
+              <p className="mt-2 text-sm text-slate-300">Citizens follow each update until the issue is resolved.</p>
+            </div>
+          </div>
+
+          <div className="mt-8">
+            <button
+              onClick={onGetStarted}
+              className="px-6 py-3 rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white font-semibold hover:from-violet-400 hover:to-fuchsia-400 transition-colors"
+            >
+              {isAuthenticated ? "Go to App" : "Get Started"}
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact-section" className="px-4 sm:px-6 lg:px-8 pb-20">
+        <div className="max-w-7xl mx-auto rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-6 sm:p-8">
+          <h2 className="text-2xl sm:text-3xl font-bold text-white">Contact & Access</h2>
+          <p className="mt-2 text-slate-300 max-w-3xl">
+            Continue to sign in if you already have access, or start now to enter CivicLens and begin reporting or monitoring issues.
+          </p>
+          <div className="mt-6 flex flex-col sm:flex-row gap-3">
+            <button
+              onClick={onGetStarted}
+              className="px-6 py-3 rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white font-semibold hover:from-violet-400 hover:to-fuchsia-400 transition-colors"
+            >
+              {isAuthenticated ? "Go to Dashboard" : "Sign In"}
+            </button>
+            <button
+              onClick={() => document.getElementById("home-section")?.scrollIntoView({ behavior: "smooth", block: "start" })}
+              className="px-6 py-3 rounded-xl border border-white/15 bg-white/5 text-slate-200 font-medium hover:bg-white/10 transition-colors"
+            >
+              Back to Top
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <div className="sm:hidden fixed bottom-4 left-1/2 -translate-x-1/2 z-40 w-[92%]">
+        <button
+          onClick={onGetStarted}
+          aria-label="Open dashboard"
+          className="w-full px-4 py-3 rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white font-semibold"
+        >
+          {isAuthenticated ? "Open Dashboard" : "Sign In"}
+        </button>
+      </div>
     </div>
   );
 }

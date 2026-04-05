@@ -11,11 +11,11 @@ interface StatsCardProps {
 
 export function StatsCard({ title, value, change, icon, color }: StatsCardProps) {
   const colorClasses = {
-    blue: "from-civic-teal/20 to-civic-darkBlue/20 border-civic-teal/30 text-civic-teal",
+    blue: "from-violet-500/12 to-cyan-400/12 border-violet-300/40 text-violet-600",
     green: "from-green-500/20 to-green-600/20 border-green-500/30 text-green-600",
-    yellow: "from-accent-yellow/20 to-accent-orange/20 border-accent-yellow/30 text-accent-orange",
-    purple: "from-purple-500/20 to-purple-600/20 border-purple-500/30 text-purple-600",
-    red: "from-accent-orange/20 to-red-600/20 border-accent-orange/30 text-red-600",
+    yellow: "from-amber-400/20 to-orange-400/20 border-amber-300/50 text-orange-500",
+    purple: "from-fuchsia-500/15 to-violet-500/15 border-fuchsia-300/40 text-fuchsia-600",
+    red: "from-orange-400/20 to-rose-500/20 border-orange-300/50 text-rose-600",
   };
 
   const isPositive = change.startsWith("+");
@@ -73,7 +73,7 @@ export function StatsCard({ title, value, change, icon, color }: StatsCardProps)
       
       {/* Hover Effect Line */}
       <motion.div
-        className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-civic-teal to-civic-darkBlue transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"
+        className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-violet-500 to-fuchsia-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"
       />
     </motion.div>
   );

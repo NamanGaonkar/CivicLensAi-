@@ -32,11 +32,13 @@ export function TrendsChart({ data }: TrendsChartProps) {
   // Map old colors to new civic palette
   const mapColor = (color: string) => {
     const colorMap: Record<string, string> = {
-      '#3b82f6': '#0091B9',  // blue -> teal
-      '#ef4444': '#FF6500',  // red -> orange
-      '#f59e0b': '#FFD500',  // amber -> yellow
+      '#3b82f6': '#8B5CF6',  // blue -> violet
+      '#ef4444': '#F97316',  // red -> orange
+      '#f59e0b': '#F59E0B',  // amber -> amber
       '#10b981': '#10b981',  // green -> green (keep for resolved)
-      '#8b5cf6': '#004F9B',  // violet -> dark blue
+      '#8b5cf6': '#A855F7',  // violet -> bright violet
+      '#FF6500': '#F97316',
+      '#FFD500': '#F59E0B',
     };
     return colorMap[color] || color;
   };
@@ -62,7 +64,7 @@ export function TrendsChart({ data }: TrendsChartProps) {
           {/* Grid lines */}
           <div className="absolute inset-0 flex flex-col justify-between">
             {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="border-t border-civic-teal/20"></div>
+              <div key={i} className="border-t border-violet-200/50"></div>
             ))}
           </div>
           

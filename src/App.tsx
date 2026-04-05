@@ -224,10 +224,10 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.5 }}
-              className="min-h-screen bg-gradient-to-br from-slate-50 via-civic-lightBlue/30 to-white"
+              className="min-h-screen bg-gradient-to-br from-violet-100/70 via-fuchsia-50/50 to-cyan-100/60"
             >
               {/* Navigation */}
-              <nav className="sticky top-0 z-50 backdrop-blur-xl bg-white/90 border-b border-civic-teal/20 shadow-sm">
+              <nav className="sticky top-0 z-50 backdrop-blur-xl bg-gradient-to-r from-violet-100/90 to-cyan-100/85 border-b border-violet-300/60 shadow-sm">
                 <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
                   <div className="flex justify-between items-center h-12 sm:h-14 md:h-16">
                     <div className="flex items-center space-x-2 sm:space-x-8">
@@ -237,15 +237,15 @@ export default function App() {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                       >
-                        <Logo size="sm" showText={true} textColor="text-slate-900" />
+                        <Logo size="sm" showText={true} textColor="text-slate-900" lensColor="text-violet-600" />
                       </motion.button>
                       <div className="hidden md:flex space-x-1 lg:space-x-3">
                         <motion.button
                           onClick={() => setCurrentView("dashboard")}
                           className={`px-3 py-1.5 lg:px-4 lg:py-2 rounded-lg transition-all duration-200 text-sm lg:text-base ${
                             currentView === "dashboard"
-                              ? "bg-civic-teal text-white"
-                              : "text-slate-700 hover:text-civic-teal hover:bg-civic-lightBlue/30"
+                              ? "bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white"
+                                : "text-slate-700 hover:text-violet-700 hover:bg-white/60"
                           }`}
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
@@ -256,8 +256,8 @@ export default function App() {
                           onClick={() => setCurrentView("report")}
                           className={`px-3 py-1.5 lg:px-4 lg:py-2 rounded-lg transition-all duration-200 text-sm lg:text-base ${
                             currentView === "report"
-                              ? "bg-civic-teal text-white"
-                              : "text-slate-700 hover:text-civic-teal hover:bg-civic-lightBlue/30"
+                              ? "bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white"
+                                : "text-slate-700 hover:text-violet-700 hover:bg-white/60"
                           }`}
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
@@ -269,8 +269,8 @@ export default function App() {
                           onClick={() => setCurrentView("community")}
                           className={`px-3 py-1.5 lg:px-4 lg:py-2 rounded-lg transition-all duration-200 flex items-center space-x-1 text-sm lg:text-base ${
                             currentView === "community"
-                              ? "bg-civic-teal text-white"
-                              : "text-slate-700 hover:text-civic-teal hover:bg-civic-lightBlue/30"
+                              ? "bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white"
+                                : "text-slate-700 hover:text-violet-700 hover:bg-white/60"
                           }`}
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
@@ -282,8 +282,8 @@ export default function App() {
                           onClick={() => setCurrentView("status")}
                           className={`px-3 py-1.5 lg:px-4 lg:py-2 rounded-lg transition-all duration-200 flex items-center space-x-1 text-sm lg:text-base ${
                             currentView === "status"
-                              ? "bg-civic-teal text-white"
-                              : "text-slate-700 hover:text-civic-teal hover:bg-civic-lightBlue/30"
+                              ? "bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white"
+                                : "text-slate-700 hover:text-violet-700 hover:bg-white/60"
                           }`}
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
@@ -296,8 +296,8 @@ export default function App() {
                             onClick={() => setCurrentView("official")}
                             className={`px-4 py-2 rounded-lg transition-all duration-200 flex items-center space-x-1 ${
                               currentView === "official"
-                                ? "bg-civic-darkBlue text-white"
-                                : "text-slate-700 hover:text-civic-darkBlue hover:bg-civic-lightBlue/30"
+                                ? "bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white"
+                                : "text-slate-700 hover:text-violet-700 hover:bg-white/60"
                             }`}
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
@@ -313,7 +313,7 @@ export default function App() {
                       <ThemeToggle />
                       <motion.button
                         onClick={() => setCurrentView("notifications")}
-                        className="p-2 rounded-lg hover:bg-civic-lightBlue/30 transition-colors"
+                        className="p-2 rounded-lg hover:bg-white/60 transition-colors"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         title="Notification Settings"
@@ -322,7 +322,7 @@ export default function App() {
                       </motion.button>
                       <motion.button
                         onClick={() => setCurrentView("profile")}
-                        className="p-2 rounded-lg hover:bg-civic-lightBlue/30 transition-colors"
+                        className="p-2 rounded-lg hover:bg-white/60 transition-colors"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         title="My Profile"
@@ -436,15 +436,15 @@ export default function App() {
               {/* REMOVED - replaced with bottom navigation */}
               
               {/* Mobile Bottom Navigation Bar */}
-              <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-t border-civic-teal/20 shadow-2xl">
+              <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-gradient-to-r from-violet-100/95 to-cyan-100/90 backdrop-blur-xl border-t border-violet-300/60 shadow-2xl">
                 <div className="grid grid-cols-4 gap-1 px-2 py-2">
                   {/* Dashboard */}
                   <motion.button
                     onClick={() => setCurrentView("dashboard")}
                     className={`flex flex-col items-center justify-center py-2 px-1 rounded-lg transition-all ${
                       currentView === "dashboard"
-                        ? "bg-civic-teal text-white"
-                        : "text-slate-600 hover:text-civic-teal hover:bg-civic-lightBlue/30"
+                        ? "bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white"
+                        : "text-slate-700 hover:text-violet-700 hover:bg-white/60"
                     }`}
                     whileTap={{ scale: 0.95 }}
                   >
@@ -457,8 +457,8 @@ export default function App() {
                     onClick={() => setCurrentView("report")}
                     className={`flex flex-col items-center justify-center py-2 px-1 rounded-lg transition-all ${
                       currentView === "report"
-                        ? "bg-civic-teal text-white"
-                        : "text-slate-600 hover:text-civic-teal hover:bg-civic-lightBlue/30"
+                        ? "bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white"
+                        : "text-slate-700 hover:text-violet-700 hover:bg-white/60"
                     }`}
                     whileTap={{ scale: 0.95 }}
                   >
@@ -471,8 +471,8 @@ export default function App() {
                     onClick={() => setCurrentView("status")}
                     className={`flex flex-col items-center justify-center py-2 px-1 rounded-lg transition-all ${
                       currentView === "status"
-                        ? "bg-civic-teal text-white"
-                        : "text-slate-600 hover:text-civic-teal hover:bg-civic-lightBlue/30"
+                        ? "bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white"
+                        : "text-slate-700 hover:text-violet-700 hover:bg-white/60"
                     }`}
                     whileTap={{ scale: 0.95 }}
                   >
@@ -485,8 +485,8 @@ export default function App() {
                     onClick={() => setCurrentView("community")}
                     className={`flex flex-col items-center justify-center py-2 px-1 rounded-lg transition-all ${
                       currentView === "community"
-                        ? "bg-civic-teal text-white"
-                        : "text-slate-600 hover:text-civic-teal hover:bg-civic-lightBlue/30"
+                        ? "bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white"
+                        : "text-slate-700 hover:text-violet-700 hover:bg-white/60"
                     }`}
                     whileTap={{ scale: 0.95 }}
                   >
