@@ -1,6 +1,8 @@
 # Project Title
 LocalityAI
 
+AI-powered civic reporting platform
+
 ## Team Members
 - Naman Gaonkar
 
@@ -17,14 +19,6 @@ LocalityAI makes civic reporting simple and fast with a map-first interface, suc
 - HTML, CSS, JavaScript
 - React / Node.js / Python
 - Gemini / Google AI Studio / GitHub
-
-## AI Tools Used
-The project uses AI to improve report quality, classification, and user assistance:
-
-- Google Gemini — natural language understanding, summarization, and conversational assistant (used in `src/lib/gemini.ts` and `src/components/AIChatbot.tsx`).
-- Local classifier module (`src/lib/classifier.ts`) — lightweight heuristics and ML helpers for category suggestions.
-
-Note: API keys and production model configuration belong in environment variables and secure edge functions.
 
 ## Features
 - Map-based issue reporting with precise pin selection
@@ -48,15 +42,15 @@ npm run dev
 ```
 
 ## Demo / Screenshots
-Screenshots from the app (click to view full size):
+Screenshots from the app:
 
-!(assets/Screenshot 2026-05-23 100452.png)
+![Landing screen](assets/Screenshot%202026-05-23%20100452.png)
 
-!(assets/Screenshot 2026-05-23 100717.png)
+![Dashboard view](assets/Screenshot%202026-05-23%20100717.png)
 
-!(assets/Screenshot 2026-05-23 100726.png)
+![Report flow](assets/Screenshot%202026-05-23%20100726.png)
 
-!(assets/Screenshot 2026-05-23 100807.png)
+![Map and analytics](assets/Screenshot%202026-05-23%20100807.png)
 
 
 ## Future Scope
