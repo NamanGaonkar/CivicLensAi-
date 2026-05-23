@@ -2,7 +2,7 @@ import { supabase } from "./supabase";
 import { toast } from "sonner";
 
 /**
- * Notification Service for CivicLens
+ * Notification Service for LocalityAI
  * Handles push notifications and email alerts
  */
 
@@ -132,7 +132,7 @@ async function sendEmailNotification(
     // In a real app, you'd use Supabase Edge Functions or an email service like Resend
     // For demo, we'll simulate the email
     console.log("📧 Email sent to:", user.email);
-    console.log("Subject: Report Status Update - CivicLens");
+    console.log("Subject: Report Status Update - LocalityAI");
     console.log(`Body: Your report "${reportTitle}" has been updated to: ${newStatus}`);
 
     // You could implement this with Supabase Edge Functions:
@@ -140,7 +140,7 @@ async function sendEmailNotification(
     await supabase.functions.invoke('send-email', {
       body: {
         to: user.email,
-        subject: 'Report Status Update - CivicLens',
+        subject: 'Report Status Update - LocalityAI',
         html: generateEmailTemplate(reportTitle, newStatus, reportId)
       }
     });
@@ -322,19 +322,19 @@ function generateEmailTemplate(
 </head>
 <body>
   <div class="container">
-    <div class="header">
-      <h1>🏙️ CivicLens</h1>
+      <div class="header">
+      <h1>🏙️ LocalityAI</h1>
       <p>Report Status Update</p>
     </div>
     <div class="content">
       <h2>Your Report Has Been Updated!</h2>
       <p><strong>Report:</strong> ${reportTitle}</p>
       <p><strong>New Status:</strong> <span class="status-badge">${newStatus}</span></p>
-      <p>Thank you for using CivicLens to make your community better. We'll continue to keep you updated on the progress of your report.</p>
-      <a href="https://civiclens.vercel.app/dashboard" class="button">View Report Details</a>
+      <p>Thank you for using LocalityAI to make your community better. We'll continue to keep you updated on the progress of your report.</p>
+      <a href="https://localityai.vercel.app/dashboard" class="button">View Report Details</a>
     </div>
     <div class="footer">
-      <p>© 2026 CivicLens. Building better communities together.</p>
+      <p>© 2026 LocalityAI. Building better communities together.</p>
       <p><a href="#">Unsubscribe</a> | <a href="#">Notification Settings</a></p>
     </div>
   </div>

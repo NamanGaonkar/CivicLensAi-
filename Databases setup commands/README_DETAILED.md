@@ -1,4 +1,4 @@
-# CivicLens — AI-powered Civic Platform
+# LocalityAI — AI-powered Civic Platform
 
 \\
 

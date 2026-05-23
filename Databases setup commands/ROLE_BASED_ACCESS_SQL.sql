@@ -106,13 +106,16 @@ CREATE INDEX report_responses_report_id_idx ON report_responses(report_id);
 CREATE INDEX report_responses_created_at_idx ON report_responses(created_at DESC);
 
 
+
+
+
 -- ========================================
 -- STEP 8: Create Test Users (OPTIONAL)
 -- ========================================
 -- After creating accounts normally, run these to assign roles:
 
 -- Make a user an ADMIN (replace with actual email)
--- UPDATE profiles SET role = 'admin' WHERE email = 'admin@civiclens.com';
+-- UPDATE profiles SET role = 'admin' WHERE email = 'admin@localityai.com';
 
 -- Make a user an OFFICIAL (replace with actual email)
 -- UPDATE profiles SET role = 'official' WHERE email = 'official@gov.in';

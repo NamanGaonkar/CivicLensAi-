@@ -159,7 +159,7 @@ export function UnifiedLoginPage({
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder={
-                      activeTab === "admin" ? "admin@civiclens.com" :
+                      activeTab === "admin" ? "admin@localityai.com" :
                       activeTab === "official" ? "official@government.in" :
                       "you@example.com"
                     }

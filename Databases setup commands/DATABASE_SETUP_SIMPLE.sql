@@ -1,5 +1,5 @@
 -- ========================================
--- CIVICLENS DATABASE SETUP
+-- LOCALITYAI DATABASE SETUP
 -- ========================================
 -- Copy and paste this ENTIRE file into Supabase SQL Editor and click RUN
 

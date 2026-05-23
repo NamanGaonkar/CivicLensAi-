@@ -10,7 +10,7 @@ The status update system is **fully functional** and syncs automatically between
 - Database stores: title, description, category, location, images, user_id, created_at
 
 ### 2. **Official Views Report**
-- Official logs in: `official@civiclens.com / official123`
+- Official logs in: `official@localityai.com / LocalityAI@Official!2026`
 - OfficialDashboard fetches all reports:
   ```typescript
   const { data: reports } = await supabase.from('reports').select('*')
@@ -27,7 +27,7 @@ The status update system is **fully functional** and syncs automatically between
 // Insert response into report_responses table
 await supabase.from('report_responses').insert({
   report_id: selectedReport.id,
-  responder_email: 'official@civiclens.com',
+  responder_email: 'official@localityai.com',
   responder_name: 'Official',
   response_text: responseText,
   status_update: statusUpdate
@@ -52,7 +52,7 @@ await supabase.from('reports')
 - Shows: ✅ Resolved, 🕒 In Progress, ❌ Rejected, ⚠️ Open
 
 ### 5. **Admin Monitors Everything**
-- Admin logs in: `admin@civiclens.com / admin123`
+- Admin logs in: `admin@localityai.com / LocalityAI@Admin!2026`
 - AdminDashboard shows:
   - All users and their roles
   - All reports with current status
@@ -118,7 +118,7 @@ await supabase.from('reports')
    - Navigate to "My Status" → See "OPEN" status
 
 2. **As Official:**
-   - Log in with: official@civiclens.com / official123
+  - Log in with: official@localityai.com / LocalityAI@Official!2026
    - Click on the test report
    - Add response: "We're working on this issue"
    - Change status to "In Progress"
@@ -130,7 +130,7 @@ await supabase.from('reports')
    - Can see the official's response (if response display is implemented)
 
 4. **As Admin:**
-   - Log in with: admin@civiclens.com / admin123
+  - Log in with: admin@localityai.com / LocalityAI@Admin!2026
    - View all reports in Reports tab
    - See updated status and response count
    - Monitor resolution rate statistics

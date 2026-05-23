@@ -91,7 +91,7 @@ export default function App() {
 
   const handleAdminLogin = async (email: string, password: string) => {
     // Hardcoded admin credentials - no auth required
-    if (email === 'admin@civiclens.com' && password === 'admin123') {
+    if (email === 'admin@localityai.com' && password === 'LocalityAI@Admin!2026') {
       setUserRole('admin');
       setCurrentView('admin-dash');
       return;
@@ -101,7 +101,7 @@ export default function App() {
 
   const handleOfficialLogin = async (email: string, password: string) => {
     // Hardcoded official credentials - no auth required
-    if (email === 'official@civiclens.com' && password === 'official123') {
+    if (email === 'official@localityai.com' && password === 'LocalityAI@Official!2026') {
       setUserRole('official');
       setCurrentView('official-dash');
       return;
@@ -176,7 +176,7 @@ export default function App() {
                     Create {signupRole === 'citizen' ? 'Citizen' : signupRole === 'official' ? 'Official' : 'Admin'} Account
                   </h2>
                   <p className="text-sm sm:text-base text-slate-600">
-                    {signupRole === 'citizen' && 'Join CivicLens to report issues and engage with your community'}
+                    {signupRole === 'citizen' && 'Join LocalityAI to report issues and engage with your community'}
                     {signupRole === 'official' && 'Create an official account to respond to citizen reports'}
                     {signupRole === 'admin' && 'Create an administrator account with full system access'}
                   </p>
@@ -198,9 +198,9 @@ export default function App() {
 
         {/* Official Dashboard */}
         {currentView === "official-dash" && (
-          <OfficialDashboard
+            <OfficialDashboard
             onLogout={handleLogout}
-            userEmail="official@civiclens.com"
+            userEmail="official@localityai.com"
           />
         )}
 

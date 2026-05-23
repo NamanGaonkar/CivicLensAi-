@@ -1,8 +1,8 @@
-# CivicLens Login Credentials
+# LocalityAI Login Credentials
 
 ## 🔴 ADMIN ACCESS
-**Email:** `admin@civiclens.com`  
-**Password:** `admin123`
+**Email:** `admin@localityai.com`  
+**Password:** `LocalityAI@Admin!2026`
 
 **What you'll see:**
 - Red/orange themed admin dashboard
@@ -12,8 +12,8 @@
 - Full administrative controls
 
 ## 🔵 OFFICIAL ACCESS
-**Email:** `official@civiclens.com`  
-**Password:** `official123`
+**Email:** `official@localityai.com`  
+**Password:** `LocalityAI@Official!2026`
 
 **What you'll see:**
 - Blue/teal themed official dashboard
@@ -40,13 +40,13 @@ Any user can sign up as a citizen through the app.
 1. Go to http://localhost:5173 (or your app URL)
 2. Click "GET STARTED"
 3. On UnifiedLoginPage, click the **Admin** tab (red shield icon)
-4. Enter: `admin@civiclens.com` / `admin123`
+4. Enter: `admin@localityai.com` / `LocalityAI@Admin!2026`
 5. You'll be redirected to the Admin Dashboard ✅
 
 ### Official Dashboard:
 1. Click "GET STARTED"
 2. On UnifiedLoginPage, click the **Official** tab (blue UserCheck icon)
-3. Enter: `official@civiclens.com` / `official123`
+3. Enter: `official@localityai.com` / `LocalityAI@Official!2026`
 4. You'll be redirected to the Official Dashboard ✅
 
 ### Citizen Dashboard:

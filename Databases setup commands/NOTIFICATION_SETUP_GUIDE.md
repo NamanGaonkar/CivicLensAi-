@@ -1,7 +1,7 @@
 # 🔔 Notification System Setup Guide
 
 ## Overview
-CivicLens now has a complete push notification and email alert system that automatically notifies users when:
+LocalityAI now has a complete push notification and email alert system that automatically notifies users when:
 - Report status changes (Open → In Progress → Resolved)
 - Someone comments on their report
 - System announcements
@@ -91,7 +91,7 @@ serve(async (req) => {
   const { to, subject, html } = await req.json()
 
   const { data, error } = await resend.emails.send({
-    from: 'CivicLens <noreply@civiclens.com>',
+    from: 'LocalityAI <noreply@localityai.com>',
     to: [to],
     subject: subject,
     html: html,
@@ -122,7 +122,7 @@ serve(async (req) => {
 await supabase.functions.invoke('send-email', {
   body: {
     to: user.email,
-    subject: 'Report Status Update - CivicLens',
+    subject: 'Report Status Update - LocalityAI',
     html: generateEmailTemplate(reportTitle, newStatus, reportId)
   }
 });
@@ -157,7 +157,7 @@ await supabase.functions.invoke('send-email', {
 
 ### ✅ Email Templates
 - **Beautiful HTML** email design
-- **Gradient header** with CivicLens branding
+ - **Gradient header** with LocalityAI branding
 - **Status badges** in email
 - **Direct links** to view report
 - **Unsubscribe link** (ready for implementation)
@@ -245,7 +245,7 @@ import { supabase } from './lib/supabase';
 await supabase.from('notifications').insert({
   user_id: userId,
   type: 'system',
-  title: 'Welcome to CivicLens!',
+  title: 'Welcome to LocalityAI!',
   message: 'Thanks for joining our community.',
   read: false
 });

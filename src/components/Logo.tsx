@@ -48,7 +48,7 @@ export function Logo({
       {/* Logo Text */}
       {showText && (
         <span className={`${currentSize.text} font-bold ${textColor} tracking-tight`}>
-          CIVIC<span className={lensColor}>LENS</span>
+          Locality<span className={lensColor}>AI</span>
         </span>
       )}
     </div>

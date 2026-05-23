@@ -239,9 +239,9 @@ Run the SQL commands in `SUPABASE_SETUP.md` to:
 1. **Admin User**:
    - Sign up normally
    - Manually update role in Supabase:
-     ```sql
-     UPDATE profiles SET role = 'admin' WHERE email = 'admin@civiclens.com';
-     ```
+    ```sql
+    UPDATE profiles SET role = 'admin' WHERE email = 'admin@localityai.com';
+    ```
 
 2. **Official User**:
    - Sign up normally

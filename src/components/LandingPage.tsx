@@ -102,7 +102,7 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
             </h1>
 
             <p className="mt-6 text-slate-300 max-w-xl text-base sm:text-lg leading-relaxed">
-              CivicLens combines reporting, maps, analytics, role-based dashboards, and AI support
+              LocalityAI combines reporting, maps, analytics, role-based dashboards, and AI support
               to help communities solve real civic issues faster.
             </p>
 
@@ -153,9 +153,9 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
 
       <section id="about-section" className="px-4 sm:px-6 lg:px-8 pb-12 sm:pb-14">
         <div className="max-w-7xl mx-auto rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-6 sm:p-8">
-          <h2 className="text-2xl sm:text-3xl font-bold text-white">About CivicLens</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-white">About LocalityAI</h2>
           <p className="mt-4 text-slate-300 leading-relaxed max-w-4xl">
-            CivicLens is built for practical civic problem-solving. Citizens report issues, officials respond with
+            LocalityAI is built for practical civic problem-solving. Citizens report issues, officials respond with
             progress updates, and communities can track outcomes transparently using AI-assisted workflows.
           </p>
           <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -178,7 +178,7 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
       <section id="team-section" className="px-4 sm:px-6 lg:px-8 pb-12 sm:pb-14">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-2xl sm:text-3xl font-bold text-white">Who It Serves</h2>
-          <p className="mt-2 text-slate-300">CivicLens supports every role in the civic workflow.</p>
+          <p className="mt-2 text-slate-300">LocalityAI supports every role in the civic workflow.</p>
           <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="rounded-xl border border-white/10 bg-white/5 p-5">
               <Users className="w-5 h-5 text-violet-200" />
@@ -267,8 +267,8 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
       <section id="contact-section" className="px-4 sm:px-6 lg:px-8 pb-20">
         <div className="max-w-7xl mx-auto rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-6 sm:p-8">
           <h2 className="text-2xl sm:text-3xl font-bold text-white">Contact & Access</h2>
-          <p className="mt-2 text-slate-300 max-w-3xl">
-            Continue to sign in if you already have access, or start now to enter CivicLens and begin reporting or monitoring issues.
+            <p className="mt-2 text-slate-300 max-w-3xl">
+            Continue to sign in if you already have access, or start now to enter LocalityAI and begin reporting or monitoring issues.
           </p>
           <div className="mt-6 flex flex-col sm:flex-row gap-3">
             <button

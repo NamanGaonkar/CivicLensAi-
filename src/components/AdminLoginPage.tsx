@@ -78,7 +78,7 @@ export function AdminLoginPage({ onLogin, onBackToHome }: AdminLoginPageProps) {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@civiclens.com"
+                  placeholder="admin@localityai.com"
                   required
                   className="w-full pl-11 pr-4 py-3 border border-slate-300 rounded-lg focus:border-red-500 focus:ring-2 focus:ring-red-100 outline-none transition-all"
                 />

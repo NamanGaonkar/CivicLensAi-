@@ -142,4 +142,4 @@ Want to enhance the AI further?
 
 ---
 
-**You're all set!** 🎉 Your CivicLens platform now has intelligent AI assistance.
+**You're all set!** 🎉 Your LocalityAI platform now has intelligent AI assistance.

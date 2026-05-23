@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 
 export type Theme = 'light' | 'dark' | 'system';
-const STORAGE_KEY = 'civiclens_theme';
+const STORAGE_KEY = 'localityai_theme';
 
 export function useTheme() {
   const [theme, setThemeState] = useState<Theme>(() => {

@@ -45,8 +45,8 @@ export async function generateAIResponse(
       .map((msg) => `${msg.role === "user" ? "User" : "Assistant"}: ${msg.text}`)
       .join("\n");
 
-    // System prompt for CivicLens AI
-    const systemPrompt = `You are a helpful AI assistant for CivicLens, a civic engagement platform. Your role is to:
+    // System prompt for LocalityAI
+    const systemPrompt = `You are a helpful AI assistant for LocalityAI, a civic engagement platform. Your role is to:
 - Help citizens understand and report civic issues (potholes, streetlights, garbage, etc.)
 - Provide insights on community problems and solutions
 - Analyze images of civic issues when provided
