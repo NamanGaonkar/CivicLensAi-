@@ -1,18 +1,18 @@
 import { motion } from "framer-motion";
+import { useEffect, useRef } from "react";
+import Hls from "hls.js";
 import { Logo } from "./Logo";
 import {
-  MapPin, 
-  Camera, 
+  MapPin,
+  Camera,
   Brain,
-  BarChart3, 
-  Users, 
+  BarChart3,
+  Users,
   Globe,
   ArrowRight,
-  CheckCircle,
   MessageSquare,
   Shield,
-  Image,
-  Zap
+  ChevronDown,
 } from "lucide-react";
 // AI chatbot is shown only on the dashboard now
 
@@ -65,145 +65,145 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
     },
   ];
 
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const videoSrc = "https://stream.mux.com/T6oQJQ02cQ6N01TR6iHwZkKFkbepS34dkkIc9iukgy400g.m3u8";
+  const videoPoster =
+    "https://images.unsplash.com/photo-1647356191320-d7a1f80ca777?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMGRhcmslMjB0ZWNobm9sb2d5JTIwbmV1cmFsJTIwbmV0d29ya3xlbnwxfHx8fDE3Njg5NzIyNTV8MA&ixlib=rb-4.1.0&q=80&w=1080";
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    let hls: Hls | null = null;
+    if (Hls.isSupported()) {
+      hls = new Hls();
+      hls.loadSource(videoSrc);
+      hls.attachMedia(video);
+      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        video.play().catch((e) => console.log("Auto-play prevented:", e));
+      });
+    } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+      video.src = videoSrc;
+      const handleMeta = () => video.play().catch((e) => console.log("Auto-play prevented:", e));
+      video.addEventListener("loadedmetadata", handleMeta);
+      return () => video.removeEventListener("loadedmetadata", handleMeta);
+    }
+    return () => {
+      hls?.destroy();
+    };
+  }, []);
+
+  const scrollTo = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   return (
-    <div className="landing-root min-h-screen bg-[#060810] text-slate-100 relative overflow-x-hidden">
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -top-24 -left-20 w-[380px] h-[380px] rounded-full bg-fuchsia-600/20 blur-3xl" />
-        <div className="absolute top-40 -right-10 w-[380px] h-[380px] rounded-full bg-violet-600/25 blur-3xl" />
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full bg-purple-600/15 blur-3xl" />
-      </div>
+    <div className="landing-root min-h-screen bg-black text-white relative overflow-x-hidden font-instrument-sans">
+      <nav className="fixed top-0 inset-x-0 z-50 bg-transparent px-6 py-4 flex items-center justify-between">
+        <Logo size="sm" showText={true} textColor="text-white" />
 
-      <nav className="sticky top-0 z-50 px-3 sm:px-5 lg:px-8 py-3 sm:py-4">
-        <div className="max-w-7xl mx-auto rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl px-4 sm:px-6 py-3 flex items-center justify-between">
-          <Logo size="md" showText={true} textColor="text-white" />
+        <div className="hidden md:flex items-center gap-8 text-sm font-medium text-white/80">
+          <button onClick={() => scrollTo("about-section")} className="hover:text-white transition-colors">
+            About
+          </button>
+          <button onClick={() => scrollTo("features-section")} className="flex items-center gap-1 hover:text-white transition-colors">
+            Features <ChevronDown className="w-4 h-4" />
+          </button>
+          <button onClick={() => scrollTo("contact-section")} className="hover:text-white transition-colors">
+            Contact
+          </button>
+        </div>
 
+        <div className="flex items-center gap-3">
           <button
             onClick={onGetStarted}
-            className="px-4 sm:px-6 py-2 rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white font-semibold hover:from-violet-400 hover:to-fuchsia-400 transition-colors"
+            className="rounded-full bg-white text-black px-5 py-2.5 font-semibold text-sm hover:scale-[1.02] transition-transform"
           >
-            {isAuthenticated ? "Dashboard" : "Get Started"}
+            Get Started
           </button>
         </div>
       </nav>
 
-      <section id="home-section" className="relative px-4 sm:px-6 lg:px-8 pt-8 sm:pt-14 pb-16 sm:pb-24">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-6 items-center">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
+      <section id="home-section" className="relative w-full min-h-screen bg-black text-white overflow-hidden">
+        <video
+          ref={videoRef}
+          className="absolute inset-0 w-full h-full object-cover opacity-60"
+          muted
+          loop
+          playsInline
+          poster={videoPoster}
+        />
+        <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]" />
+
+        <div className="pointer-events-none absolute top-[-20%] left-[20%] w-[600px] h-[600px] rounded-full bg-blue-900/20 blur-[120px] mix-blend-screen" />
+        <div className="pointer-events-none absolute bottom-[-10%] right-[20%] w-[500px] h-[500px] rounded-full bg-indigo-900/20 blur-[120px] mix-blend-screen" />
+
+        <div className="relative z-10 max-w-5xl mx-auto flex flex-col items-center text-center mt-40 sm:mt-48 px-4">
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
+            className="font-instrument-serif text-3xl sm:text-5xl lg:text-[48px] leading-[1.1] text-white"
           >
-            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold leading-tight text-white">
-              Transforming Civic Data
-              <br />
-              into <span className="text-violet-300">Intelligent</span>
-              <br />
-              <span className="text-fuchsia-300">Decisions</span>
-            </h1>
+            Civic intelligence for every neighborhood
+          </motion.p>
 
-            <p className="mt-6 text-slate-300 max-w-xl text-base sm:text-lg leading-relaxed">
-              LocalityAI combines reporting, maps, analytics, role-based dashboards, and AI support
-              to help communities solve real civic issues faster.
-            </p>
+          <motion.h1
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+            className="mt-6 font-semibold text-6xl sm:text-8xl lg:text-[136px] leading-[0.9] tracking-tighter bg-gradient-to-b from-white via-white to-[#b4c0ff] bg-clip-text text-transparent"
+          >
+            Report. Resolve.
+          </motion.h1>
 
-            <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4">
-              <button
-                onClick={onGetStarted}
-                className="px-6 py-3 rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white font-semibold hover:from-violet-400 hover:to-fuchsia-400 transition-colors"
-              >
-                {isAuthenticated ? "Open Dashboard" : "Sign In"}
-              </button>
-              <button
-                onClick={() => {
-                  document.getElementById("features-section")?.scrollIntoView({ behavior: "smooth", block: "start" });
-                }}
-                className="px-6 py-3 rounded-xl border border-white/15 bg-white/5 text-slate-200 font-medium hover:bg-white/10 transition-colors"
-              >
-                Our Services
-              </button>
-            </div>
-          </motion.div>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.7 }}
+            transition={{ delay: 0.4, duration: 0.6 }}
+            className="mt-8 text-lg sm:text-[20px] leading-[1.65] text-white max-w-xl"
+          >
+            LocalityAI combines reporting, maps, analytics, and AI assistance to help citizens
+            report issues faster and help officials respond with clarity.
+          </motion.p>
 
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            className="relative h-[340px] sm:h-[430px] lg:h-[500px]"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6, duration: 0.5 }}
+            className="mt-10 flex flex-col sm:flex-row items-center gap-6"
           >
-            <div className="absolute inset-0 flex items-center justify-center">
-              <motion.div
-                animate={{ scale: [1, 1.06, 1], rotate: [0, 2, -2, 0] }}
-                transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-                className="relative w-[260px] h-[260px] sm:w-[330px] sm:h-[330px] lg:w-[390px] lg:h-[390px] rounded-full"
-                style={{
-                  background:
-                    "radial-gradient(circle at 45% 40%, rgba(255,255,255,0.95) 0%, rgba(240,171,252,0.75) 20%, rgba(168,85,247,0.35) 50%, rgba(17,24,39,0) 72%)",
-                  boxShadow:
-                    "0 0 40px rgba(217,70,239,0.55), 0 0 120px rgba(139,92,246,0.45), inset 0 0 80px rgba(255,255,255,0.22)",
-                }}
-              >
-                <div className="absolute inset-8 rounded-full border border-fuchsia-200/40" />
-                <div className="absolute inset-14 rounded-full border border-violet-200/30" />
-                <div className="absolute inset-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-white/90 blur-sm" />
-              </motion.div>
-            </div>
+            <button
+              onClick={onGetStarted}
+              className="group inline-flex items-center pl-6 pr-2 py-2 rounded-full bg-white hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:scale-105 transition-all duration-200"
+            >
+              <span className="font-medium text-lg text-[#0a0400]">
+                {isAuthenticated ? "Open Dashboard" : "Get Started"}
+              </span>
+              <span className="ml-3 w-10 h-10 rounded-full bg-[#3054ff] group-hover:bg-[#2040e0] flex items-center justify-center transition-colors">
+                <ArrowRight className="w-5 h-5 text-white" />
+              </span>
+            </button>
           </motion.div>
         </div>
       </section>
 
-      <section id="about-section" className="px-4 sm:px-6 lg:px-8 pb-12 sm:pb-14">
+      <section id="about-section" className="px-4 sm:px-6 lg:px-8 pb-12 sm:pb-14 pt-16 sm:pt-24">
         <div className="max-w-7xl mx-auto rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-6 sm:p-8">
           <h2 className="text-2xl sm:text-3xl font-bold text-white">About LocalityAI</h2>
-          <p className="mt-4 text-slate-300 leading-relaxed max-w-4xl">
-            LocalityAI is built for practical civic problem-solving. Citizens report issues, officials respond with
-            progress updates, and communities can track outcomes transparently using AI-assisted workflows.
+          <p className="mt-4 text-white/70 leading-relaxed max-w-4xl">
+            LocalityAI is a civic-issue platform that helps citizens report local problems,
+            track them on a map, and stay informed as officials respond. AI assistance helps
+            classify reports faster, while dashboards give teams the visibility they need to act
+            with clarity and build public trust.
           </p>
-          <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="rounded-xl border border-white/10 bg-black/20 p-4">
-              <p className="text-violet-200 font-semibold">Simple reporting</p>
-              <p className="text-sm text-slate-300 mt-2">Share location, photos, and issue details in minutes.</p>
-            </div>
-            <div className="rounded-xl border border-white/10 bg-black/20 p-4">
-              <p className="text-violet-200 font-semibold">Faster resolution</p>
-              <p className="text-sm text-slate-300 mt-2">Officials prioritize and respond with structured updates.</p>
-            </div>
-            <div className="rounded-xl border border-white/10 bg-black/20 p-4">
-              <p className="text-violet-200 font-semibold">Public trust</p>
-              <p className="text-sm text-slate-300 mt-2">Track issue status from open to resolved.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="team-section" className="px-4 sm:px-6 lg:px-8 pb-12 sm:pb-14">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-2xl sm:text-3xl font-bold text-white">Who It Serves</h2>
-          <p className="mt-2 text-slate-300">LocalityAI supports every role in the civic workflow.</p>
-          <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="rounded-xl border border-white/10 bg-white/5 p-5">
-              <Users className="w-5 h-5 text-violet-200" />
-              <h3 className="mt-3 text-white font-semibold">Citizens</h3>
-              <p className="mt-2 text-sm text-slate-300">Report issues and monitor updates from officials.</p>
-            </div>
-            <div className="rounded-xl border border-white/10 bg-white/5 p-5">
-              <Shield className="w-5 h-5 text-violet-200" />
-              <h3 className="mt-3 text-white font-semibold">Officials</h3>
-              <p className="mt-2 text-sm text-slate-300">Review reports and communicate status transparently.</p>
-            </div>
-            <div className="rounded-xl border border-white/10 bg-white/5 p-5">
-              <BarChart3 className="w-5 h-5 text-violet-200" />
-              <h3 className="mt-3 text-white font-semibold">Admins</h3>
-              <p className="mt-2 text-sm text-slate-300">Monitor trends and keep system quality high.</p>
-            </div>
-          </div>
         </div>
       </section>
 
       <section id="features-section" className="px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         <div className="max-w-7xl mx-auto">
           <div className="mb-8 sm:mb-10">
-            <h2 className="text-2xl sm:text-3xl font-bold text-white">All Platform Features</h2>
-            <p className="mt-2 text-slate-300">All key functions remain available across the app.</p>
+            <h2 className="text-2xl sm:text-3xl font-bold text-white">Features</h2>
+            <p className="mt-2 text-white/70">All key functions stay available across the app.</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
@@ -215,87 +215,54 @@ export function LandingPage({ onGetStarted, isAuthenticated = false }: LandingPa
                 viewport={{ once: true }}
                 className="rounded-xl border border-white/10 bg-white/5 backdrop-blur-md p-5"
               >
-                <div className="w-10 h-10 rounded-lg bg-violet-400/20 text-violet-200 flex items-center justify-center mb-3">
+                <div className="w-10 h-10 rounded-lg bg-white/10 text-[#b4c0ff] flex items-center justify-center mb-3">
                   <feature.icon className="w-5 h-5" />
                 </div>
                 <h3 className="font-semibold text-white">{feature.title}</h3>
-                <p className="mt-2 text-sm text-slate-300 leading-relaxed">{feature.description}</p>
+                <p className="mt-2 text-sm text-white/70 leading-relaxed">{feature.description}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="px-4 sm:px-6 lg:px-8 pb-16">
+      <section id="contact-section" className="px-4 sm:px-6 lg:px-8 pb-12">
         <div className="max-w-7xl mx-auto rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-6 sm:p-8">
-          <h2 className="text-2xl sm:text-3xl font-bold text-white">How it works</h2>
-          <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="rounded-xl bg-black/20 border border-white/10 p-4">
-              <div className="flex items-center gap-2 text-violet-200 font-semibold">
-                <Image className="w-4 h-4" />
-                1. Report with details
-              </div>
-              <p className="mt-2 text-sm text-slate-300">Submit issue details with location and photos for better clarity.</p>
-            </div>
-            <div className="rounded-xl bg-black/20 border border-white/10 p-4">
-              <div className="flex items-center gap-2 text-violet-200 font-semibold">
-                <CheckCircle className="w-4 h-4" />
-                2. Official response
-              </div>
-              <p className="mt-2 text-sm text-slate-300">Officials review reports, respond, and update progress in real time.</p>
-            </div>
-            <div className="rounded-xl bg-black/20 border border-white/10 p-4">
-              <div className="flex items-center gap-2 text-violet-200 font-semibold">
-                <ArrowRight className="w-4 h-4" />
-                3. Track resolution
-              </div>
-              <p className="mt-2 text-sm text-slate-300">Citizens follow each update until the issue is resolved.</p>
-            </div>
-          </div>
-
-          <div className="mt-8">
-            <button
-              onClick={onGetStarted}
-              className="px-6 py-3 rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white font-semibold hover:from-violet-400 hover:to-fuchsia-400 transition-colors"
-            >
-              {isAuthenticated ? "Go to App" : "Get Started"}
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <section id="contact-section" className="px-4 sm:px-6 lg:px-8 pb-20">
-        <div className="max-w-7xl mx-auto rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-6 sm:p-8">
-          <h2 className="text-2xl sm:text-3xl font-bold text-white">Contact & Access</h2>
-            <p className="mt-2 text-slate-300 max-w-3xl">
-            Continue to sign in if you already have access, or start now to enter LocalityAI and begin reporting or monitoring issues.
+          <h2 className="text-2xl sm:text-3xl font-bold text-white">Contact</h2>
+          <p className="mt-2 text-white/70 max-w-3xl">
+            Have a civic project in mind or want to get in touch? Reach out through the portfolio below.
           </p>
           <div className="mt-6 flex flex-col sm:flex-row gap-3">
-            <button
-              onClick={onGetStarted}
-              className="px-6 py-3 rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white font-semibold hover:from-violet-400 hover:to-fuchsia-400 transition-colors"
+            <a
+              href="https://naman-gaonkar.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center pl-6 pr-2 py-2 rounded-full bg-white hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:scale-105 transition-all duration-200"
             >
-              {isAuthenticated ? "Go to Dashboard" : "Sign In"}
-            </button>
-            <button
-              onClick={() => document.getElementById("home-section")?.scrollIntoView({ behavior: "smooth", block: "start" })}
-              className="px-6 py-3 rounded-xl border border-white/15 bg-white/5 text-slate-200 font-medium hover:bg-white/10 transition-colors"
-            >
-              Back to Top
-            </button>
+              <span className="font-medium text-lg text-[#0a0400]">
+                Contact Me
+              </span>
+              <span className="ml-3 w-10 h-10 rounded-full bg-[#3054ff] group-hover:bg-[#2040e0] flex items-center justify-center transition-colors">
+                <ArrowRight className="w-5 h-5 text-white" />
+              </span>
+            </a>
           </div>
         </div>
       </section>
 
-      <div className="sm:hidden fixed bottom-4 left-1/2 -translate-x-1/2 z-40 w-[92%]">
-        <button
-          onClick={onGetStarted}
-          aria-label="Open dashboard"
-          className="w-full px-4 py-3 rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white font-semibold"
-        >
-          {isAuthenticated ? "Open Dashboard" : "Sign In"}
-        </button>
-      </div>
+      <footer className="px-4 sm:px-6 lg:px-8 pb-12">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-white/10 pt-6 text-sm text-white/60">
+          <span>Built by Naman Gaonkar</span>
+          <a
+            href="https://naman-gaonkar.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-white/80 hover:text-white transition-colors"
+          >
+            naman-gaonkar.vercel.app
+          </a>
+        </div>
+      </footer>
     </div>
   );
 }

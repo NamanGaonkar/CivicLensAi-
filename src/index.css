@@ -1,6 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Instrument+Serif:ital@0;1&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.font-instrument-sans {
+  font-family: 'Instrument Sans', system-ui, -apple-system, sans-serif;
+}
+
+.font-instrument-serif {
+  font-family: 'Instrument Serif', Georgia, serif;
+}
 
 :root {
   --bg: #ffffff;
